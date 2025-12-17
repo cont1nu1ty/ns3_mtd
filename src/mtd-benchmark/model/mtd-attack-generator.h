@@ -1,0 +1,317 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * MTD-Benchmark: Attack Generator for dynamic attack simulation
+ */
+
+#ifndef MTD_ATTACK_GENERATOR_H
+#define MTD_ATTACK_GENERATOR_H
+
+#include "mtd-common.h"
+#include "mtd-event-bus.h"
+#include "ns3/object.h"
+#include "ns3/ptr.h"
+#include "ns3/event-id.h"
+
+#include <map>
+#include <vector>
+
+#include "ns3/random-variable-stream.h"
+
+namespace ns3 {
+namespace mtd {
+
+/**
+ * \brief Attack behavior mode
+ */
+enum class AttackBehavior {
+    STATIC,          ///< Fixed attack parameters
+    ADAPTIVE,        ///< Adapts to defense actions
+    INTELLIGENT,     ///< ML-based adaptation
+    RANDOM_BURST     ///< Random burst patterns
+};
+
+/**
+ * \brief Attack event record
+ */
+struct AttackEvent {
+    uint64_t timestamp;
+    AttackType type;
+    uint32_t targetProxyId;
+    double rate;
+    double duration;
+    bool defenseTriggered;
+    
+    AttackEvent() : timestamp(0), type(AttackType::DOS), targetProxyId(0),
+                    rate(0.0), duration(0.0), defenseTriggered(false) {}
+};
+
+// Defense event callback type (same as EventCallback from mtd-common.h)
+typedef EventCallback DefenseEventCallback;
+
+/**
+ * \brief Attack Generator for simulating adaptive DDoS attacks
+ * 
+ * Generates attack traffic that can adapt to defense actions,
+ * enabling closed-loop testing of MTD strategies.
+ */
+class AttackGenerator : public Object
+{
+public:
+    static TypeId GetTypeId();
+    
+    AttackGenerator();
+    ~AttackGenerator() override;
+    
+    /**
+     * \brief Generate attack with specified parameters
+     * \param params Attack parameters
+     */
+    void Generate(const AttackParams& params);
+    
+    /**
+     * \brief Update attack parameters dynamically
+     * \param params Updated parameters
+     */
+    void Update(const AttackParams& params);
+    
+    /**
+     * \brief Subscribe to defense events for adaptive behavior
+     * \param callback Callback function for defense events
+     * \return Subscription ID
+     */
+    uint32_t SubscribeDefenseEvents(DefenseEventCallback callback);
+    
+    /**
+     * \brief Unsubscribe from defense events
+     * \param subscriptionId Subscription ID
+     */
+    void UnsubscribeDefenseEvents(uint32_t subscriptionId);
+    
+    /**
+     * \brief Set event bus for receiving defense events
+     * \param eventBus Pointer to event bus
+     */
+    void SetEventBus(Ptr<EventBus> eventBus);
+    
+    /**
+     * \brief Start attack generation
+     */
+    void Start();
+    
+    /**
+     * \brief Stop attack generation
+     */
+    void Stop();
+    
+    /**
+     * \brief Pause attack (temporary stop)
+     */
+    void Pause();
+    
+    /**
+     * \brief Resume paused attack
+     */
+    void Resume();
+    
+    /**
+     * \brief Check if attack is active
+     * \return True if currently attacking
+     */
+    bool IsActive() const;
+    
+    /**
+     * \brief Get current attack parameters
+     * \return Current parameters
+     */
+    AttackParams GetCurrentParams() const;
+    
+    /**
+     * \brief Set attack behavior mode
+     * \param behavior Behavior mode
+     */
+    void SetBehavior(AttackBehavior behavior);
+    
+    /**
+     * \brief Get attack behavior mode
+     * \return Current behavior mode
+     */
+    AttackBehavior GetBehavior() const;
+    
+    /**
+     * \brief Set cooldown period
+     * \param seconds Cooldown in seconds
+     */
+    void SetCooldownPeriod(double seconds);
+    
+    /**
+     * \brief Get cooldown period
+     * \return Cooldown in seconds
+     */
+    double GetCooldownPeriod() const;
+    
+    /**
+     * \brief Check if in cooldown
+     * \return True if in cooldown period
+     */
+    bool IsInCooldown() const;
+    
+    /**
+     * \brief Get attack history
+     * \return Vector of attack events
+     */
+    std::vector<AttackEvent> GetAttackHistory() const;
+    
+    /**
+     * \brief Get attack statistics
+     * \return Map of metric name to value
+     */
+    std::map<std::string, double> GetStatistics() const;
+    
+    /**
+     * \brief Set target selection callback for intelligent targeting
+     * \param callback Function that selects target based on defense state
+     */
+    void SetTargetSelector(Callback<uint32_t, const std::vector<uint32_t>&> callback);
+    
+    /**
+     * \brief Add target proxy
+     * \param proxyId Proxy ID to add as potential target
+     */
+    void AddTarget(uint32_t proxyId);
+    
+    /**
+     * \brief Remove target proxy
+     * \param proxyId Proxy ID to remove
+     */
+    void RemoveTarget(uint32_t proxyId);
+    
+    /**
+     * \brief Set all available targets
+     * \param proxyIds Vector of proxy IDs
+     */
+    void SetTargets(const std::vector<uint32_t>& proxyIds);
+    
+    /**
+     * \brief Get current targets
+     * \return Vector of target proxy IDs
+     */
+    std::vector<uint32_t> GetTargets() const;
+    
+    /**
+     * \brief Get generated packet count
+     * \return Total packets generated
+     */
+    uint64_t GetPacketCount() const;
+    
+    /**
+     * \brief Get generated byte count
+     * \return Total bytes generated
+     */
+    uint64_t GetByteCount() const;
+
+private:
+    AttackParams m_params;
+    AttackBehavior m_behavior;
+    bool m_active;
+    bool m_paused;
+    
+    Ptr<EventBus> m_eventBus;
+    uint32_t m_eventSubscriptionId;
+    
+    std::vector<uint32_t> m_targets;
+    std::vector<AttackEvent> m_history;
+    std::map<uint32_t, DefenseEventCallback> m_callbacks;
+    
+    EventId m_attackEvent;
+    uint64_t m_lastCooldownEnd;
+    double m_cooldownPeriod;
+    
+    uint64_t m_packetCount;
+    uint64_t m_byteCount;
+    uint64_t m_attackCount;
+    
+    Ptr<UniformRandomVariable> m_rng;
+    uint32_t m_nextCallbackId;
+    std::size_t m_roundRobinIdx;
+    
+    Callback<uint32_t, const std::vector<uint32_t>&> m_targetSelector;
+    
+    void PerformAttack();
+    void OnDefenseEvent(const MtdEvent& event);
+    void AdaptToDefense(const MtdEvent& event);
+    uint32_t SelectTarget();
+    void RecordAttackEvent(uint32_t targetId);
+    void EnterCooldown();
+};
+
+/**
+ * \brief Multi-source attack coordinator
+ * 
+ * Coordinates multiple attack generators for distributed attack simulation.
+ */
+class AttackCoordinator : public Object
+{
+public:
+    static TypeId GetTypeId();
+    
+    AttackCoordinator();
+    ~AttackCoordinator() override;
+    
+    /**
+     * \brief Add an attack generator
+     * \param generator Pointer to attack generator
+     * \return Generator ID
+     */
+    uint32_t AddGenerator(Ptr<AttackGenerator> generator);
+    
+    /**
+     * \brief Remove an attack generator
+     * \param generatorId Generator ID
+     */
+    void RemoveGenerator(uint32_t generatorId);
+    
+    /**
+     * \brief Start all generators
+     */
+    void StartAll();
+    
+    /**
+     * \brief Stop all generators
+     */
+    void StopAll();
+    
+    /**
+     * \brief Set synchronized attack
+     * \param params Synchronized parameters
+     */
+    void SetSynchronizedAttack(const AttackParams& params);
+    
+    /**
+     * \brief Set staggered attack pattern
+     * \param interval Interval between generator starts
+     */
+    void SetStaggeredPattern(double interval);
+    
+    /**
+     * \brief Get aggregate statistics
+     * \return Aggregate statistics from all generators
+     */
+    std::map<std::string, double> GetAggregateStats() const;
+    
+    /**
+     * \brief Set event bus for all generators
+     * \param eventBus Pointer to event bus
+     */
+    void SetEventBus(Ptr<EventBus> eventBus);
+
+private:
+    std::map<uint32_t, Ptr<AttackGenerator>> m_generators;
+    Ptr<EventBus> m_eventBus;
+    uint32_t m_nextGeneratorId;
+    double m_staggerInterval;
+};
+
+} // namespace mtd
+} // namespace ns3
+
+#endif // MTD_ATTACK_GENERATOR_H

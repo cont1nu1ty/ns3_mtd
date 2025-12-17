@@ -1,0 +1,42 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+#
+# MTD-Benchmark: NS-3 module build script (waf)
+#
+
+def build(bld):
+    module = bld.create_ns3_module('mtd-benchmark', ['core', 'network', 'internet', 'point-to-point', 'applications'])
+    
+    module.source = [
+        'model/mtd-event-bus.cc',
+        'model/mtd-detector.cc',
+        'model/mtd-score-manager.cc',
+        'model/mtd-domain-manager.cc',
+        'model/mtd-shuffle-controller.cc',
+        'model/mtd-attack-generator.cc',
+        'model/mtd-export-api.cc',
+        'helper/mtd-network-helper.cc',
+    ]
+
+    module_test = bld.create_ns3_module_test_library('mtd-benchmark')
+    module_test.source = [
+        'test/mtd-benchmark-test-suite.cc',
+    ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'mtd-benchmark'
+    headers.source = [
+        'model/mtd-common.h',
+        'model/mtd-event-bus.h',
+        'model/mtd-detector.h',
+        'model/mtd-score-manager.h',
+        'model/mtd-domain-manager.h',
+        'model/mtd-shuffle-controller.h',
+        'model/mtd-attack-generator.h',
+        'model/mtd-export-api.h',
+        'helper/mtd-network-helper.h',
+    ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()

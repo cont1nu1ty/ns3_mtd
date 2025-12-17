@@ -1,0 +1,11 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+#
+# MTD-Benchmark: Examples build script
+#
+
+def build(bld):
+    obj = bld.create_ns3_program('mtd-benchmark-example', ['mtd-benchmark'])
+    obj.source = 'mtd-benchmark-example.cc'
+
+    obj = bld.create_ns3_program('mtd-basic-simulation', ['mtd-benchmark'])
+    obj.source = 'mtd-basic-simulation.cc'

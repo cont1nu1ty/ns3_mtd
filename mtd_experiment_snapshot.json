@@ -1,0 +1,50 @@
+{
+  "experimentId": "mtd_example_001",
+  "timestamp": 60000,
+  "randomSeed": 42,
+  "simulationDuration": 60.000,
+  "configuration": {
+    "numClients": 50,
+    "numProxies": 5,
+    "numDomains": 3,
+    "numAttackers": 1,
+    "defaultStrategy": 2,
+    "defaultShuffleFrequency": 10.000
+  },
+  "domains": [
+    {
+      "domainId": 1,
+      "name": "Domain_0",
+      "userCount": 17,
+      "proxyCount": 2,
+      "loadFactor": 0.000,
+      "shuffleFrequency": 10.000
+    },
+    {
+      "domainId": 2,
+      "name": "Domain_1",
+      "userCount": 17,
+      "proxyCount": 2,
+      "loadFactor": 0.000,
+      "shuffleFrequency": 10.000
+    },
+    {
+      "domainId": 3,
+      "name": "Domain_2",
+      "userCount": 16,
+      "proxyCount": 1,
+      "loadFactor": 0.000,
+      "shuffleFrequency": 10.000
+    }
+  ],
+  "performance": {
+    "attackBytes": 30720000.000,
+    "attackPackets": 60000.000,
+    "avgLatency": 0.000,
+    "recordCount": 33.000,
+    "shuffleSuccessRate": 1.000,
+    "totalBytes": 0.000,
+    "totalPackets": 0.000,
+    "totalShuffles": 12.000
+  }
+}
