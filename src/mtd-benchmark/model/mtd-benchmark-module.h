@@ -15,33 +15,38 @@
  * - Attack Generator (dynamic attack simulation)
  * - Export API (metrics and logging)
  * - Event Bus (inter-module communication)
+ * - Python Interface (external algorithm integration)
  */
 
 #ifndef MTD_BENCHMARK_MODULE_H
 #define MTD_BENCHMARK_MODULE_H
 
 // Core types and enums
-#include "model/mtd-common.h"
+#include "mtd-common.h"
 
 // Event bus for inter-module communication
-#include "model/mtd-event-bus.h"
+#include "mtd-event-bus.h"
 
 // Detection layer
-#include "model/mtd-detector.h"
+#include "mtd-detector.h"
 
 // Score manager
-#include "model/mtd-score-manager.h"
+#include "mtd-score-manager.h"
 
 // Domain manager
-#include "model/mtd-domain-manager.h"
+#include "mtd-domain-manager.h"
 
 // Shuffle controller
-#include "model/mtd-shuffle-controller.h"
+#include "mtd-shuffle-controller.h"
 
 // Attack generator
-#include "model/mtd-attack-generator.h"
+#include "mtd-attack-generator.h"
 
 // Export API
-#include "model/mtd-export-api.h"
+#include "mtd-export-api.h"
+
+// Python Interface for external algorithm integration
+#include "mtd-python-interface.h"
 
 #endif // MTD_BENCHMARK_MODULE_H
+

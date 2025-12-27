@@ -15,12 +15,14 @@ set(source_files
     model/mtd-shuffle-controller.cc
     model/mtd-attack-generator.cc
     model/mtd-export-api.cc
+    model/mtd-python-interface.cc
     helper/mtd-network-helper.cc
 )
 
 # Set header files (for installation)
 set(header_files
     model/mtd-common.h
+    model/mtd-benchmark-module.h
     model/mtd-event-bus.h
     model/mtd-detector.h
     model/mtd-score-manager.h
@@ -28,6 +30,7 @@ set(header_files
     model/mtd-shuffle-controller.h
     model/mtd-attack-generator.h
     model/mtd-export-api.h
+    model/mtd-python-interface.h
     helper/mtd-network-helper.h
 )
 
@@ -53,3 +56,43 @@ build_lib(
     LIBRARIES_TO_LINK ${libraries_to_link}
     TEST_SOURCES ${test_sources}
 )
+
+# ==================== Python Bindings (Pybind11) ====================
+
+# Find Python and pybind11
+find_package(Python3 COMPONENTS Interpreter Development QUIET)
+find_package(pybind11 QUIET)
+
+if(Python3_FOUND AND pybind11_FOUND)
+    message(STATUS "Building MTD-Benchmark Python bindings")
+    
+    # Create Python module
+    pybind11_add_module(mtd_benchmark
+        bindings/mtd-benchmark-bindings.cc
+    )
+    
+    # Link with the main module library
+    target_link_libraries(mtd_benchmark PRIVATE
+        ${lib${module_name}}
+        ${libcore}
+        ${libnetwork}
+    )
+    
+    # Set output directory
+    set_target_properties(mtd_benchmark PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/python"
+    )
+    
+    # Install Python module
+    install(TARGETS mtd_benchmark
+        LIBRARY DESTINATION lib/python
+        COMPONENT python
+    )
+    
+else()
+    message(STATUS "Python3 or pybind11 not found, skipping Python bindings")
+    message(STATUS "  To enable Python bindings, install pybind11:")
+    message(STATUS "    pip install pybind11")
+    message(STATUS "    # or on Ubuntu/Debian:")
+    message(STATUS "    sudo apt install pybind11-dev python3-pybind11")
+endif()

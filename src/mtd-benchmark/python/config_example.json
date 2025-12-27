@@ -1,0 +1,61 @@
+{
+    "algorithm": {
+        "name": "MultiLevelDefense",
+        "shuffle_threshold": 0.6,
+        "base_frequency": 30.0,
+        "min_frequency": 5.0,
+        "max_frequency": 120.0,
+        "isolation_threshold": "HIGH",
+        "evaluation_interval": 5.0,
+        "max_decisions_per_eval": 10
+    },
+    "scorer": {
+        "type": "exponential_ma",
+        "alpha": 0.3,
+        "weights": {
+            "rate_anomaly": 0.5,
+            "pattern_anomaly": 0.3,
+            "persistence_factor": 0.2
+        }
+    },
+    "classifier": {
+        "type": "tiered",
+        "thresholds": {
+            "low_max": 0.25,
+            "medium_max": 0.50,
+            "high_max": 0.75
+        },
+        "vip_users": []
+    },
+    "strategy": {
+        "type": "risk_aware_isolation",
+        "isolation_ratio": 0.2
+    },
+    "detection": {
+        "packet_rate_threshold": 10000.0,
+        "byte_rate_threshold": 10000000.0,
+        "connection_threshold": 1000.0,
+        "anomaly_score_threshold": 0.7
+    },
+    "domain": {
+        "split_threshold": 0.8,
+        "merge_threshold": 0.2,
+        "min_proxies": 2,
+        "max_proxies": 20,
+        "min_users": 10,
+        "max_users": 500
+    },
+    "experiment": {
+        "experiment_id": "mtd_test_001",
+        "random_seed": 42,
+        "simulation_duration": 300.0,
+        "num_clients": 100,
+        "num_proxies": 10,
+        "num_domains": 3,
+        "num_attackers": 2
+    },
+    "logging": {
+        "level": "INFO",
+        "output_file": "defense_algorithm.log"
+    }
+}
