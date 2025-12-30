@@ -482,15 +482,15 @@ public:
 };
 
 MtdBenchmarkTestSuite::MtdBenchmarkTestSuite()
-    : TestSuite("mtd-benchmark", UNIT)
+    : TestSuite("mtd-benchmark", Type::UNIT)
 {
-    AddTestCase(new EventBusTestCase, TestCase::QUICK);
-    AddTestCase(new ScoreManagerTestCase, TestCase::QUICK);
-    AddTestCase(new DomainManagerTestCase, TestCase::QUICK);
-    AddTestCase(new ShuffleControllerTestCase, TestCase::QUICK);
-    AddTestCase(new LocalDetectorTestCase, TestCase::QUICK);
-    AddTestCase(new AttackGeneratorTestCase, TestCase::QUICK);
-    AddTestCase(new MtdEndToEndTestCase, TestCase::QUICK);
+    AddTestCase(new EventBusTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new ScoreManagerTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new DomainManagerTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new ShuffleControllerTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new LocalDetectorTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new AttackGeneratorTestCase, TestCase::Duration::QUICK);
+    AddTestCase(new MtdEndToEndTestCase, TestCase::Duration::QUICK);
 }
 
 static MtdBenchmarkTestSuite sMtdBenchmarkTestSuite;

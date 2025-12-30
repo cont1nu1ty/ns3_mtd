@@ -624,39 +624,28 @@ PythonAlgorithmBridge::ApplyCallbacksToComponents()
     if (m_hasScoreCalculator && m_scoreManager)
     {
         m_scoreManager->SetCustomScoreCallback(
-            MakeCallback([this](uint32_t userId, const DetectionObservation& obs, 
-                               double currentScore) -> double {
-                return m_scoreCalculator(userId, obs, currentScore);
-            }));
+            MakeCallback(&PythonAlgorithmBridge::WrapScoreCalculator, this));
     }
     
     // Apply risk classifier to ScoreManager
     if (m_hasRiskClassifier && m_scoreManager)
     {
         m_scoreManager->SetCustomRiskLevelCallback(
-            MakeCallback([this](uint32_t userId, double score) -> RiskLevel {
-                return m_riskClassifier(userId, score);
-            }));
+            MakeCallback(&PythonAlgorithmBridge::WrapRiskClassifier, this));
     }
     
     // Apply shuffle strategy to ShuffleController
     if (m_hasShuffleStrategy && m_shuffleController)
     {
         m_shuffleController->SetCustomStrategy(
-            MakeCallback([this](uint32_t userId, const std::vector<uint32_t>& proxies,
-                               const UserScore& score) -> uint32_t {
-                return m_shuffleStrategy(userId, proxies, score);
-            }));
+            MakeCallback(&PythonAlgorithmBridge::WrapShuffleStrategy, this));
     }
     
     // Apply domain assigner to DomainManager
     if (m_hasDomainAssigner && m_domainManager)
     {
         m_domainManager->SetCustomStrategy(
-            MakeCallback([this](uint32_t userId, 
-                               const std::map<uint32_t, Domain>& domains) -> uint32_t {
-                return m_domainAssigner(userId, domains);
-            }));
+            MakeCallback(&PythonAlgorithmBridge::WrapDomainAssigner, this));
     }
 }
 
@@ -673,6 +662,55 @@ PythonAlgorithmBridge::RecordDecision(const DefenseDecision& decision, bool succ
         m_decisionHistory.erase(m_decisionHistory.begin(), 
                                  m_decisionHistory.begin() + maxHistory / 2);
     }
+}
+
+// Callback wrapper implementations for NS-3 MakeCallback compatibility
+double
+PythonAlgorithmBridge::WrapScoreCalculator(uint32_t userId, const DetectionObservation& obs, double currentScore)
+{
+    if (m_hasScoreCalculator && m_scoreCalculator)
+    {
+        return m_scoreCalculator(userId, obs, currentScore);
+    }
+    return currentScore;
+}
+
+RiskLevel
+PythonAlgorithmBridge::WrapRiskClassifier(uint32_t userId, double score)
+{
+    if (m_hasRiskClassifier && m_riskClassifier)
+    {
+        return m_riskClassifier(userId, score);
+    }
+    // Default classification
+    if (score > 0.85) return RiskLevel::CRITICAL;
+    if (score > 0.60) return RiskLevel::HIGH;
+    if (score > 0.30) return RiskLevel::MEDIUM;
+    return RiskLevel::LOW;
+}
+
+uint32_t
+PythonAlgorithmBridge::WrapShuffleStrategy(uint32_t userId, const std::vector<uint32_t>& proxies, const UserScore& score)
+{
+    if (m_hasShuffleStrategy && m_shuffleStrategy)
+    {
+        return m_shuffleStrategy(userId, proxies, score);
+    }
+    // Default: random selection
+    if (proxies.empty()) return 0;
+    return proxies[userId % proxies.size()];
+}
+
+uint32_t
+PythonAlgorithmBridge::WrapDomainAssigner(uint32_t userId, const std::map<uint32_t, Domain>& domains)
+{
+    if (m_hasDomainAssigner && m_domainAssigner)
+    {
+        return m_domainAssigner(userId, domains);
+    }
+    // Default: first domain
+    if (domains.empty()) return 0;
+    return domains.begin()->first;
 }
 
 // ==================== SimulationContext ====================

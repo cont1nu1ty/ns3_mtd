@@ -22,7 +22,6 @@ set(source_files
 # Set header files (for installation)
 set(header_files
     model/mtd-common.h
-    model/mtd-benchmark-module.h
     model/mtd-event-bus.h
     model/mtd-detector.h
     model/mtd-score-manager.h

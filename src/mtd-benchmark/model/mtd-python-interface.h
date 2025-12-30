@@ -440,6 +440,12 @@ private:
     void PerformEvaluation();
     void ApplyCallbacksToComponents();
     void RecordDecision(const DefenseDecision& decision, bool success);
+    
+    // Callback wrapper methods for NS-3 MakeCallback compatibility
+    double WrapScoreCalculator(uint32_t userId, const DetectionObservation& obs, double currentScore);
+    RiskLevel WrapRiskClassifier(uint32_t userId, double score);
+    uint32_t WrapShuffleStrategy(uint32_t userId, const std::vector<uint32_t>& proxies, const UserScore& score);
+    uint32_t WrapDomainAssigner(uint32_t userId, const std::map<uint32_t, Domain>& domains);
 };
 
 /**
