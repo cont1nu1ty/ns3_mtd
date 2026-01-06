@@ -1,12 +1,11 @@
-build_lib_example(
-  NAME mtd-benchmark-example
-  SOURCE_FILES mtd-benchmark-example.cc
-  LIBRARIES_TO_LINK ${libmtd-benchmark}
-)
+# MTD-Benchmark Examples
+#
+# 1. mtd-full-defense-test: Complete DDoS attack-defense demonstration
+# 2. mtd-python-integration: Python external algorithm integration example
 
 build_lib_example(
-  NAME mtd-basic-simulation
-  SOURCE_FILES mtd-basic-simulation.cc
+  NAME mtd-full-defense-test
+  SOURCE_FILES mtd-full-defense-test.cc
   LIBRARIES_TO_LINK ${libmtd-benchmark}
 )
 

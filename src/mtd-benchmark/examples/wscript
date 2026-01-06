@@ -2,10 +2,14 @@
 #
 # MTD-Benchmark: Examples build script
 #
+# Examples:
+# 1. mtd-full-defense-test: Complete DDoS attack-defense demonstration
+# 2. mtd-python-integration: Python external algorithm integration example
+#
 
 def build(bld):
-    obj = bld.create_ns3_program('mtd-benchmark-example', ['mtd-benchmark'])
-    obj.source = 'mtd-benchmark-example.cc'
+    obj = bld.create_ns3_program('mtd-full-defense-test', ['mtd-benchmark'])
+    obj.source = 'mtd-full-defense-test.cc'
 
-    obj = bld.create_ns3_program('mtd-basic-simulation', ['mtd-benchmark'])
-    obj.source = 'mtd-basic-simulation.cc'
+    obj = bld.create_ns3_program('mtd-python-integration', ['mtd-benchmark'])
+    obj.source = 'mtd-python-integration.cc'

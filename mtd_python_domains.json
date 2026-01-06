@@ -1,0 +1,41 @@
+{
+  "timestamp": 60000,
+  "domains": [
+    {
+      "domainId": 1,
+      "name": "Domain_0",
+      "users": [103, 106, 109, 112, 115, 118, 121, 124, 127],
+      "proxies": [1, 4],
+      "metrics": {
+        "throughput": 0.000,
+        "avgLatency": 0.000,
+        "activeConnections": 0,
+        "loadFactor": 0.000
+      }
+    },
+    {
+      "domainId": 2,
+      "name": "Domain_1",
+      "users": [101, 104, 107, 110, 113, 116, 119, 122, 125, 128, 100],
+      "proxies": [2, 5],
+      "metrics": {
+        "throughput": 0.000,
+        "avgLatency": 0.000,
+        "activeConnections": 0,
+        "loadFactor": 0.000
+      }
+    },
+    {
+      "domainId": 3,
+      "name": "Domain_2",
+      "users": [102, 105, 108, 111, 114, 117, 120, 123, 126, 129],
+      "proxies": [3, 6],
+      "metrics": {
+        "throughput": 0.000,
+        "avgLatency": 0.000,
+        "activeConnections": 0,
+        "loadFactor": 0.000
+      }
+    }
+  ]
+}

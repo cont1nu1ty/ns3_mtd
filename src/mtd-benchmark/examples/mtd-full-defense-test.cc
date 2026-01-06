@@ -1,30 +1,30 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * MTD-Benchmark: Python Algorithm Integration
+ * MTD-Benchmark: Full Defense Test
  * 
- * This example runs the SAME simulation as mtd-full-defense-test.cc,
- * but uses Python callbacks for the defense algorithm:
+ * This is a comprehensive end-to-end test that demonstrates
+ * a complete attack-defense cycle with all MTD components:
  * 
- * - Score calculation -> Python ScoreCalculator
- * - Risk classification -> Python RiskClassifier  
- * - Shuffle strategy -> Python ShuffleStrategy
- * - Defense evaluation -> Python DefenseAlgorithm.evaluate()
- *
- * Usage:
- *   ./ns3 run "mtd-python-integration --algorithm=my_defense.py"
+ * 1. Attack Detection (LocalDetector, CrossAgentDetector, GlobalDetector)
+ * 2. Risk Scoring and Classification (ScoreManager)
+ * 3. Domain Management (DomainManager - split/merge/migrate)
+ * 4. Shuffle Operations (ShuffleController - multiple strategies)
+ * 5. Adaptive Attack Response (AttackGenerator)
+ * 6. Event-driven Architecture (EventBus)
+ * 7. Metrics Export (ExportApi)
  */
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/mtd-benchmark-module.h"
-#include "ns3/mtd-python-interface.h"
+#include "ns3/mtd-network-helper.h"
 #include "ns3/mtd-export-api.h"
 
 using namespace ns3;
 using namespace ns3::mtd;
 
-NS_LOG_COMPONENT_DEFINE("MtdPythonIntegration");
+NS_LOG_COMPONENT_DEFINE("MtdFullDefenseTest");
 
 // ==================== Global Statistics ====================
 
@@ -32,12 +32,14 @@ struct TestStatistics {
     uint32_t attacksDetected = 0;
     uint32_t shufflesTriggered = 0;
     uint32_t usersMigrated = 0;
-    uint32_t pythonDecisions = 0;
+    uint32_t domainsSplit = 0;
+    uint32_t domainsMerged = 0;
+    uint32_t attackAdaptations = 0;
+    double totalDefenseLatency = 0.0;
     std::vector<double> riskScoreHistory;
 };
 
 static TestStatistics g_stats;
-static Ptr<PythonAlgorithmBridge> g_bridge;
 
 // ==================== Event Handlers ====================
 
@@ -80,8 +82,6 @@ void OnAttackDetected(Ptr<ScoreManager> scoreManager,
         obs.patternAnomaly = 0.6;
         obs.persistenceFactor = 0.5;
         obs.confidence = 0.85;
-        
-        // Score update - will go through Python callback if registered
         scoreManager->UpdateScore(userId, obs);
         
         RiskLevel level = scoreManager->GetRiskLevel(userId);
@@ -91,30 +91,25 @@ void OnAttackDetected(Ptr<ScoreManager> scoreManager,
         NS_LOG_INFO("  User " << userId << " score updated: " << score 
                     << " (Risk: " << static_cast<int>(level) << ")");
         
-        // If high risk, trigger shuffle (same behavior as C++ version)
+        // If high risk, trigger shuffle
         if (level >= RiskLevel::HIGH) {
             NS_LOG_INFO("  -> HIGH RISK: Triggering shuffle for domain " << domainId);
             shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN);
             g_stats.shufflesTriggered++;
         }
     }
-    
-    // Note: Python evaluation disabled here for consistency with C++ version
-    // To enable Python algorithm decisions on attack detection, uncomment:
-    // if (g_bridge) {
-    //     uint32_t decisionCount = g_bridge->TriggerEvaluation();
-    //     g_stats.pythonDecisions += decisionCount;
-    //     if (decisionCount > 0) {
-    //         NS_LOG_INFO("  Python algorithm made " << decisionCount << " decisions");
-    //     }
-    // }
 }
 
 void OnShuffleCompleted(const MtdEvent& event)
 {
-    g_stats.shufflesTriggered++;
     NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] SHUFFLE COMPLETED for domain " 
                 << event.sourceNodeId);
+    
+    // Check if usersAffected is in metadata
+    auto it = event.metadata.find("usersAffected");
+    if (it != event.metadata.end()) {
+        NS_LOG_INFO("  Users affected: " << it->second);
+    }
 }
 
 void OnUserMigrated(const MtdEvent& event)
@@ -131,6 +126,7 @@ void OnUserMigrated(const MtdEvent& event)
 
 void OnDomainSplit(const MtdEvent& event)
 {
+    g_stats.domainsSplit++;
     NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] DOMAIN SPLIT: Domain " 
                 << event.sourceNodeId);
     
@@ -142,6 +138,7 @@ void OnDomainSplit(const MtdEvent& event)
 
 void OnDomainMerge(const MtdEvent& event)
 {
+    g_stats.domainsMerged++;
     NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] DOMAIN MERGE event");
 }
 
@@ -173,7 +170,7 @@ void SimulateNormalTraffic(Ptr<LocalDetector> detector,
         
         DetectionObservation obs = detector->Analyze(proxyId);
         NS_LOG_INFO("Proxy " << proxyId << " - Normal traffic: anomaly=" 
-                    << obs.patternAnomaly);
+                    << obs.patternAnomaly << ", confidence=" << obs.confidence);
     }
 }
 
@@ -184,6 +181,7 @@ void SimulateAttackTraffic(Ptr<LocalDetector> detector,
     NS_LOG_INFO("\n========== PHASE 2: Attack Traffic ==========");
     NS_LOG_INFO("Attacking proxy " << targetProxyId);
     
+    // Simulate increasing attack intensity
     for (int intensity = 1; intensity <= 5; intensity++) {
         TrafficStats stats;
         stats.packetRate = 10000.0 * intensity;
@@ -193,12 +191,15 @@ void SimulateAttackTraffic(Ptr<LocalDetector> detector,
         detector->UpdateStats(targetProxyId, stats);
         
         DetectionObservation obs = detector->Analyze(targetProxyId);
-        NS_LOG_INFO("  Attack intensity " << intensity << ": anomaly=" << obs.patternAnomaly);
+        NS_LOG_INFO("  Attack intensity " << intensity << ": packetRate=" 
+                    << stats.packetRate << ", anomaly=" << obs.patternAnomaly);
         
+        // If anomaly detected, publish event
         if (obs.patternAnomaly > 0.7) {
             MtdEvent event(EventType::ATTACK_DETECTED, Simulator::Now().GetNanoSeconds());
             event.sourceNodeId = targetProxyId;
             event.metadata["anomalyScore"] = std::to_string(obs.patternAnomaly);
+            event.metadata["packetRate"] = std::to_string(stats.packetRate);
             eventBus->Publish(event);
         }
     }
@@ -307,113 +308,31 @@ void TestAdaptiveAttacker(Ptr<AttackGenerator> attackGenerator,
     attackGenerator->Stop();
 }
 
-// ==================== Python Callback Defaults ====================
-// These are used when Python callbacks are not registered
-
-double DefaultScoreCalculator(uint32_t userId, const DetectionObservation& obs, double current)
-{
-    // Simple weighted average (can be replaced by Python)
-    double alpha = 0.3;
-    double obsScore = 0.5 * obs.rateAnomaly + 0.3 * obs.patternAnomaly + 0.2 * obs.persistenceFactor;
-    return alpha * obsScore + (1 - alpha) * current;
-}
-
-RiskLevel DefaultRiskClassifier(uint32_t userId, double score)
-{
-    if (score > 0.8) return RiskLevel::CRITICAL;
-    if (score > 0.6) return RiskLevel::HIGH;
-    if (score > 0.3) return RiskLevel::MEDIUM;
-    return RiskLevel::LOW;
-}
-
-uint32_t DefaultShuffleStrategy(uint32_t userId, const std::vector<uint32_t>& proxies, const UserScore& score)
-{
-    if (proxies.empty()) return 0;
-    
-    // High-risk users to last proxy (isolation)
-    if (score.riskLevel >= RiskLevel::HIGH) {
-        return proxies.back();
-    }
-    return proxies[userId % proxies.size()];
-}
-
-std::vector<DefenseDecision> DefaultDefenseEvaluator(const SimulationState& state)
-{
-    std::vector<DefenseDecision> decisions;
-    
-    for (const auto& [domainId, domain] : state.domains) {
-        double avgScore = 0.0;
-        for (uint32_t userId : domain.userIds) {
-            auto it = state.userScores.find(userId);
-            if (it != state.userScores.end()) {
-                avgScore += it->second.currentScore;
-            }
-        }
-        if (!domain.userIds.empty()) {
-            avgScore /= domain.userIds.size();
-        }
-        
-        // Trigger shuffle if average score > 0.6
-        if (avgScore > 0.6) {
-            DefenseDecision decision;
-            decision.action = DefenseDecision::ActionType::TRIGGER_SHUFFLE;
-            decision.targetDomainId = domainId;
-            decision.shuffleMode = ShuffleMode::SCORE_DRIVEN;
-            decision.reason = "High average risk (default evaluator)";
-            decisions.push_back(decision);
-        }
-    }
-    
-    return decisions;
-}
-
-// ==================== Periodic Evaluation Callback ====================
-
-void PeriodicPythonEvaluation()
-{
-    if (g_bridge) {
-        uint32_t decisions = g_bridge->TriggerEvaluation();
-        if (decisions > 0) {
-            NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() 
-                        << "s] Python evaluation: " << decisions << " decisions");
-            g_stats.pythonDecisions += decisions;
-        }
-    }
-}
-
 // ==================== Main Function ====================
 
 int main(int argc, char *argv[])
 {
-    LogComponentEnable("MtdPythonIntegration", LOG_LEVEL_INFO);
+    // Enable logging
+    LogComponentEnable("MtdFullDefenseTest", LOG_LEVEL_INFO);
     
-    // Parameters (same as mtd-full-defense-test)
+    // Parameters
     uint32_t numClients = 30;
     uint32_t numProxies = 6;
     uint32_t numDomains = 3;
     double simulationTime = 60.0;
-    std::string algorithmPath = "";  // Python algorithm file
-    std::string configPath = "";      // Config JSON file
     
     CommandLine cmd;
     cmd.AddValue("clients", "Number of clients", numClients);
     cmd.AddValue("proxies", "Number of proxies", numProxies);
     cmd.AddValue("domains", "Number of domains", numDomains);
     cmd.AddValue("time", "Simulation time", simulationTime);
-    cmd.AddValue("algorithm", "Path to Python defense algorithm", algorithmPath);
-    cmd.AddValue("config", "Path to config.json", configPath);
     cmd.Parse(argc, argv);
     
     NS_LOG_INFO("╔══════════════════════════════════════════════════════════════╗");
-    NS_LOG_INFO("║         MTD-BENCHMARK PYTHON INTEGRATION TEST                ║");
+    NS_LOG_INFO("║           MTD-BENCHMARK FULL DEFENSE TEST                    ║");
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     NS_LOG_INFO("║ Clients: " << numClients << "  Proxies: " << numProxies 
                 << "  Domains: " << numDomains << "  Time: " << simulationTime << "s");
-    if (!algorithmPath.empty()) {
-        NS_LOG_INFO("║ Python Algorithm: " << algorithmPath);
-    } else {
-        NS_LOG_INFO("║ Python Algorithm: (using default C++ callbacks)");
-    }
     NS_LOG_INFO("╚══════════════════════════════════════════════════════════════╝\n");
     
     // ==================== Create Components ====================
@@ -427,7 +346,7 @@ int main(int argc, char *argv[])
     Ptr<ScoreManager> scoreManager = CreateObject<ScoreManager>();
     scoreManager->SetEventBus(eventBus);
     
-    // Configure scoring weights (same as mtd-full-defense-test)
+    // Configure scoring weights
     ScoreWeights weights;
     weights.alpha = 0.4;  // rate weight
     weights.beta = 0.3;   // anomaly weight
@@ -440,7 +359,7 @@ int main(int argc, char *argv[])
     shuffleController->SetScoreManager(scoreManager);
     shuffleController->SetEventBus(eventBus);
     
-    // Configure shuffle (same as mtd-full-defense-test)
+    // Configure shuffle
     ShuffleConfig shuffleConfig;
     shuffleConfig.baseFrequency = 10.0;
     shuffleConfig.minFrequency = 3.0;
@@ -448,6 +367,7 @@ int main(int argc, char *argv[])
     shuffleConfig.sessionAffinity = true;
     shuffleController->SetConfig(shuffleConfig);
     
+    // Create detectors
     Ptr<LocalDetector> localDetector = CreateObject<LocalDetector>();
     Ptr<CrossAgentDetector> crossAgentDetector = CreateObject<CrossAgentDetector>();
     Ptr<GlobalDetector> globalDetector = CreateObject<GlobalDetector>();
@@ -473,46 +393,13 @@ int main(int argc, char *argv[])
     
     // Configure experiment
     ExperimentConfig experimentConfig;
-    experimentConfig.experimentId = "mtd_python_integration";
+    experimentConfig.experimentId = "mtd_full_defense_test";
     experimentConfig.randomSeed = 42;
     experimentConfig.simulationDuration = simulationTime;
     experimentConfig.numClients = numClients;
     experimentConfig.numProxies = numProxies;
     experimentConfig.numDomains = numDomains;
     exportApi->SetExperimentConfig(experimentConfig);
-    
-    // ==================== Setup Python Bridge ====================
-    
-    g_bridge = CreateObject<PythonAlgorithmBridge>();
-    g_bridge->SetDomainManager(domainManager);
-    g_bridge->SetScoreManager(scoreManager);
-    g_bridge->SetShuffleController(shuffleController);
-    g_bridge->SetEventBus(eventBus);
-    g_bridge->SetLocalDetector(localDetector);
-    
-    // Configure bridge
-    PythonAlgorithmConfig bridgeConfig;
-    bridgeConfig.algorithmName = algorithmPath.empty() ? "DefaultAlgorithm" : algorithmPath;
-    bridgeConfig.evaluationInterval = 5.0;
-    bridgeConfig.maxDecisionsPerEval = 10;
-    g_bridge->SetConfig(bridgeConfig);
-    
-    // Only register custom callbacks if Python algorithm is specified
-    // Otherwise, use ScoreManager's native scoring logic for consistency with C++ version
-    if (!algorithmPath.empty()) {
-        NS_LOG_INFO("Using custom Python callbacks from: " << algorithmPath);
-        // These would be replaced by actual Python callbacks when loaded
-        g_bridge->RegisterScoreCalculator(DefaultScoreCalculator);
-        g_bridge->RegisterRiskClassifier(DefaultRiskClassifier);
-        g_bridge->RegisterShuffleStrategy(DefaultShuffleStrategy);
-        g_bridge->RegisterDefenseEvaluator(DefaultDefenseEvaluator);
-    } else {
-        NS_LOG_INFO("Using native ScoreManager scoring (no custom callbacks)");
-        // Only register the defense evaluator for periodic evaluation
-        g_bridge->RegisterDefenseEvaluator(DefaultDefenseEvaluator);
-    }
-    
-    NS_LOG_INFO("Python Algorithm Bridge configured");
     
     // ==================== Subscribe to Events ====================
     
@@ -541,16 +428,19 @@ int main(int argc, char *argv[])
     std::vector<uint32_t> domainIds;
     std::vector<uint32_t> proxyIds;
     
+    // Create proxies
     for (uint32_t p = 0; p < numProxies; p++) {
-        proxyIds.push_back(p + 1);
+        proxyIds.push_back(p + 1);  // Proxy IDs start from 1
     }
     
+    // Create domains
     for (uint32_t d = 0; d < numDomains; d++) {
         std::ostringstream name;
         name << "Domain_" << d;
         uint32_t domainId = domainManager->CreateDomain(name.str());
         domainIds.push_back(domainId);
         
+        // Assign proxies (round-robin)
         for (uint32_t p = d; p < numProxies; p += numDomains) {
             domainManager->AddProxy(domainId, proxyIds[p]);
         }
@@ -558,10 +448,12 @@ int main(int argc, char *argv[])
         NS_LOG_INFO("Created " << name.str() << " (ID: " << domainId << ")");
     }
     
+    // Assign users
     for (uint32_t u = 0; u < numClients; u++) {
         uint32_t domainIdx = u % numDomains;
-        domainManager->AddUser(domainIds[domainIdx], u + 100);
+        domainManager->AddUser(domainIds[domainIdx], u + 100);  // User IDs start from 100
         
+        // Initial proxy assignment
         Domain info = domainManager->GetDomainInfo(domainIds[domainIdx]);
         if (!info.proxyIds.empty()) {
             uint32_t proxyId = info.proxyIds[u % info.proxyIds.size()];
@@ -571,7 +463,7 @@ int main(int argc, char *argv[])
     
     NS_LOG_INFO("Assigned " << numClients << " users to " << numDomains << " domains");
     
-    // Add attack targets (same as mtd-full-defense-test)
+    // Add attack targets
     for (uint32_t proxyId : proxyIds) {
         attackGenerator->AddTarget(proxyId);
     }
@@ -602,14 +494,7 @@ int main(int argc, char *argv[])
             &ShuffleController::StartPeriodicShuffle, shuffleController, domainId);
     }
     
-    // Schedule periodic Python evaluation (disabled for consistency with C++ version)
-    // Uncomment to enable Python algorithm periodic evaluation
-    // for (double t = 10.0; t < simulationTime; t += 5.0) {
-    //     Simulator::Schedule(Seconds(t), &PeriodicPythonEvaluation);
-    // }
-    
-    // Schedule attack (targets already added before phases)
-    // Configure attack parameters (same as C++ full-defense-test)
+    // Schedule attack
     AttackParams attackParams;
     attackParams.type = AttackType::UDP_FLOOD;
     attackParams.rate = 15000.0;
@@ -634,23 +519,26 @@ int main(int argc, char *argv[])
     
     NS_LOG_INFO("\n========== EXPORTING RESULTS ==========");
     
-    exportApi->ExportExperimentSnapshot("mtd_python_snapshot.json");
-    exportApi->ExportDomainState("mtd_python_domains.json");
-    exportApi->ExportShuffleEvents("mtd_python_shuffles.csv");
-    exportApi->ExportAttackEvents("mtd_python_attacks.csv");
-    exportApi->ExportEventHistory("mtd_python_events.json");
+    exportApi->ExportExperimentSnapshot("mtd_full_test_snapshot.json");
+    exportApi->ExportDomainState("mtd_full_test_domains.json");
+    exportApi->ExportShuffleEvents("mtd_full_test_shuffles.csv");
+    exportApi->ExportAttackEvents("mtd_full_test_attacks.csv");
+    exportApi->ExportEventHistory("mtd_full_test_events.json");
     
     // ==================== Print Summary ====================
     
     NS_LOG_INFO("\n╔══════════════════════════════════════════════════════════════╗");
-    NS_LOG_INFO("║               PYTHON INTEGRATION TEST RESULTS                ║");
+    NS_LOG_INFO("║                    TEST RESULTS SUMMARY                       ║");
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     NS_LOG_INFO("║ Attacks Detected:     " << g_stats.attacksDetected);
     NS_LOG_INFO("║ Shuffles Triggered:   " << g_stats.shufflesTriggered);
     NS_LOG_INFO("║ Users Migrated:       " << g_stats.usersMigrated);
-    NS_LOG_INFO("║ Python Decisions:     " << g_stats.pythonDecisions);
+    NS_LOG_INFO("║ Domains Split:        " << g_stats.domainsSplit);
+    NS_LOG_INFO("║ Domains Merged:       " << g_stats.domainsMerged);
+    NS_LOG_INFO("║ Attack Adaptations:   " << g_stats.attackAdaptations);
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     
+    // Calculate average risk score
     double avgRiskScore = 0.0;
     if (!g_stats.riskScoreHistory.empty()) {
         for (double score : g_stats.riskScoreHistory) {
@@ -660,17 +548,20 @@ int main(int argc, char *argv[])
     }
     NS_LOG_INFO("║ Average Risk Score:   " << avgRiskScore);
     
+    // Shuffle controller stats
     auto shuffleStats = shuffleController->GetShuffleStats();
     NS_LOG_INFO("║ Total Shuffles:       " << shuffleStats["totalShuffles"]);
+    NS_LOG_INFO("║ Shuffle Success Rate: " << shuffleStats["successRate"]);
     
-    auto bridgeStats = g_bridge->GetStatistics();
-    NS_LOG_INFO("║ Bridge Evaluations:   " << bridgeStats["totalEvaluations"]);
-    NS_LOG_INFO("║ Bridge Success Rate:  " << bridgeStats["successRate"]);
+    // Attack stats
+    auto attackStats = attackGenerator->GetStatistics();
+    NS_LOG_INFO("║ Attack Packets:       " << attackStats["packetCount"]);
     
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
-    NS_LOG_INFO("║ Results exported to: mtd_python_*.csv/json                   ║");
+    NS_LOG_INFO("║ Results exported to: mtd_full_test_*.csv/json                ║");
     NS_LOG_INFO("╚══════════════════════════════════════════════════════════════╝");
     
+    // Cleanup
     Simulator::Destroy();
     
     return 0;

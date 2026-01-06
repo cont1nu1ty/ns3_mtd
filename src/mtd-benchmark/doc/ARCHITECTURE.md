@@ -1,579 +1,385 @@
-# MTD-Benchmark Architecture Documentation
+# MTD-Benchmark 架构设计文档
 
-## Overview
-
-MTD-Benchmark is an NS-3 module that provides a standardized, extensible platform for evaluating DDoS defense algorithms using proxy-switching Moving Target Defense (MTD) strategies. This document describes the project structure, component responsibilities, customization options, and how to configure and run defense algorithms.
-
-## Table of Contents
-
-1. [Project Structure](#project-structure)
-2. [Component Overview](#component-overview)
-3. [File Descriptions](#file-descriptions)
-4. [Data Flow Architecture](#data-flow-architecture)
-5. [User Customization Guide](#user-customization-guide)
-6. [Configuration Reference](#configuration-reference)
-7. [Running Simulations](#running-simulations)
-8. [Integration Guide](#integration-guide)
+本文档面向需要理解内部机制、进行二次开发或贡献代码的开发者。
 
 ---
 
-## Project Structure
+## 1. 整体架构
+
+### 1.1 系统分层
 
 ```
-src/mtd-benchmark/
-├── model/                          # Core component implementations
-│   ├── mtd-common.h                # Common types, enums, and data structures
-│   ├── mtd-benchmark-module.h      # Main module header (includes all components)
-│   ├── mtd-event-bus.h/cc          # Event bus for inter-module communication
-│   ├── mtd-detector.h/cc           # Attack detection layer (3 levels)
-│   ├── mtd-score-manager.h/cc      # User risk scoring and classification
-│   ├── mtd-domain-manager.h/cc     # Logical domain management
-│   ├── mtd-shuffle-controller.h/cc # MTD proxy switching controller
-│   ├── mtd-attack-generator.h/cc   # Attack traffic simulation
-│   └── mtd-export-api.h/cc         # Data export for analysis
-├── helper/                         # Simulation setup helpers
-│   └── mtd-network-helper.h/cc     # Network topology creation
-├── examples/                       # Example simulations
-│   ├── mtd-benchmark-example.cc    # Basic component usage
-│   └── mtd-basic-simulation.cc     # Complete network simulation
-├── test/                           # Unit tests
-│   └── mtd-benchmark-test-suite.cc # Test cases for all components
-├── doc/                            # Documentation
-│   ├── README.md                   # Quick start guide
-│   ├── ARCHITECTURE.md             # This document
-│   └── mtd-benchmark.h             # Doxygen documentation
-├── wscript                         # waf build configuration
-└── CMakeLists.txt                  # CMake build configuration
+┌─────────────────────────────────────────────────────────────────────┐
+│                      Python 用户空间                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │
+│  │ DefenseAlgorithm│  │ ScoreCalculator │  │ ShuffleStrategy │     │
+│  │   (用户实现)     │  │   (用户实现)     │  │   (用户实现)     │     │
+│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘     │
+│           └────────────────────┼────────────────────┘               │
+│                                │                                    │
+│                    ┌───────────┴───────────┐                        │
+│                    │   PythonAlgorithmBridge│  ◄── pybind11 绑定    │
+│                    └───────────┬───────────┘                        │
+└────────────────────────────────┼────────────────────────────────────┘
+                                 │
+┌────────────────────────────────┼────────────────────────────────────┐
+│                         C++ NS-3 核心                               │
+│                                │                                    │
+│  ┌─────────────────────────────┴─────────────────────────────────┐  │
+│  │                        EventBus                                │  │
+│  │         (发布/订阅模式，解耦所有组件通信)                        │  │
+│  └──────┬──────────────┬──────────────┬──────────────┬───────────┘  │
+│         │              │              │              │              │
+│  ┌──────┴──────┐ ┌─────┴─────┐ ┌──────┴──────┐ ┌─────┴─────┐       │
+│  │  Detector   │ │  Score    │ │  Shuffle    │ │  Attack   │       │
+│  │  (3-level)  │ │  Manager  │ │  Controller │ │  Generator│       │
+│  └──────┬──────┘ └─────┬─────┘ └──────┬──────┘ └───────────┘       │
+│         │              │              │                             │
+│         └──────────────┼──────────────┘                             │
+│                        │                                            │
+│                 ┌──────┴──────┐                                     │
+│                 │   Domain    │                                     │
+│                 │   Manager   │                                     │
+│                 └─────────────┘                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
----
+### 1.2 NS-3 与 Python 交互机制
 
-## Component Overview
+**数据流方向**：
 
-### Core Components (model/)
+1. **NS-3 → Python**：仿真状态（`SimulationState`）通过 `PythonAlgorithmBridge` 封装后传递
+2. **Python → NS-3**：防御决策（`DefenseDecision`）经回调函数返回，由 Bridge 解析执行
 
-| Component | Purpose | Key Classes |
-|-----------|---------|-------------|
-| **Event Bus** | Decoupled inter-module communication | `EventBus` |
-| **Detector** | Multi-level attack detection | `LocalDetector`, `CrossAgentDetector`, `GlobalDetector` |
-| **Score Manager** | User risk scoring | `ScoreManager` |
-| **Domain Manager** | Logical domain operations | `DomainManager`, `MetricsApi` |
-| **Shuffle Controller** | MTD proxy switching | `ShuffleController`, `TrafficDataApi` |
-| **Attack Generator** | Attack traffic simulation | `AttackGenerator`, `AttackCoordinator` |
-| **Export API** | Data export | `ExportApi` |
-
-### Helper Components (helper/)
-
-| Component | Purpose |
-|-----------|---------|
-| **Network Helper** | Creates standard MTD network topology with clients, proxies, servers, and attackers |
-
----
-
-## File Descriptions
-
-### Core Files
-
-#### `mtd-common.h`
-Defines all common types used across the module:
-- **Enums**: `SwitchStrategy`, `AttackType`, `RiskLevel`, `EventType`, `NodeType`
-- **Structures**: `MtdNode`, `Domain`, `TrafficStats`, `DetectionObservation`, `UserScore`, `DomainMetrics`, `AttackParams`, `ShuffleEvent`, `ProxyAssignment`, `ExperimentConfig`, `MtdEvent`
-
-#### `mtd-event-bus.h/cc`
-Provides publish-subscribe event system:
-- `Publish(event)`: Broadcast events to subscribers
-- `Subscribe(eventType, callback)`: Register for specific event types
-- `SubscribeAll(callback)`: Register for all events
-- Supports event history logging
-
-#### `mtd-detector.h/cc`
-Three-level detection hierarchy:
-
-| Detector | Level | Method | Use Case |
-|----------|-------|--------|----------|
-| `LocalDetector` | Per-proxy | Threshold-based | Fast initial filtering |
-| `CrossAgentDetector` | Cross-proxy | Z-score comparison | Distributed attack detection |
-| `GlobalDetector` | Global | ML-based | Complex pattern detection |
-
-#### `mtd-score-manager.h/cc`
-Risk scoring with customizable algorithm:
-- Default formula: `score = α·rate + β·anomaly + γ·persistence + δ·feedback`
-- Time decay: `score_t+1 = score_t * exp(-λΔt) + new_obs_weight`
-- Supports custom scoring and risk level callbacks
-
-#### `mtd-domain-manager.h/cc`
-Domain lifecycle management:
-- Create/delete domains
-- Add/remove users and proxies
-- Dynamic split/merge based on load
-- Multiple assignment strategies (consistent hash, load-aware, custom)
-
-#### `mtd-shuffle-controller.h/cc`
-MTD proxy switching:
-- Multiple strategies: RANDOM, SCORE_DRIVEN, ROUND_ROBIN, ATTACKER_AVOID, CUSTOM
-- Adaptive frequency based on risk
-- Session affinity support
-
-#### `mtd-attack-generator.h/cc`
-Attack simulation:
-- Attack types: DOS, SYN_FLOOD, UDP_FLOOD, HTTP_FLOOD, PROBE, PORT_SCAN
-- Behavior modes: STATIC, ADAPTIVE, INTELLIGENT, RANDOM_BURST
-- Defense-aware adaptation with cooldown
-
-#### `mtd-export-api.h/cc`
-Data export:
-- Experiment snapshots (JSON)
-- Traffic traces (CSV)
-- Domain state, shuffle events, attack events
-
----
-
-## Data Flow Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Event Bus                                │
-│  (Publishes: SHUFFLE_*, DOMAIN_*, ATTACK_*, SCORE_*, etc.)      │
-└─────────────────────────────────────────────────────────────────┘
-         ▲                    ▲                    ▲
-         │                    │                    │
-         │ Subscribe          │ Subscribe          │ Subscribe
-         │                    │                    │
-┌────────┴────────┐  ┌────────┴────────┐  ┌───────┴─────────┐
-│  Detection      │  │  Score          │  │  Attack         │
-│  Layer          │  │  Manager        │  │  Generator      │
-│                 │  │                 │  │                 │
-│ LocalDetector   │  │ UpdateScore()   │  │ Subscribe to    │
-│ CrossAgent      │──▶│ GetRiskLevel() │  │ defense events  │
-│ GlobalDetector  │  │ Custom scoring  │  │ Adapt behavior  │
-└────────┬────────┘  └────────┬────────┘  └─────────────────┘
-         │                    │
-         │ Observations       │ Risk Levels
-         ▼                    ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Shuffle Controller                          │
-│                                                                   │
-│  • Receives detection observations and risk scores               │
-│  • Triggers shuffles based on strategy                           │
-│  • Supports custom shuffle callbacks                             │
-│  • Manages proxy assignments                                     │
-└─────────────────────────────────────────────────────────────────┘
-         │
-         │ Shuffle decisions
-         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Domain Manager                              │
-│                                                                   │
-│  • Manages user-domain-proxy mappings                            │
-│  • Handles domain split/merge                                    │
-│  • Executes user migrations                                      │
-└─────────────────────────────────────────────────────────────────┘
-         │
-         │ Metrics & Events
-         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        Export API                                │
-│                                                                   │
-│  • Records all events and metrics                                │
-│  • Exports JSON/CSV for analysis                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## User Customization Guide
-
-The platform supports three levels of customization:
-
-### Level 1: Parameter Tuning
-
-Adjust the default algorithm parameters without changing logic:
+**绑定实现**：采用 pybind11，核心绑定代码位于 `model/mtd-python-interface.cc`
 
 ```cpp
-// 1. Detection thresholds
-DetectionThresholds thresholds;
-thresholds.packetRateThreshold = 5000.0;    // packets/sec
-thresholds.byteRateThreshold = 5000000.0;   // bytes/sec
-thresholds.connectionThreshold = 500.0;     // connections/sec
-thresholds.anomalyScoreThreshold = 0.6;     // 0-1 scale
-localDetector->SetThresholds(thresholds);
-
-// 2. Scoring weights (α, β, γ, δ, λ)
-ScoreWeights weights;
-weights.alpha = 0.4;   // Rate anomaly weight
-weights.beta = 0.3;    // Pattern anomaly weight
-weights.gamma = 0.15;  // Persistence factor weight
-weights.delta = 0.15;  // Feedback weight
-weights.lambda = 0.05; // Time decay factor
-scoreManager->SetWeights(weights);
-
-// 3. Risk level thresholds
-RiskThresholds riskThresholds;
-riskThresholds.lowMax = 0.25;    // Score <= 0.25 → LOW
-riskThresholds.mediumMax = 0.55; // Score <= 0.55 → MEDIUM
-riskThresholds.highMax = 0.80;   // Score <= 0.80 → HIGH
-scoreManager->SetRiskThresholds(riskThresholds);
-
-// 4. Shuffle configuration
-ShuffleConfig shuffleConfig;
-shuffleConfig.baseFrequency = 30.0;    // Base interval (seconds)
-shuffleConfig.minFrequency = 5.0;      // Minimum interval
-shuffleConfig.maxFrequency = 120.0;    // Maximum interval
-shuffleConfig.riskFactor = 1.5;        // Risk multiplier
-shuffleConfig.sessionAffinity = true;  // Preserve active sessions
-shuffleConfig.batchSize = 50;          // Max users per shuffle
-shuffleController->SetConfig(shuffleConfig);
-
-// 5. Domain thresholds
-DomainThresholds domainThresholds;
-domainThresholds.splitThreshold = 0.8; // Split when load > 80%
-domainThresholds.mergeThreshold = 0.2; // Merge when load < 20%
-domainThresholds.minProxies = 2;       // Minimum proxies per domain
-domainThresholds.maxUsers = 500;       // Maximum users per domain
-domainManager->SetThresholds(domainThresholds);
+// 绑定示例：注册 Python 评分回调
+void PythonAlgorithmBridge::SetScoreCallback(py::function callback) {
+    m_scoreCallback = callback;
+    m_scoreManager->SetCustomScoreCallback(
+        [this](uint32_t userId, const DetectionObservation& obs, double score) {
+            py::gil_scoped_acquire acquire;  // 获取 GIL
+            return m_scoreCallback(userId, obs, score).cast<double>();
+        });
+}
 ```
 
-### Level 2: Custom Callbacks
+**内存管理要点**：
+- C++ 对象生命周期由 NS-3 智能指针 (`Ptr<T>`) 管理
+- Python 回调执行时需获取 GIL（`py::gil_scoped_acquire`）
+- `SimulationState` 为值拷贝传递，避免跨语言引用问题
 
-Replace specific algorithm components with custom logic:
+---
 
-```cpp
-// Custom scoring algorithm
-scoreManager->SetCustomScoreCallback(
-    [](uint32_t userId, const DetectionObservation& obs, 
-       double currentScore) -> double {
-        // Your scoring logic here
-        // Example: Exponential moving average
-        double alpha = 0.3;
-        double observedScore = obs.rateAnomaly * 0.6 + obs.patternAnomaly * 0.4;
-        return alpha * observedScore + (1 - alpha) * currentScore;
-    });
+## 2. 核心组件详解
 
-// Custom risk level classification
-scoreManager->SetCustomRiskLevelCallback(
-    [](uint32_t userId, double score) -> RiskLevel {
-        // Your classification logic here
-        // Example: User-specific thresholds
-        if (userId < 100) {  // VIP users
-            if (score > 0.95) return RiskLevel::CRITICAL;
-            return RiskLevel::LOW;
-        }
-        // Standard users
-        if (score > 0.8) return RiskLevel::CRITICAL;
-        if (score > 0.6) return RiskLevel::HIGH;
-        if (score > 0.3) return RiskLevel::MEDIUM;
-        return RiskLevel::LOW;
-    });
+### 2.1 EventBus（事件总线）
 
-// Custom shuffle strategy
-shuffleController->SetCustomStrategy(
-    [](uint32_t userId, const std::vector<uint32_t>& proxies, 
-       const UserScore& score) -> uint32_t {
-        // Your proxy selection logic here
-        // Example: Risk-based isolation
-        if (score.riskLevel == RiskLevel::CRITICAL) {
-            return proxies.back();  // Isolate to last proxy
-        }
-        if (score.riskLevel == RiskLevel::HIGH) {
-            // Spread high-risk users across fewer proxies
-            size_t idx = score.userId % (proxies.size() / 2);
-            return proxies[idx];
-        }
-        // Normal distribution for low-risk users
-        return proxies[score.userId % proxies.size()];
-    });
+**职责**：解耦组件间通信，实现事件驱动架构
 
-// Custom domain assignment strategy
-domainManager->SetCustomStrategy(
-    [](uint32_t userId, const std::map<uint32_t, Domain>& domains) -> uint32_t {
-        // Your domain assignment logic here
-        // Example: Geography-based or load-based
-        uint32_t bestDomain = 0;
-        double minLoad = 1.0;
-        for (const auto& [id, domain] : domains) {
-            if (domain.loadFactor < minLoad) {
-                minLoad = domain.loadFactor;
-                bestDomain = id;
-            }
-        }
-        return bestDomain;
-    });
-```
-
-### Level 3: Component Extension
-
-Create custom detector or controller classes:
+**类定义** (`mtd-event-bus.h`)：
 
 ```cpp
-// Custom detector that inherits from LocalDetector
-class MyCustomDetector : public LocalDetector {
+class EventBus : public Object {
 public:
-    DetectionObservation Analyze(uint32_t agentId) override {
-        // Get base analysis
-        DetectionObservation obs = LocalDetector::Analyze(agentId);
-        
-        // Add custom analysis
-        obs.patternAnomaly = CustomPatternDetection(agentId);
-        
-        return obs;
-    }
+    static Ptr<EventBus> GetInstance();  // 单例模式
+    
+    void Publish(const MtdEvent& event);
+    void Subscribe(EventType type, EventCallback callback);
+    void SubscribeAll(EventCallback callback);
+    
+    std::vector<MtdEvent> GetEventHistory() const;
+    void ClearHistory();
     
 private:
-    double CustomPatternDetection(uint32_t agentId) {
-        // Your custom pattern detection logic
-        return 0.0;
+    std::map<EventType, std::vector<EventCallback>> m_subscribers;
+    std::vector<MtdEvent> m_eventHistory;
+};
+```
+
+**事件类型枚举**：
+
+| EventType | 触发时机 | 典型 metadata |
+|-----------|----------|---------------|
+| `SHUFFLE_TRIGGERED` | 洗牌开始 | `domainId` |
+| `SHUFFLE_COMPLETED` | 洗牌完成 | `domainId`, `usersAffected` |
+| `DOMAIN_SPLIT` | 域拆分 | `originalDomainId`, `newDomainId` |
+| `DOMAIN_MERGE` | 域合并 | `domainIdA`, `domainIdB` |
+| `USER_MIGRATED` | 用户迁移 | `userId`, `fromDomain`, `toDomain` |
+| `ATTACK_DETECTED` | 攻击检测 | `agentId`, `attackType`, `confidence` |
+| `SCORE_UPDATED` | 评分更新 | `userId`, `score`, `riskLevel` |
+
+---
+
+### 2.2 Detector（检测器）
+
+**三级检测架构**：
+
+```
+              延迟低 ◄──────────────────────► 精度高
+                 │                              │
+    ┌────────────┼────────────┬─────────────────┼────────────┐
+    │            │            │                 │            │
+    ▼            │            ▼                 │            ▼
+┌─────────┐     │     ┌─────────────┐          │     ┌──────────┐
+│ Local   │     │     │ CrossAgent  │          │     │ Global   │
+│ Detector│     │     │ Detector    │          │     │ Detector │
+├─────────┤     │     ├─────────────┤          │     ├──────────┤
+│ 阈值规则 │     │     │ Z-score     │          │     │ ML 模型  │
+│ <1ms    │     │     │ ~10ms       │          │     │ >100ms   │
+└─────────┘     │     └─────────────┘          │     └──────────┘
+                │                              │
+           适用场景                        适用场景
+         实时洗牌触发                    离线分析/报告
+```
+
+**类继承关系**：
+
+```cpp
+class DetectorBase : public Object {
+public:
+    virtual DetectionObservation Analyze(uint32_t nodeId) = 0;
+    void SetEventBus(Ptr<EventBus> bus);
+protected:
+    void PublishDetection(const DetectionObservation& obs);
+};
+
+class LocalDetector : public DetectorBase { ... };
+class CrossAgentDetector : public DetectorBase { ... };
+class GlobalDetector : public DetectorBase { ... };
+```
+
+---
+
+### 2.3 ScoreManager（评分管理器）
+
+**默认评分公式**：
+
+$$
+\text{score}_{t+1} = \text{score}_t \cdot e^{-\lambda \Delta t} + w \cdot (\alpha \cdot r + \beta \cdot a + \gamma \cdot p + \delta \cdot f)
+$$
+
+其中：
+- $r$: 速率异常度 (`rateAnomaly`)
+- $a$: 模式异常度 (`patternAnomaly`)  
+- $p$: 持续因子 (`persistenceFactor`)
+- $f$: 反馈权重
+- $\lambda$: 时间衰减系数
+
+**可扩展点**：
+
+```cpp
+// 替换评分算法
+scoreManager->SetCustomScoreCallback(
+    [](uint32_t userId, const DetectionObservation& obs, double current) -> double {
+        // 自定义逻辑
+    });
+
+// 替换风险分类
+scoreManager->SetCustomRiskLevelCallback(
+    [](uint32_t userId, double score) -> RiskLevel {
+        // 自定义阈值
+    });
+```
+
+---
+
+### 2.4 DomainManager（域管理器）
+
+**核心数据结构**：
+
+```cpp
+struct Domain {
+    uint32_t domainId;
+    std::string name;
+    std::set<uint32_t> proxyIds;
+    std::set<uint32_t> userIds;
+    double loadFactor;           // 负载因子 [0, 1]
+    double shuffleFrequency;     // 洗牌周期（秒）
+    std::map<uint32_t, uint32_t> userProxyMap;  // 用户→代理映射
+};
+```
+
+**关键操作**：
+
+| 方法 | 说明 | 复杂度 |
+|------|------|--------|
+| `CreateDomain(name)` | 创建新域 | O(1) |
+| `AddUser(domainId, userId)` | 添加用户到域 | O(log n) |
+| `MoveUser(userId, newDomainId)` | 跨域迁移 | O(log n) |
+| `SplitDomain(domainId)` | 按负载拆分 | O(n) |
+| `MergeDomains(idA, idB)` | 合并两域 | O(n) |
+
+---
+
+### 2.5 ShuffleController（洗牌控制器）
+
+**洗牌策略枚举**：
+
+```cpp
+enum class ShuffleMode {
+    RANDOM,          // 随机分配
+    SCORE_DRIVEN,    // 高风险用户优先分散
+    ROUND_ROBIN,     // 轮询
+    ATTACKER_AVOID,  // 回避已知攻击目标
+    LOAD_BALANCED,   // 负载均衡
+    CUSTOM           // 用户自定义回调
+};
+```
+
+**自适应频率公式**：
+
+$$
+f_{\text{domain}} = \text{clamp}\left(f_{\text{base}} \cdot (1 + k \cdot \text{risk\_factor}),\ f_{\text{min}},\ f_{\text{max}}\right)
+$$
+
+**NS-3 调度集成**：
+
+```cpp
+void ShuffleController::StartPeriodicShuffle(uint32_t domainId) {
+    double interval = GetFrequency(domainId);
+    Simulator::Schedule(Seconds(interval), 
+        &ShuffleController::PeriodicShuffleCallback, this, domainId);
+}
+```
+
+---
+
+### 2.6 AttackGenerator（攻击生成器）
+
+**攻击类型**：
+
+| AttackType | 特征 | 典型参数 |
+|------------|------|----------|
+| `DOS` | 高包速率 | rate: 10000 pps |
+| `SYN_FLOOD` | TCP 半连接 | rate: 5000 cps |
+| `UDP_FLOOD` | 高带宽 | rate: 100 Mbps |
+| `HTTP_FLOOD` | 应用层 | rate: 1000 rps |
+
+**自适应行为模式**：
+
+```cpp
+enum class AttackBehavior {
+    STATIC,       // 固定参数
+    ADAPTIVE,     // 订阅防御事件，根据洗牌调整目标
+    INTELLIGENT,  // 学习防御模式，预测性调整
+    RANDOM_BURST  // 随机爆发
+};
+```
+
+**闭环联动**：
+
+```cpp
+attackGenerator->SubscribeDefenseEvents(
+    [this](const MtdEvent& event) {
+        if (event.type == EventType::SHUFFLE_COMPLETED) {
+            // 冷却窗口后切换攻击目标
+            Simulator::Schedule(Seconds(m_cooldownTime),
+                &AttackGenerator::SwitchTarget, this);
+        }
+    });
+```
+
+---
+
+## 3. 数据流详解
+
+### 3.1 典型攻防周期
+
+```
+时间轴 ─────────────────────────────────────────────────────────────►
+       │
+  T=0  │  AttackGenerator 开始攻击
+       │         │
+       ▼         ▼
+  T=1  │  LocalDetector 检测到异常 → 发布 THRESHOLD_EXCEEDED
+       │         │
+       ▼         ▼
+  T=2  │  ScoreManager 更新用户评分 → 发布 SCORE_UPDATED
+       │         │
+       ▼         ▼
+  T=3  │  ShuffleController 触发洗牌 → 发布 SHUFFLE_TRIGGERED
+       │         │
+       ▼         ▼
+  T=4  │  DomainManager 执行重映射
+       │         │
+       ▼         ▼
+  T=5  │  ShuffleController 完成 → 发布 SHUFFLE_COMPLETED
+       │         │
+       ▼         ▼
+  T=6  │  AttackGenerator 收到事件，进入冷却
+       │         │
+       ▼         ▼
+  T=16 │  AttackGenerator 切换目标，继续攻击
+       │
+```
+
+### 3.2 Python 算法集成流程
+
+```
+┌──────────────┐    SimulationState     ┌──────────────────┐
+│   NS-3 核心   │ ─────────────────────► │  Python 算法     │
+│              │                        │                  │
+│  EventBus    │                        │  evaluate(state) │
+│  Detectors   │                        │       │          │
+│  ScoreManager│ ◄───────────────────── │       ▼          │
+│              │    DefenseDecision     │  返回决策列表     │
+└──────────────┘                        └──────────────────┘
+       │
+       ▼ 执行决策
+  TriggerShuffle / MoveUser / UpdateScore / ...
+```
+
+---
+
+## 4. 扩展指南
+
+### 4.1 添加新的检测算法
+
+1. 继承 `DetectorBase`：
+
+```cpp
+class MyDetector : public DetectorBase {
+public:
+    DetectionObservation Analyze(uint32_t nodeId) override {
+        DetectionObservation obs;
+        // 自定义检测逻辑
+        obs.patternAnomaly = MyPatternAnalysis(nodeId);
+        return obs;
     }
 };
 ```
 
----
+2. 在 `mtd-benchmark-module.h` 中注册
 
-## Configuration Reference
+### 4.2 添加新的洗牌策略
 
-### Event Types
+1. 在 `ShuffleMode` 枚举中添加新值
+2. 在 `ShuffleController::ExecuteShuffle()` 中添加 case 分支
+3. 或使用 `SetCustomStrategy()` 动态注入
 
-| EventType | Description | Metadata |
-|-----------|-------------|----------|
-| `SHUFFLE_TRIGGERED` | Shuffle started | domainId |
-| `SHUFFLE_COMPLETED` | Shuffle finished | domainId, usersAffected, executionTime |
-| `DOMAIN_SPLIT` | Domain split | domainId |
-| `DOMAIN_MERGE` | Domains merged | domainId |
-| `USER_MIGRATED` | User moved | userId, oldDomain, newDomain |
-| `ATTACK_DETECTED` | Attack detected | agentId, attackType, confidence |
-| `ATTACK_STARTED` | Attack began | type, rate |
-| `ATTACK_STOPPED` | Attack ended | packetsGenerated, bytesGenerated |
-| `PROXY_SWITCHED` | User switched proxy | userId, oldProxy, newProxy |
-| `SCORE_UPDATED` | User score changed | userId, score, riskLevel |
-
-### Attack Types
-
-| AttackType | Description | Characteristics |
-|------------|-------------|-----------------|
-| `DOS` | Generic DoS | High packet rate |
-| `SYN_FLOOD` | TCP SYN flood | High connection rate |
-| `UDP_FLOOD` | UDP flood | High byte rate |
-| `HTTP_FLOOD` | HTTP request flood | Application layer |
-| `PROBE` | Network probe | Low rate, persistent |
-| `PORT_SCAN` | Port scanning | Connection patterns |
-
-### Shuffle Modes
-
-| ShuffleMode | Description | Use Case |
-|-------------|-------------|----------|
-| `RANDOM` | Random proxy assignment | Baseline comparison |
-| `SCORE_DRIVEN` | Based on risk scores | Risk-aware defense |
-| `ROUND_ROBIN` | Sequential rotation | Predictable switching |
-| `ATTACKER_AVOID` | Avoid attack targets | Active defense |
-| `LOAD_BALANCED` | Balance proxy load | Performance focus |
-| `CUSTOM` | User-defined callback | Custom algorithms |
-
-### Risk Levels
-
-| RiskLevel | Default Threshold | Typical Response |
-|-----------|-------------------|------------------|
-| `LOW` | score ≤ 0.3 | Normal operation |
-| `MEDIUM` | score ≤ 0.6 | Increased monitoring |
-| `HIGH` | score ≤ 0.85 | Accelerated shuffling |
-| `CRITICAL` | score > 0.85 | Immediate isolation |
-
----
-
-## Running Simulations
-
-### Basic Simulation Setup
+### 4.3 导出自定义指标
 
 ```cpp
-#include "ns3/mtd-benchmark-module.h"
-#include "ns3/mtd-network-helper.h"
-
-using namespace ns3;
-using namespace ns3::mtd;
-
-int main() {
-    // 1. Create core components
-    Ptr<EventBus> eventBus = EventBus::GetInstance();
-    Ptr<DomainManager> domainManager = CreateObject<DomainManager>();
-    Ptr<ScoreManager> scoreManager = CreateObject<ScoreManager>();
-    Ptr<ShuffleController> shuffleController = CreateObject<ShuffleController>();
-    Ptr<AttackGenerator> attackGenerator = CreateObject<AttackGenerator>();
-    Ptr<ExportApi> exportApi = CreateObject<ExportApi>();
-    
-    // 2. Connect components
-    domainManager->SetEventBus(eventBus);
-    scoreManager->SetEventBus(eventBus);
-    shuffleController->SetDomainManager(domainManager);
-    shuffleController->SetScoreManager(scoreManager);
-    shuffleController->SetEventBus(eventBus);
-    attackGenerator->SetEventBus(eventBus);
-    
-    // 3. Configure components (see Configuration Reference)
-    // ...
-    
-    // 4. Create network topology
-    MtdNetworkHelper networkHelper;
-    TopologyConfig topoConfig;
-    topoConfig.numClients = 100;
-    topoConfig.numProxies = 10;
-    topoConfig.numServers = 5;
-    networkHelper.SetTopologyConfig(topoConfig);
-    networkHelper.CreateTopology();
-    networkHelper.InstallInternetStack();
-    networkHelper.AssignIpAddresses();
-    
-    // 5. Initialize domains
-    uint32_t domainId = domainManager->CreateDomain("MainDomain");
-    for (int p = 0; p < 10; ++p) domainManager->AddProxy(domainId, p);
-    for (int u = 0; u < 100; ++u) domainManager->AddUser(domainId, u);
-    
-    // 6. Start periodic shuffling
-    shuffleController->SetFrequency(domainId, 30.0);
-    shuffleController->StartPeriodicShuffle(domainId);
-    
-    // 7. Configure and start attack simulation
-    AttackParams attackParams;
-    attackParams.type = AttackType::UDP_FLOOD;
-    attackParams.rate = 10000.0;
-    attackParams.adaptToDefense = true;
-    attackGenerator->Generate(attackParams);
-    
-    Simulator::Schedule(Seconds(10.0), &AttackGenerator::Start, attackGenerator);
-    Simulator::Schedule(Seconds(50.0), &AttackGenerator::Stop, attackGenerator);
-    
-    // 8. Run simulation
-    Simulator::Stop(Seconds(60.0));
-    Simulator::Run();
-    
-    // 9. Export results
-    exportApi->ExportExperimentSnapshot("results/experiment.json");
-    exportApi->ExportShuffleEvents("results/shuffles.csv");
-    exportApi->ExportAttackEvents("results/attacks.csv");
-    
-    Simulator::Destroy();
-    return 0;
-}
-```
-
-### Command Line Execution
-
-```bash
-# Build with waf
-cd /path/to/ns-3
-./waf configure --enable-examples
-./waf build
-
-# Run example
-./waf --run "mtd-benchmark-example --clients=100 --proxies=10 --time=60"
-
-# Run with logging
-NS_LOG="MtdShuffleController:MtdScoreManager" ./waf --run mtd-benchmark-example
-```
-
-### Event-Driven Defense Algorithm
-
-```cpp
-// Subscribe to detection events
-eventBus->Subscribe(EventType::THRESHOLD_EXCEEDED,
-    [scoreManager, shuffleController, domainManager](const MtdEvent& event) {
-        uint32_t agentId = std::stoul(event.metadata.at("agentId"));
-        
-        // Update risk scores for connected users
-        std::vector<uint32_t> users = domainManager->GetDomainUsers(
-            domainManager->GetDomain(agentId));
-        
-        DetectionObservation obs;
-        obs.rateAnomaly = std::stod(event.metadata.at("rateAnomaly"));
-        obs.patternAnomaly = std::stod(event.metadata.at("patternAnomaly"));
-        
-        for (uint32_t userId : users) {
-            scoreManager->UpdateScore(userId, obs);
-            
-            // Check if shuffle needed
-            if (scoreManager->GetRiskLevel(userId) >= RiskLevel::HIGH) {
-                uint32_t domainId = domainManager->GetDomain(userId);
-                shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN);
-                break;  // One shuffle per event
-            }
-        }
-    });
+exportApi->AddCustomMetric("myMetric", [this]() {
+    return CalculateMyMetric();
+});
 ```
 
 ---
 
-## Integration Guide
+## 5. 文件索引
 
-### Integrating Custom Defense Algorithms
-
-To integrate your own defense algorithm (e.g., from proactive-ddos-defender):
-
-1. **Map your detection logic** to the DetectionObservation structure:
-```cpp
-DetectionObservation ConvertFromMyDetector(MyDetectorOutput output) {
-    DetectionObservation obs;
-    obs.rateAnomaly = output.trafficAnomaly;
-    obs.patternAnomaly = output.behaviorAnomaly;
-    obs.persistenceFactor = output.attackDuration / 60.0;
-    obs.suspectedType = MapToAttackType(output.attackClass);
-    obs.confidence = output.confidence;
-    return obs;
-}
-```
-
-2. **Register your scoring algorithm**:
-```cpp
-scoreManager->SetCustomScoreCallback(
-    [this](uint32_t userId, const DetectionObservation& obs, 
-           double currentScore) -> double {
-        return myDefender->CalculateRiskScore(userId, obs);
-    });
-```
-
-3. **Register your shuffle strategy**:
-```cpp
-shuffleController->SetCustomStrategy(
-    [this](uint32_t userId, const std::vector<uint32_t>& proxies,
-           const UserScore& score) -> uint32_t {
-        return myDefender->SelectProxy(userId, proxies, score);
-    });
-```
-
-4. **Subscribe to events for closed-loop operation**:
-```cpp
-eventBus->Subscribe(EventType::SHUFFLE_COMPLETED, 
-    [this](const MtdEvent& event) {
-        myDefender->OnShuffleComplete(event);
-    });
-
-eventBus->Subscribe(EventType::ATTACK_DETECTED,
-    [this](const MtdEvent& event) {
-        myDefender->OnAttackDetected(event);
-    });
-```
-
-### Performance Metrics
-
-The platform automatically tracks:
-- Attack blocking rate
-- Average switch latency
-- Session interruption rate
-- Detection accuracy (if ground truth provided)
-
-Export and analyze with:
-```cpp
-auto summary = exportApi->GetPerformanceSummary();
-std::cout << "Total shuffles: " << summary["totalShuffles"] << std::endl;
-std::cout << "Success rate: " << summary["shuffleSuccessRate"] << std::endl;
-std::cout << "Avg latency: " << summary["avgLatency"] << " ms" << std::endl;
-```
-
----
-
-## Appendix: Complete Example
-
-See `examples/mtd-benchmark-example.cc` for a complete working example that demonstrates:
-- All component initialization
-- Custom algorithm integration
-- Attack simulation
-- Event handling
-- Data export
-
-For network-level simulation with actual NS-3 packet flow, see `examples/mtd-basic-simulation.cc`.
+| 文件 | 职责 |
+|------|------|
+| `mtd-common.h` | 公共类型定义（枚举、结构体） |
+| `mtd-event-bus.h/cc` | 事件发布/订阅 |
+| `mtd-detector.h/cc` | 三级检测器 |
+| `mtd-score-manager.h/cc` | 风险评分 |
+| `mtd-domain-manager.h/cc` | 域管理 |
+| `mtd-shuffle-controller.h/cc` | 洗牌控制 |
+| `mtd-attack-generator.h/cc` | 攻击模拟 |
+| `mtd-export-api.h/cc` | 数据导出 |
+| `mtd-python-interface.h/cc` | Python 绑定 |
+| `mtd-benchmark-module.h` | 统一包含头文件 |
