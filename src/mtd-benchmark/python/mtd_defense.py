@@ -1,13 +1,50 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MTD-Benchmark Python Defense Algorithm Base Classes
+mtd_defense.py - Base Classes and Data Structures
+=================================================
 
-This module provides base classes and utilities for implementing
-custom defense algorithms in Python for the NS-3 MTD-Benchmark platform.
+This module provides the foundational classes for implementing
+defense algorithms in Python for the NS-3 MTD-Benchmark platform.
+
+Contents:
+    Enums:
+        - RiskLevel: User risk classification (LOW, MEDIUM, HIGH, CRITICAL)
+        - ShuffleMode: Proxy reassignment strategies
+        - ActionType: Defense action types
+        - AttackType: Network attack classifications
+    
+    Data Classes:
+        - TrafficStats: Network traffic statistics
+        - DetectionObservation: Attack detection metrics
+        - UserScore: User risk score data
+        - Domain: Proxy domain information
+        - MtdEvent: Simulation event record
+        - SimulationState: Complete simulation snapshot
+        - DefenseDecision: Algorithm decision output
+    
+    Base Classes:
+        - DefenseAlgorithm: Abstract base for all defense algorithms
+        - ScoreCalculator: Abstract base for custom scoring
+    
+    Utility Functions:
+        - get_high_risk_users(): Filter users by risk level
+        - get_domain_metrics_summary(): Compute domain statistics
+        - create_algorithm(): Factory function for algorithms
+
+Usage:
+    from mtd_defense import (
+        DefenseAlgorithm, SimulationState, DefenseDecision,
+        ShuffleMode, RiskLevel
+    )
+    
+    class MyAlgorithm(DefenseAlgorithm):
+        def evaluate(self, state: SimulationState) -> list:
+            # Implement defense logic
+            return [DefenseDecision.trigger_shuffle(1, ShuffleMode.RANDOM)]
 
 Authors: MTD-Benchmark Team
-Version: 1.0.0
+Version: 2.0.0
 """
 
 from abc import ABC, abstractmethod
@@ -15,14 +52,6 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import List, Dict, Callable, Optional, Any, Tuple
 import json
-import logging
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger('mtd_algorithm')
 
 
 # ==================== Enums (Python-side mirrors) ====================
@@ -230,7 +259,6 @@ class DefenseAlgorithm(ABC):
         """Initialize the defense algorithm"""
         self.name = name
         self.parameters: Dict[str, Any] = {}
-        self._logger = logging.getLogger(f'mtd.{name}')
     
     @abstractmethod
     def evaluate(self, state: SimulationState) -> List[DefenseDecision]:
@@ -260,7 +288,6 @@ class DefenseAlgorithm(ABC):
         """
         if parameters:
             self.parameters.update(parameters)
-        self._logger.info(f"Initialized {self.name} with parameters: {self.parameters}")
     
     def on_event(self, event: MtdEvent) -> Optional[DefenseDecision]:
         """
@@ -289,7 +316,7 @@ class DefenseAlgorithm(ABC):
     
     def reset(self) -> None:
         """Reset algorithm state"""
-        self._logger.info(f"Reset {self.name}")
+        pass
 
 
 class ScoreCalculator(ABC):
@@ -572,7 +599,6 @@ class SimpleThresholdAlgorithm(DefenseAlgorithm):
                     ShuffleMode.SCORE_DRIVEN,
                     f"Average score {metrics['avg_user_score']:.2f} > {self.threshold}"
                 ))
-                self._logger.info(f"Triggered shuffle for domain {domain_id}")
         
         return decisions
 
@@ -635,7 +661,6 @@ class IsolationAlgorithm(DefenseAlgorithm):
                 break
         
         if self.isolation_domain_id is None:
-            self._logger.warning("Isolation domain not found")
             return decisions
         
         # Find high-risk users not in isolation domain

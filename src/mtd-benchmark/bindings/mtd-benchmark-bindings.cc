@@ -353,6 +353,102 @@ PYBIND11_MODULE(mtd_benchmark, m) {
         .def_readwrite("max_decisions_per_eval", &PythonAlgorithmConfig::maxDecisionsPerEval)
         .def_readwrite("parameters", &PythonAlgorithmConfig::parameters);
     
+    // ==================== SimulationContext ====================
+    
+    /**
+     * SimulationContext - Python-friendly wrapper for running MTD simulations
+     * 
+     * This class provides a high-level interface for Python users to:
+     * - Configure and run simulations
+     * - Register custom defense algorithms
+     * - Collect and export results
+     */
+    py::class_<SimulationContext, std::shared_ptr<SimulationContext>>(m, "SimulationContext",
+        R"pbdoc(
+        High-level simulation context for running MTD experiments from Python.
+        
+        Example:
+            ctx = mtd.SimulationContext(num_users=100, num_proxies=5)
+            ctx.set_defense_evaluator(my_algorithm.evaluate)
+            ctx.run(duration=60.0)
+            results = ctx.get_results()
+        )pbdoc")
+        .def(py::init<uint32_t, uint32_t, uint32_t, uint32_t>(),
+             "Create simulation context",
+             py::arg("num_users") = 100,
+             py::arg("num_proxies") = 5,
+             py::arg("num_domains") = 3,
+             py::arg("num_attackers") = 1)
+        .def("initialize", &SimulationContext::Initialize,
+             "Initialize the simulation environment")
+        .def("set_random_seed", &SimulationContext::SetRandomSeed,
+             "Set random seed for reproducibility",
+             py::arg("seed"))
+        .def("set_shuffle_frequency", &SimulationContext::SetShuffleFrequency,
+             "Set default shuffle frequency in seconds",
+             py::arg("frequency"))
+        .def("set_attack_rate", &SimulationContext::SetAttackRate,
+             "Set attack packet rate",
+             py::arg("rate"))
+        .def("set_defense_evaluator", &SimulationContext::SetDefenseEvaluator,
+             R"pbdoc(
+             Register a Python defense evaluation function.
+             
+             The function should have signature:
+                 def evaluate(state: SimulationState) -> List[DefenseDecision]
+             
+             Args:
+                 evaluator: Python callable that takes SimulationState and returns decisions
+             )pbdoc",
+             py::arg("evaluator"))
+        .def("set_score_calculator", &SimulationContext::SetScoreCalculator,
+             "Register custom score calculator",
+             py::arg("calculator"))
+        .def("run", &SimulationContext::Run,
+             "Run simulation for specified duration",
+             py::arg("duration") = 60.0)
+        .def("step", &SimulationContext::Step,
+             "Advance simulation by one time step",
+             py::arg("step_size") = 1.0)
+        .def("get_state", &SimulationContext::GetState,
+             "Get current simulation state")
+        .def("trigger_shuffle", &SimulationContext::TriggerShuffle,
+             "Manually trigger a shuffle for a domain",
+             py::arg("domain_id"),
+             py::arg("mode") = ShuffleMode::RANDOM)
+        .def("migrate_user", &SimulationContext::MigrateUser,
+             "Migrate a user to a different domain",
+             py::arg("user_id"),
+             py::arg("new_domain_id"))
+        .def("get_user_score", &SimulationContext::GetUserScore,
+             "Get score for a specific user",
+             py::arg("user_id"))
+        .def("get_all_user_scores", &SimulationContext::GetAllUserScores,
+             "Get all user scores")
+        .def("get_domain_info", &SimulationContext::GetDomainInfo,
+             "Get information about a domain",
+             py::arg("domain_id"))
+        .def("get_proxy_stats", &SimulationContext::GetProxyStats,
+             "Get traffic statistics for a proxy",
+             py::arg("proxy_id"))
+        .def("get_results", &SimulationContext::GetResults,
+             "Get simulation results as a dictionary")
+        .def("export_results", &SimulationContext::ExportResults,
+             "Export results to files",
+             py::arg("prefix") = "mtd_results")
+        .def("reset", &SimulationContext::Reset,
+             "Reset simulation to initial state")
+        .def_property_readonly("current_time", &SimulationContext::GetCurrentTime,
+             "Get current simulation time in seconds")
+        .def_property_readonly("num_users", &SimulationContext::GetNumUsers,
+             "Get number of users")
+        .def_property_readonly("num_proxies", &SimulationContext::GetNumProxies,
+             "Get number of proxies")
+        .def_property_readonly("num_domains", &SimulationContext::GetNumDomains,
+             "Get number of domains")
+        .def_property_readonly("is_running", &SimulationContext::IsRunning,
+             "Check if simulation is currently running");
+    
     // ==================== Helper Functions ====================
     
     m.def("shuffle_mode_to_string", &ShuffleModeToString, "Convert ShuffleMode to string");

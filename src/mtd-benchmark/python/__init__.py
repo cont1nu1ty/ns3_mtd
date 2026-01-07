@@ -1,98 +1,58 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-MTD-Benchmark Python Package
+__init__.py - MTD-Benchmark Python Package Root
+===============================================
 
-This package provides Python interfaces for the NS-3 MTD-Benchmark module,
-enabling researchers to implement and test defense algorithms in Python.
+This is the main package initializer for mtd-benchmark Python interface.
+It exports all public APIs, data structures, and algorithm classes.
+
+Package Structure:
+    mtd_defense.py  - Base classes and data structures
+    mtd_api.py      - Simulation context and C++ bindings
+    main.py         - Command-line entry point
+    algorithms.py   - Algorithm export entry point
+    algorithm/      - Algorithm implementations directory
 
 Usage:
-    from mtd_benchmark_py import DefenseAlgorithm, SimulationState, DefenseDecision
-    
-    class MyAlgorithm(DefenseAlgorithm):
-        def evaluate(self, state):
-            # Your algorithm logic
-            return []
+    from mtd_benchmark.python import (
+        create_simulation_context,
+        PDDAlgorithm,
+        DefenseDecision,
+        ShuffleMode,
+    )
+
+Note:
+    All simulation logging is handled by C++ backend via 'reason' parameters.
+    Python code should NOT use print/logging for simulation events.
 """
 
-__version__ = "1.0.0"
-__author__ = "MTD-Benchmark Team"
+__version__ = "2.0.0"
 
-# Import from base module
 from .mtd_defense import (
-    # Enums
-    RiskLevel,
-    ShuffleMode,
-    AttackType,
-    ActionType,
-    
-    # Data classes
-    TrafficStats,
-    DetectionObservation,
-    UserScore,
-    Domain,
-    MtdEvent,
-    SimulationState,
-    DefenseDecision,
-    
-    # Base classes
+    RiskLevel, ShuffleMode, AttackType, ActionType,
+    TrafficStats, DetectionObservation, UserScore, Domain,
+    MtdEvent, SimulationState, DefenseDecision,
     DefenseAlgorithm,
-    ScoreCalculator,
-    RiskClassifier,
-    ShuffleStrategy,
-    DomainAssigner,
-    
-    # Utility functions
-    load_algorithm_config,
-    save_algorithm_config,
-    calculate_anomaly_score,
-    get_high_risk_users,
-    get_domain_metrics_summary,
-    
-    # Example implementations
-    SimpleThresholdAlgorithm,
-    AdaptiveFrequencyAlgorithm,
-    IsolationAlgorithm,
-    create_algorithm,
 )
 
+from .mtd_api import (
+    create_simulation_context,
+    is_cpp_module_available,
+    MockSimulationContext,
+    EventType,
+)
+
+from .algorithm import PDDAlgorithm
+
 __all__ = [
-    # Version
     '__version__',
-    '__author__',
-    
-    # Enums
-    'RiskLevel',
-    'ShuffleMode',
-    'AttackType',
-    'ActionType',
-    
-    # Data classes
-    'TrafficStats',
-    'DetectionObservation',
-    'UserScore',
-    'Domain',
-    'MtdEvent',
-    'SimulationState',
-    'DefenseDecision',
-    
-    # Base classes
+    'create_simulation_context',
+    'is_cpp_module_available',
+    'MockSimulationContext',
+    'RiskLevel', 'ShuffleMode', 'AttackType', 'ActionType', 'EventType',
+    'TrafficStats', 'DetectionObservation', 'UserScore', 'Domain',
+    'MtdEvent', 'SimulationState', 'DefenseDecision',
     'DefenseAlgorithm',
-    'ScoreCalculator',
-    'RiskClassifier',
-    'ShuffleStrategy',
-    'DomainAssigner',
-    
-    # Utility functions
-    'load_algorithm_config',
-    'save_algorithm_config',
-    'calculate_anomaly_score',
-    'get_high_risk_users',
-    'get_domain_metrics_summary',
-    
-    # Example implementations
-    'SimpleThresholdAlgorithm',
-    'AdaptiveFrequencyAlgorithm',
-    'IsolationAlgorithm',
-    'create_algorithm',
+    'PDDAlgorithm',
 ]

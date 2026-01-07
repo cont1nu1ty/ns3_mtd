@@ -99,15 +99,14 @@ void OnAttackDetected(Ptr<ScoreManager> scoreManager,
         }
     }
     
-    // Note: Python evaluation disabled here for consistency with C++ version
-    // To enable Python algorithm decisions on attack detection, uncomment:
-    // if (g_bridge) {
-    //     uint32_t decisionCount = g_bridge->TriggerEvaluation();
-    //     g_stats.pythonDecisions += decisionCount;
-    //     if (decisionCount > 0) {
-    //         NS_LOG_INFO("  Python algorithm made " << decisionCount << " decisions");
-    //     }
-    // }
+    // Trigger Python algorithm evaluation on attack detection
+    if (g_bridge) {
+        uint32_t decisionCount = g_bridge->TriggerEvaluation();
+        g_stats.pythonDecisions += decisionCount;
+        if (decisionCount > 0) {
+            NS_LOG_INFO("  Python algorithm made " << decisionCount << " decisions");
+        }
+    }
 }
 
 void OnShuffleCompleted(const MtdEvent& event)
@@ -391,6 +390,7 @@ int main(int argc, char *argv[])
     uint32_t numClients = 30;
     uint32_t numProxies = 6;
     uint32_t numDomains = 3;
+    uint32_t numAttackers = 1;
     double simulationTime = 60.0;
     std::string algorithmPath = "";  // Python algorithm file
     std::string configPath = "";      // Config JSON file
@@ -399,6 +399,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("clients", "Number of clients", numClients);
     cmd.AddValue("proxies", "Number of proxies", numProxies);
     cmd.AddValue("domains", "Number of domains", numDomains);
+    cmd.AddValue("attackers", "Number of attackers", numAttackers);
     cmd.AddValue("time", "Simulation time", simulationTime);
     cmd.AddValue("algorithm", "Path to Python defense algorithm", algorithmPath);
     cmd.AddValue("config", "Path to config.json", configPath);
@@ -408,7 +409,8 @@ int main(int argc, char *argv[])
     NS_LOG_INFO("║         MTD-BENCHMARK PYTHON INTEGRATION TEST                ║");
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     NS_LOG_INFO("║ Clients: " << numClients << "  Proxies: " << numProxies 
-                << "  Domains: " << numDomains << "  Time: " << simulationTime << "s");
+                << "  Domains: " << numDomains << "  Attackers: " << numAttackers);
+    NS_LOG_INFO("║ Time: " << simulationTime << "s");
     if (!algorithmPath.empty()) {
         NS_LOG_INFO("║ Python Algorithm: " << algorithmPath);
     } else {
@@ -602,11 +604,10 @@ int main(int argc, char *argv[])
             &ShuffleController::StartPeriodicShuffle, shuffleController, domainId);
     }
     
-    // Schedule periodic Python evaluation (disabled for consistency with C++ version)
-    // Uncomment to enable Python algorithm periodic evaluation
-    // for (double t = 10.0; t < simulationTime; t += 5.0) {
-    //     Simulator::Schedule(Seconds(t), &PeriodicPythonEvaluation);
-    // }
+    // Schedule periodic Python evaluation 
+    for (double t = 10.0; t < simulationTime; t += 5.0) {
+        Simulator::Schedule(Seconds(t), &PeriodicPythonEvaluation);
+    }
     
     // Schedule attack (targets already added before phases)
     // Configure attack parameters (same as C++ full-defense-test)

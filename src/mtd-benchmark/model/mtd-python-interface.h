@@ -453,40 +453,177 @@ private:
  * 
  * Provides a simplified API for Python scripts to interact with
  * the simulation without needing to understand NS-3 internals.
+ * 
+ * This is the main entry point for Python-driven simulations.
  */
 class SimulationContext : public Object
 {
 public:
     static TypeId GetTypeId();
     
-    SimulationContext();
+    /**
+     * \brief Constructor with configuration
+     * \param numUsers Number of users in simulation
+     * \param numProxies Number of proxy nodes
+     * \param numDomains Number of domains
+     * \param numAttackers Number of attackers
+     */
+    SimulationContext(uint32_t numUsers = 100,
+                      uint32_t numProxies = 5,
+                      uint32_t numDomains = 3,
+                      uint32_t numAttackers = 1);
     virtual ~SimulationContext();
     
-    /**
-     * \brief Initialize context with all MTD components
-     * \param bridge Python algorithm bridge
-     * \param domainManager Domain manager
-     * \param scoreManager Score manager
-     * \param shuffleController Shuffle controller
-     * \param eventBus Event bus
-     */
-    void Initialize(Ptr<PythonAlgorithmBridge> bridge,
-                    Ptr<DomainManager> domainManager,
-                    Ptr<ScoreManager> scoreManager,
-                    Ptr<ShuffleController> shuffleController,
-                    Ptr<EventBus> eventBus);
+    // ==================== Initialization ====================
     
     /**
-     * \brief Get the Python algorithm bridge
-     * \return Pointer to bridge
+     * \brief Initialize the simulation environment
+     * Creates all components and sets up the network topology
      */
-    Ptr<PythonAlgorithmBridge> GetBridge() const;
+    void Initialize();
     
     /**
-     * \brief Get current simulation time (seconds)
-     * \return Current time
+     * \brief Set random seed for reproducibility
+     * \param seed Random seed value
+     */
+    void SetRandomSeed(uint32_t seed);
+    
+    /**
+     * \brief Set default shuffle frequency
+     * \param frequency Shuffle interval in seconds
+     */
+    void SetShuffleFrequency(double frequency);
+    
+    /**
+     * \brief Set attack packet rate
+     * \param rate Packets per second
+     */
+    void SetAttackRate(double rate);
+    
+    // ==================== Algorithm Registration ====================
+    
+    /**
+     * \brief Register defense evaluation callback
+     * \param evaluator Python function: (SimulationState) -> List[DefenseDecision]
+     */
+    void SetDefenseEvaluator(DefenseEvaluator evaluator);
+    
+    /**
+     * \brief Register custom score calculator
+     * \param calculator Python function: (userId, observation, currentScore) -> newScore
+     */
+    void SetScoreCalculator(ScoreCalculator calculator);
+    
+    // ==================== Simulation Control ====================
+    
+    /**
+     * \brief Run simulation for specified duration
+     * \param duration Simulation time in seconds
+     */
+    void Run(double duration = 60.0);
+    
+    /**
+     * \brief Advance simulation by one step
+     * \param stepSize Time step in seconds
+     */
+    void Step(double stepSize = 1.0);
+    
+    /**
+     * \brief Reset simulation to initial state
+     */
+    void Reset();
+    
+    /**
+     * \brief Check if simulation is running
+     * \return True if running
+     */
+    bool IsRunning() const;
+    
+    // ==================== State Access ====================
+    
+    /**
+     * \brief Get current simulation state
+     * \return Complete simulation state snapshot
+     */
+    SimulationState GetState() const;
+    
+    /**
+     * \brief Get current simulation time
+     * \return Time in seconds
      */
     double GetCurrentTime() const;
+    
+    /**
+     * \brief Get number of users
+     */
+    uint32_t GetNumUsers() const { return m_numUsers; }
+    
+    /**
+     * \brief Get number of proxies
+     */
+    uint32_t GetNumProxies() const { return m_numProxies; }
+    
+    /**
+     * \brief Get number of domains
+     */
+    uint32_t GetNumDomains() const { return m_numDomains; }
+    
+    /**
+     * \brief Get domain information
+     * \param domainId Domain ID
+     * \return Domain data
+     */
+    Domain GetDomainInfo(uint32_t domainId) const;
+    
+    /**
+     * \brief Get user score
+     * \param userId User ID
+     * \return User score data
+     */
+    UserScore GetUserScore(uint32_t userId) const;
+    
+    /**
+     * \brief Get all user scores
+     * \return Map of userId -> UserScore
+     */
+    std::map<uint32_t, UserScore> GetAllUserScores() const;
+    
+    /**
+     * \brief Get proxy traffic statistics
+     * \param proxyId Proxy ID
+     * \return Traffic statistics
+     */
+    TrafficStats GetProxyStats(uint32_t proxyId) const;
+    
+    // ==================== Actions ====================
+    
+    /**
+     * \brief Trigger a shuffle for a domain
+     * \param domainId Domain to shuffle
+     * \param mode Shuffle strategy
+     */
+    void TriggerShuffle(uint32_t domainId, ShuffleMode mode = ShuffleMode::RANDOM);
+    
+    /**
+     * \brief Migrate a user to a different domain
+     * \param userId User to migrate
+     * \param newDomainId Target domain
+     */
+    void MigrateUser(uint32_t userId, uint32_t newDomainId);
+    
+    // ==================== Results ====================
+    
+    /**
+     * \brief Get simulation results
+     * \return Dictionary of result metrics
+     */
+    std::map<std::string, double> GetResults() const;
+    
+    /**
+     * \brief Export results to files
+     * \param prefix File name prefix
+     */
+    void ExportResults(const std::string& prefix = "mtd_results");
     
     /**
      * \brief Get all domain IDs
@@ -521,11 +658,31 @@ public:
     void ScheduleEvent(double delaySeconds, std::function<void()> callback);
 
 private:
+    // Configuration
+    uint32_t m_numUsers;
+    uint32_t m_numProxies;
+    uint32_t m_numDomains;
+    uint32_t m_numAttackers;
+    uint32_t m_randomSeed;
+    double m_shuffleFrequency;
+    double m_attackRate;
+    bool m_initialized;
+    bool m_running;
+    
+    // Components
     Ptr<PythonAlgorithmBridge> m_bridge;
     Ptr<DomainManager> m_domainManager;
     Ptr<ScoreManager> m_scoreManager;
     Ptr<ShuffleController> m_shuffleController;
     Ptr<EventBus> m_eventBus;
+    Ptr<LocalDetector> m_detector;
+    Ptr<AttackGenerator> m_attackGenerator;
+    Ptr<ExportApi> m_exportApi;
+    
+    // Internal methods
+    void SetupNetwork();
+    void SetupComponents();
+    void ScheduleEvaluation();
 };
 
 /**

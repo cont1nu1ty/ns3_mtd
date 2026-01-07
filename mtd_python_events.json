@@ -15,7 +15,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "5",
+        "newProxy": "2",
         "oldProxy": "0",
         "userId": "101"
       }
@@ -45,7 +45,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
+        "newProxy": "5",
         "oldProxy": "0",
         "userId": "104"
       }
@@ -65,7 +65,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
+        "newProxy": "2",
         "oldProxy": "0",
         "userId": "106"
       }
@@ -75,7 +75,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "5",
+        "newProxy": "3",
         "oldProxy": "0",
         "userId": "107"
       }
@@ -85,7 +85,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "3",
+        "newProxy": "4",
         "oldProxy": "0",
         "userId": "108"
       }
@@ -95,7 +95,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "5",
         "oldProxy": "0",
         "userId": "109"
       }
@@ -105,7 +105,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
+        "newProxy": "1",
         "oldProxy": "0",
         "userId": "110"
       }
@@ -115,7 +115,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "6",
+        "newProxy": "2",
         "oldProxy": "0",
         "userId": "111"
       }
@@ -125,7 +125,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
+        "newProxy": "3",
         "oldProxy": "0",
         "userId": "112"
       }
@@ -135,7 +135,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "5",
+        "newProxy": "4",
         "oldProxy": "0",
         "userId": "113"
       }
@@ -145,7 +145,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "3",
+        "newProxy": "5",
         "oldProxy": "0",
         "userId": "114"
       }
@@ -155,7 +155,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "0",
         "userId": "115"
       }
@@ -175,7 +175,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "6",
+        "newProxy": "3",
         "oldProxy": "0",
         "userId": "117"
       }
@@ -185,7 +185,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
+        "newProxy": "4",
         "oldProxy": "0",
         "userId": "118"
       }
@@ -205,7 +205,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "3",
+        "newProxy": "1",
         "oldProxy": "0",
         "userId": "120"
       }
@@ -215,49 +215,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "0",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
         "newProxy": "2",
         "oldProxy": "0",
-        "userId": "122"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "0",
-        "userId": "123"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "0",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "0",
-        "userId": "125"
+        "userId": "121"
       }
     },
     {
@@ -267,7 +227,7 @@
       "metadata": {
         "newProxy": "3",
         "oldProxy": "0",
-        "userId": "126"
+        "userId": "122"
       }
     },
     {
@@ -277,7 +237,7 @@
       "metadata": {
         "newProxy": "4",
         "oldProxy": "0",
-        "userId": "127"
+        "userId": "123"
       }
     },
     {
@@ -285,9 +245,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
+        "newProxy": "5",
         "oldProxy": "0",
-        "userId": "128"
+        "userId": "124"
       }
     },
     {
@@ -297,133 +257,77 @@
       "metadata": {
         "newProxy": "6",
         "oldProxy": "0",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "126"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "127"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "4",
+        "oldProxy": "0",
+        "userId": "128"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
         "userId": "129"
       }
     },
     {
       "timestamp": 0,
-      "type": 5,
-      "sourceNodeId": 1,
-      "metadata": {
-        "anomalyScore": "1.000000"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "100"
+        "newProxy": "1",
+        "oldProxy": "0",
+        "userId": "130"
       }
     },
     {
       "timestamp": 0,
-      "type": 10,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "103"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "131"
       }
     },
     {
       "timestamp": 0,
-      "type": 10,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "1",
-        "score": "0.600000",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 5,
-      "sourceNodeId": 1,
-      "metadata": {
-        "anomalyScore": "1.000000"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "100"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "132"
       }
     },
     {
@@ -432,8 +336,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
+        "oldProxy": "0",
+        "userId": "133"
       }
     },
     {
@@ -441,9 +345,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "134"
       }
     },
     {
@@ -451,30 +355,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "3"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "103"
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "135"
       }
     },
     {
@@ -482,9 +365,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "136"
       }
     },
     {
@@ -492,9 +375,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "137"
       }
     },
     {
@@ -503,8 +386,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "138"
       }
     },
     {
@@ -512,70 +395,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "5"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "139"
       }
     },
     {
@@ -584,8 +406,28 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "141"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "142"
       }
     },
     {
@@ -594,8 +436,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
+        "oldProxy": "0",
+        "userId": "143"
       }
     },
     {
@@ -603,9 +445,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "144"
       }
     },
     {
@@ -613,9 +455,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "145"
       }
     },
     {
@@ -623,9 +465,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "146"
       }
     },
     {
@@ -633,60 +475,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "147"
       }
     },
     {
@@ -695,8 +486,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "148"
       }
     },
     {
@@ -704,70 +495,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "6"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "149"
       }
     },
     {
@@ -776,8 +506,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "150"
       }
     },
     {
@@ -785,9 +515,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "151"
       }
     },
     {
@@ -795,70 +525,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "7"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "152"
       }
     },
     {
@@ -867,8 +536,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "153"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "154"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "155"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "156"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "157"
       }
     },
     {
@@ -877,8 +586,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
+        "oldProxy": "0",
+        "userId": "158"
       }
     },
     {
@@ -886,19 +595,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "159"
       }
     },
     {
@@ -907,8 +606,28 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
+        "oldProxy": "0",
+        "userId": "160"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "161"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "162"
       }
     },
     {
@@ -917,29 +636,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
+        "oldProxy": "0",
+        "userId": "163"
       }
     },
     {
       "timestamp": 0,
-      "type": 1,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "164"
       }
     },
     {
       "timestamp": 0,
-      "type": 10,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "118"
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "165"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "166"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "167"
       }
     },
     {
@@ -948,8 +686,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
+        "oldProxy": "0",
+        "userId": "168"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "169"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "0",
+        "userId": "170"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "171"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "172"
       }
     },
     {
@@ -958,8 +736,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
+        "oldProxy": "0",
+        "userId": "173"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "174"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "175"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "176"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "177"
       }
     },
     {
@@ -968,8 +786,18 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "oldProxy": "0",
+        "userId": "178"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "179"
       }
     },
     {
@@ -978,8 +806,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "180"
       }
     },
     {
@@ -987,9 +815,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "181"
       }
     },
     {
@@ -997,80 +825,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "8"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "182"
       }
     },
     {
@@ -1079,8 +836,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "oldProxy": "0",
+        "userId": "183"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "184"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "185"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "186"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "187"
       }
     },
     {
@@ -1089,8 +886,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
+        "oldProxy": "0",
+        "userId": "188"
       }
     },
     {
@@ -1098,29 +895,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "189"
       }
     },
     {
@@ -1129,29 +906,28 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
+        "oldProxy": "0",
+        "userId": "190"
       }
     },
     {
       "timestamp": 0,
-      "type": 1,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "191"
       }
     },
     {
       "timestamp": 0,
-      "type": 10,
+      "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "124"
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "192"
       }
     },
     {
@@ -1160,8 +936,48 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
+        "oldProxy": "0",
+        "userId": "193"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "194"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "0",
+        "userId": "195"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "2",
+        "oldProxy": "0",
+        "userId": "196"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "3",
+        "oldProxy": "0",
+        "userId": "197"
       }
     },
     {
@@ -1170,8 +986,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
+        "oldProxy": "0",
+        "userId": "198"
       }
     },
     {
@@ -1179,211 +995,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 10,
-      "sourceNodeId": 0,
-      "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "newProxy": "5",
+        "oldProxy": "0",
+        "userId": "199"
       }
     },
     {
@@ -1399,120 +1013,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
+        "riskLevel": "0",
+        "score": "0.204000",
         "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -1520,120 +1023,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "105"
       }
     },
     {
@@ -1641,120 +1033,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "110"
       }
     },
     {
@@ -1762,120 +1043,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
+        "riskLevel": "0",
+        "score": "0.204000",
         "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -1883,120 +1053,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "120"
       }
     },
     {
@@ -2004,120 +1063,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "125"
       }
     },
     {
@@ -2125,120 +1073,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "130"
       }
     },
     {
@@ -2246,120 +1083,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "135"
       }
     },
     {
@@ -2367,120 +1093,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "140"
       }
     },
     {
@@ -2488,120 +1103,109 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "127"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "145"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "150"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "155"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "160"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "165"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "170"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "175"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "180"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "185"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "190"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "0",
+        "score": "0.204000",
+        "userId": "195"
       }
     },
     {
@@ -2617,120 +1221,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
+        "riskLevel": "1",
+        "score": "0.346800",
         "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -2738,120 +1231,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "105"
       }
     },
     {
@@ -2859,120 +1241,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "110"
       }
     },
     {
@@ -2980,120 +1251,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
+        "riskLevel": "1",
+        "score": "0.346800",
         "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -3101,120 +1261,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "120"
       }
     },
     {
@@ -3222,120 +1271,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "125"
       }
     },
     {
@@ -3343,120 +1281,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "130"
       }
     },
     {
@@ -3464,120 +1291,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "135"
       }
     },
     {
@@ -3585,120 +1301,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "140"
       }
     },
     {
@@ -3706,120 +1311,109 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "127"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "145"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "150"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "155"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "160"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "165"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "170"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "175"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "180"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "185"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "190"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.346800",
+        "userId": "195"
       }
     },
     {
@@ -3835,120 +1429,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
+        "riskLevel": "1",
+        "score": "0.446760",
         "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -3956,120 +1439,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "105"
       }
     },
     {
@@ -4077,120 +1449,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "110"
       }
     },
     {
@@ -4198,120 +1459,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
+        "riskLevel": "1",
+        "score": "0.446760",
         "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
       }
     },
     {
@@ -4319,120 +1469,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "120"
       }
     },
     {
@@ -4440,120 +1479,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "125"
       }
     },
     {
@@ -4561,120 +1489,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "130"
       }
     },
     {
@@ -4682,120 +1499,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "135"
       }
     },
     {
@@ -4803,120 +1509,9 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "140"
       }
     },
     {
@@ -4924,120 +1519,533 @@
       "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "riskLevel": "3",
-        "score": "1.000000",
-        "userId": "127"
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "145"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "150"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "155"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "160"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "165"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "170"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "175"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "180"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "185"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "190"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.446760",
+        "userId": "195"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 5,
+      "sourceNodeId": 1,
+      "metadata": {
+        "anomalyScore": "1.000000"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
         "userId": "100"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "105"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "110"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
+        "riskLevel": "1",
+        "score": "0.516732",
         "userId": "115"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "120"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "125"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "130"
       }
     },
     {
       "timestamp": 0,
-      "type": 8,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "135"
       }
     },
     {
       "timestamp": 0,
-      "type": 1,
+      "type": 10,
       "sourceNodeId": 0,
       "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "10"
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "150"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "155"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "160"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "165"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "170"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "175"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "180"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "185"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "190"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.516732",
+        "userId": "195"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 5,
+      "sourceNodeId": 1,
+      "metadata": {
+        "anomalyScore": "1.000000"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "100"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "105"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "150"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "155"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "160"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "165"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "170"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "175"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "180"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "185"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "190"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 10,
+      "sourceNodeId": 0,
+      "metadata": {
+        "riskLevel": "1",
+        "score": "0.565712",
+        "userId": "195"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 2,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1"
       }
     },
     {
@@ -5055,19 +2063,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "userId": "110"
       }
     },
     {
@@ -5076,8 +2074,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "oldProxy": "6",
+        "userId": "115"
       }
     },
     {
@@ -5086,8 +2084,89 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
+        "oldProxy": "6",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "6"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "135"
       }
     },
     {
@@ -5107,8 +2186,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "oldProxy": "6",
+        "userId": "105"
       }
     },
     {
@@ -5117,8 +2196,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "oldProxy": "6",
+        "userId": "110"
       }
     },
     {
@@ -5127,27 +2206,7 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
+        "oldProxy": "6",
         "userId": "115"
       }
     },
@@ -5156,9 +2215,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "118"
+        "userId": "120"
       }
     },
     {
@@ -5166,9 +2225,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "125"
       }
     },
     {
@@ -5176,9 +2235,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "124"
+        "userId": "130"
       }
     },
     {
@@ -5186,9 +2245,29 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "145"
       }
     },
     {
@@ -5207,9 +2286,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "103"
+        "userId": "105"
       }
     },
     {
@@ -5217,9 +2296,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "106"
+        "userId": "110"
       }
     },
     {
@@ -5227,27 +2306,7 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
         "userId": "115"
       }
@@ -5258,8 +2317,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "oldProxy": "6",
+        "userId": "120"
       }
     },
     {
@@ -5267,100 +2326,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 0,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "118"
+        "userId": "125"
       }
     },
     {
@@ -5368,9 +2336,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "130"
       }
     },
     {
@@ -5378,9 +2346,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "124"
+        "userId": "135"
       }
     },
     {
@@ -5388,9 +2356,19 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "127"
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 0,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
       }
     },
     {
@@ -5445,49 +2423,9 @@
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "105"
       }
     },
     {
@@ -5496,8 +2434,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "oldProxy": "6",
+        "userId": "125"
       }
     },
     {
@@ -5506,8 +2444,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
+        "oldProxy": "6",
+        "userId": "135"
       }
     },
     {
@@ -5516,18 +2454,8 @@
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
+        "oldProxy": "6",
+        "userId": "145"
       }
     },
     {
@@ -5538,57 +2466,7 @@
         "domainId": "1",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "101"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "104"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "122"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "125"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "128"
+        "usersAffected": "4"
       }
     },
     {
@@ -5607,647 +2485,250 @@
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "1"
+      }
+    },
+    {
+      "timestamp": 15000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 15000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 15000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 20409,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "105"
+      }
+    },
+    {
+      "timestamp": 20409,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 20409,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 20409,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 24611,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 25000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 25000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 25000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 25819,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 25819,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 25819,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 25819,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "105"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 31228,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
         "executionTime": "0.000000",
         "success": "true",
         "usersAffected": "6"
       }
     },
     {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "105"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "108"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "114"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "117"
-      }
-    },
-    {
-      "timestamp": 15000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "3",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "4"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 19000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 23000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 23800,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "113"
-      }
-    },
-    {
-      "timestamp": 23800,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "119"
-      }
-    },
-    {
-      "timestamp": 23800,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 23800,
+      "timestamp": 34223,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "2",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "3"
-      }
-    },
-    {
-      "timestamp": 25000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "102"
-      }
-    },
-    {
-      "timestamp": 25000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "123"
-      }
-    },
-    {
-      "timestamp": 25000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "126"
-      }
-    },
-    {
-      "timestamp": 25000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "3",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "3"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 27000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 31000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "104"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "110"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "113"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "125"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 32600,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "2",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "5"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "108"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "111"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "126"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "129"
+        "usersAffected": "0"
       }
     },
     {
@@ -6258,97 +2739,7 @@
         "domainId": "3",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "4"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 35000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
+        "usersAffected": "0"
       }
     },
     {
@@ -6356,353 +2747,134 @@
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "domainId": "1",
+        "domainId": "4",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "9"
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 39000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 39000,
+      "timestamp": 35000,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "domainId": "1",
+        "domainId": "5",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "9"
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "101"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "104"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "110"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "116"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "119"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "122"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "128"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 41400,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "2",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "8"
-      }
-    },
-    {
-      "timestamp": 43000,
+      "timestamp": 36638,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 43000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 45000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "105"
-      }
-    },
-    {
-      "timestamp": 45000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "108"
-      }
-    },
-    {
-      "timestamp": 45000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
+        "oldProxy": "6",
         "userId": "120"
       }
     },
     {
-      "timestamp": 45000,
+      "timestamp": 36638,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "123"
+        "oldProxy": "1",
+        "userId": "135"
       }
     },
     {
-      "timestamp": 45000,
+      "timestamp": 36638,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "129"
+        "oldProxy": "1",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 36638,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 42047,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "5"
+      }
+    },
+    {
+      "timestamp": 43834,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
@@ -6713,294 +2885,1011 @@
         "domainId": "3",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "5"
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 47000,
-      "type": 8,
+      "timestamp": 45000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 47000,
-      "type": 8,
+      "timestamp": 45000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 47000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 47000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 47000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 47000,
+      "timestamp": 47457,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "oldProxy": "6",
+        "userId": "120"
       }
     },
     {
-      "timestamp": 47000,
+      "timestamp": 47457,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
+        "oldProxy": "6",
+        "userId": "125"
       }
     },
     {
-      "timestamp": 47000,
+      "timestamp": 47457,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
+        "oldProxy": "6",
+        "userId": "135"
       }
     },
     {
-      "timestamp": 47000,
+      "timestamp": 47457,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 47457,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
+        "oldProxy": "6",
+        "userId": "145"
       }
     },
     {
-      "timestamp": 47000,
+      "timestamp": 47457,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "1",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "9"
+        "usersAffected": "5"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "101"
-      }
-    },
-    {
-      "timestamp": 50200,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "104"
-      }
-    },
-    {
-      "timestamp": 50200,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
+        "newProxy": "6",
+        "oldProxy": "1",
         "userId": "110"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "116"
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "115"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "122"
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
+        "newProxy": "6",
+        "oldProxy": "1",
         "userId": "125"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "100"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "130"
       }
     },
     {
-      "timestamp": 50200,
+      "timestamp": 52867,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 52867,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "6"
+      }
+    },
+    {
+      "timestamp": 53446,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 55000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 55000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 55000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 58276,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 58276,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 58276,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 58276,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 63058,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 63686,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "6"
+      }
+    },
+    {
+      "timestamp": 65000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 65000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 65000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 69095,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 69095,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 69095,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "2"
+      }
+    },
+    {
+      "timestamp": 72669,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 74505,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 74505,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 74505,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 74505,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 74505,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "4"
+      }
+    },
+    {
+      "timestamp": 75000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 75000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 75000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 79915,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "6"
+      }
+    },
+    {
+      "timestamp": 82281,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 85000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 85000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 85000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 85324,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 85324,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 85324,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 85324,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "115"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 90734,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
         "executionTime": "0.000000",
         "success": "true",
         "usersAffected": "7"
       }
     },
     {
-      "timestamp": 51000,
-      "type": 8,
+      "timestamp": 91892,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 51000,
-      "type": 8,
+      "timestamp": 95000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 51000,
-      "type": 8,
+      "timestamp": 95000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 51000,
-      "type": 8,
+      "timestamp": 95000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 51000,
+      "timestamp": 96143,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 51000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
+        "newProxy": "6",
         "oldProxy": "1",
-        "userId": "118"
+        "userId": "110"
       }
     },
     {
-      "timestamp": 51000,
+      "timestamp": 96143,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "120"
       }
     },
     {
-      "timestamp": 51000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 51000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 51000,
+      "timestamp": 96143,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "1",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "9"
+        "usersAffected": "2"
       }
     },
     {
-      "timestamp": 55000,
+      "timestamp": 101504,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 101553,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 101553,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "130"
+      }
+    },
+    {
+      "timestamp": 101553,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "145"
+      }
+    },
+    {
+      "timestamp": 101553,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "3"
+      }
+    },
+    {
+      "timestamp": 105000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "3",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 105000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 105000,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "105"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "120"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "135"
+      }
+    },
+    {
+      "timestamp": 106963,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "5"
+      }
+    },
+    {
+      "timestamp": 111116,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "2",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
+      }
+    },
+    {
+      "timestamp": 112372,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "105"
+      }
+    },
+    {
+      "timestamp": 112372,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "110"
+      }
+    },
+    {
+      "timestamp": 112372,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "125"
+      }
+    },
+    {
+      "timestamp": 112372,
+      "type": 8,
+      "sourceNodeId": 0,
+      "metadata": {
+        "newProxy": "6",
+        "oldProxy": "1",
+        "userId": "140"
+      }
+    },
+    {
+      "timestamp": 112372,
+      "type": 1,
+      "sourceNodeId": 0,
+      "metadata": {
+        "domainId": "1",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "4"
+      }
+    },
+    {
+      "timestamp": 115000,
       "type": 7,
       "sourceNodeId": 0,
       "metadata": {
@@ -7009,307 +3898,77 @@
       }
     },
     {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "6",
-        "oldProxy": "3",
-        "userId": "111"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "114"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "120"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "123"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "3",
-        "oldProxy": "6",
-        "userId": "129"
-      }
-    },
-    {
-      "timestamp": 55000,
+      "timestamp": 115000,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "3",
         "executionTime": "0.000000",
         "success": "true",
-        "usersAffected": "5"
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 55000,
-      "type": 8,
+      "timestamp": 115000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "103"
+        "domainId": "4",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 55000,
-      "type": 8,
+      "timestamp": 115000,
+      "type": 1,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "106"
+        "domainId": "5",
+        "executionTime": "0.000000",
+        "success": "true",
+        "usersAffected": "0"
       }
     },
     {
-      "timestamp": 55000,
+      "timestamp": 117782,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "109"
+        "newProxy": "1",
+        "oldProxy": "6",
+        "userId": "110"
       }
     },
     {
-      "timestamp": 55000,
+      "timestamp": 117782,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
+        "newProxy": "1",
+        "oldProxy": "6",
         "userId": "115"
       }
     },
     {
-      "timestamp": 55000,
+      "timestamp": 117782,
       "type": 8,
       "sourceNodeId": 0,
       "metadata": {
         "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "118"
+        "oldProxy": "6",
+        "userId": "140"
       }
     },
     {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 55000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 55000,
+      "timestamp": 117782,
       "type": 1,
       "sourceNodeId": 0,
       "metadata": {
         "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "107"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "2",
-        "oldProxy": "5",
-        "userId": "122"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "5",
-        "oldProxy": "2",
-        "userId": "100"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "2",
         "executionTime": "0.000000",
         "success": "true",
         "usersAffected": "3"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "103"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "106"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "109"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "112"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "1",
-        "oldProxy": "4",
-        "userId": "115"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "118"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "121"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "124"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 8,
-      "sourceNodeId": 0,
-      "metadata": {
-        "newProxy": "4",
-        "oldProxy": "1",
-        "userId": "127"
-      }
-    },
-    {
-      "timestamp": 59000,
-      "type": 1,
-      "sourceNodeId": 0,
-      "metadata": {
-        "domainId": "1",
-        "executionTime": "0.000000",
-        "success": "true",
-        "usersAffected": "9"
       }
     }
   ]

@@ -4,8 +4,11 @@
  */
 
 #include "mtd-python-interface.h"
+#include "mtd-attack-generator.h"
 #include "ns3/log.h"
+#include "ns3/rng-seed-manager.h"
 #include "ns3/simulator.h"
+#include "ns3/random-variable-stream.h"
 
 #include <chrono>
 #include <sstream>
@@ -722,12 +725,21 @@ SimulationContext::GetTypeId()
 {
     static TypeId tid = TypeId("ns3::mtd::SimulationContext")
         .SetParent<Object>()
-        .SetGroupName("Mtd")
-        .AddConstructor<SimulationContext>();
+        .SetGroupName("Mtd");
     return tid;
 }
 
-SimulationContext::SimulationContext()
+SimulationContext::SimulationContext(uint32_t numUsers, uint32_t numProxies,
+                                     uint32_t numDomains, uint32_t numAttackers)
+    : m_numUsers(numUsers),
+      m_numProxies(numProxies),
+      m_numDomains(numDomains),
+      m_numAttackers(numAttackers),
+      m_randomSeed(1),
+      m_shuffleFrequency(10.0),
+      m_attackRate(1000.0),
+      m_initialized(false),
+      m_running(false)
 {
     NS_LOG_FUNCTION(this);
 }
@@ -738,30 +750,329 @@ SimulationContext::~SimulationContext()
 }
 
 void
-SimulationContext::Initialize(Ptr<PythonAlgorithmBridge> bridge,
-                               Ptr<DomainManager> domainManager,
-                               Ptr<ScoreManager> scoreManager,
-                               Ptr<ShuffleController> shuffleController,
-                               Ptr<EventBus> eventBus)
+SimulationContext::SetRandomSeed(uint32_t seed)
 {
-    NS_LOG_FUNCTION(this);
-    m_bridge = bridge;
-    m_domainManager = domainManager;
-    m_scoreManager = scoreManager;
-    m_shuffleController = shuffleController;
-    m_eventBus = eventBus;
+    m_randomSeed = seed;
+    // Make runs reproducible from Python.
+    ns3::RngSeedManager::SetSeed(seed);
+    ns3::RngSeedManager::SetRun(1);
 }
 
-Ptr<PythonAlgorithmBridge>
-SimulationContext::GetBridge() const
+void
+SimulationContext::SetShuffleFrequency(double frequency)
 {
-    return m_bridge;
+    m_shuffleFrequency = frequency;
+}
+
+void
+SimulationContext::SetAttackRate(double rate)
+{
+    m_attackRate = rate;
+}
+
+void
+SimulationContext::Initialize()
+{
+    NS_LOG_FUNCTION(this);
+    
+    if (m_initialized) {
+        NS_LOG_WARN("SimulationContext already initialized");
+        return;
+    }
+    
+    // Create components
+    m_eventBus = CreateObject<EventBus>();
+    // Event history is off by default; enable so ExportEventHistory() is meaningful.
+    m_eventBus->SetLogging(true);
+    m_domainManager = CreateObject<DomainManager>();
+    m_scoreManager = CreateObject<ScoreManager>();
+    m_shuffleController = CreateObject<ShuffleController>();
+    m_detector = CreateObject<LocalDetector>();
+    m_attackGenerator = CreateObject<AttackGenerator>();
+    m_exportApi = CreateObject<ExportApi>();
+    m_bridge = CreateObject<PythonAlgorithmBridge>();
+    
+    // Wire up components
+    m_domainManager->SetEventBus(m_eventBus);
+    m_shuffleController->SetDomainManager(m_domainManager);
+    m_shuffleController->SetEventBus(m_eventBus);
+    m_scoreManager->SetEventBus(m_eventBus);
+    m_attackGenerator->SetEventBus(m_eventBus);
+    m_exportApi->SetEventBus(m_eventBus);
+    m_exportApi->SetDomainManager(m_domainManager);
+    m_exportApi->SetShuffleController(m_shuffleController);
+    m_exportApi->SetAttackGenerator(m_attackGenerator);
+    
+    // Configure bridge
+    m_bridge->SetDomainManager(m_domainManager);
+    m_bridge->SetScoreManager(m_scoreManager);
+    m_bridge->SetShuffleController(m_shuffleController);
+    m_bridge->SetEventBus(m_eventBus);
+    m_bridge->SetLocalDetector(m_detector);
+    
+    // Create domains
+    for (uint32_t i = 0; i < m_numDomains; i++)
+    {
+        m_domainManager->CreateDomain("Domain_" + std::to_string(i));
+    }
+
+    // Assign proxies to domains (round-robin), include all proxies.
+    for (uint32_t proxyId = 1; proxyId <= m_numProxies; ++proxyId)
+    {
+        uint32_t domainId = ((proxyId - 1) % m_numDomains) + 1;
+        m_domainManager->AddProxy(domainId, proxyId);
+
+        // Initialize a stats entry so the detector has a baseline record.
+        m_detector->UpdateStats(proxyId, TrafficStats());
+    }
+    
+    // Create users and assign to domains
+    for (uint32_t i = 0; i < m_numUsers; i++) {
+        uint32_t userId = 100 + i;  // User IDs start at 100
+        uint32_t domainId = (i % m_numDomains) + 1;
+        m_domainManager->AddUser(domainId, userId);
+        // ScoreManager will auto-track users when they generate events
+    }
+    
+    // Configure shuffle controller
+    for (uint32_t domainId : m_domainManager->GetAllDomainIds()) {
+        m_shuffleController->SetFrequency(domainId, m_shuffleFrequency);
+    }
+    
+    // Configure attack generator
+    AttackParams attackParams;
+    attackParams.type = AttackType::UDP_FLOOD;
+    attackParams.rate = m_attackRate;
+    attackParams.adaptToDefense = true;
+    m_attackGenerator->Generate(attackParams);
+
+    // Attack targets: all proxies we created.
+    std::vector<uint32_t> targets;
+    targets.reserve(m_numProxies);
+    for (uint32_t proxyId = 1; proxyId <= m_numProxies; ++proxyId)
+    {
+        targets.push_back(proxyId);
+    }
+    m_attackGenerator->SetTargets(targets);
+    
+    // Mark first user as attacker for testing
+    // Attacker will be identified through high anomaly scores
+    
+    // Configure export API
+    ExperimentConfig config;
+    config.experimentId = "python_simulation";
+    config.randomSeed = m_randomSeed;
+    // Will be overwritten in Run() with actual duration.
+    config.simulationDuration = 0.0;
+    config.numClients = m_numUsers;
+    config.numProxies = m_numProxies;
+    config.numDomains = m_numDomains;
+    config.numAttackers = m_numAttackers;
+    config.defaultShuffleFrequency = m_shuffleFrequency;
+    m_exportApi->SetExperimentConfig(config);
+    
+    m_initialized = true;
+    NS_LOG_INFO("SimulationContext initialized: " << m_numUsers << " users, "
+                << m_numProxies << " proxies, " << m_numDomains << " domains");
+}
+
+void
+SimulationContext::SetDefenseEvaluator(DefenseEvaluator evaluator)
+{
+    if (m_bridge) {
+        m_bridge->RegisterDefenseEvaluator(evaluator);
+    }
+}
+
+void
+SimulationContext::SetScoreCalculator(ScoreCalculator calculator)
+{
+    if (m_bridge) {
+        m_bridge->RegisterScoreCalculator(calculator);
+    }
+}
+
+void
+SimulationContext::Run(double duration)
+{
+    NS_LOG_FUNCTION(this << duration);
+    
+    if (!m_initialized) {
+        Initialize();
+    }
+    
+    m_running = true;
+
+    // Update snapshot metadata for this run.
+    if (m_exportApi)
+    {
+        auto config = m_exportApi->GetExperimentConfig();
+        config.randomSeed = m_randomSeed;
+        config.simulationDuration = duration;
+        m_exportApi->SetExperimentConfig(config);
+
+        // Enable periodic recording of metrics.
+        m_exportApi->StartAutoRecording(1.0);
+    }
+    
+    // Start attack
+    Simulator::Schedule(Seconds(1.0), &AttackGenerator::Start, m_attackGenerator);
+    if (duration > 2.0)
+    {
+        Simulator::Schedule(Seconds(duration - 1.0), &AttackGenerator::Stop, m_attackGenerator);
+    }
+    
+    // Start periodic shuffles
+    for (uint32_t domainId : m_domainManager->GetAllDomainIds()) {
+        Simulator::Schedule(Seconds(5.0), 
+            &ShuffleController::StartPeriodicShuffle, m_shuffleController, domainId);
+    }
+    
+    // Schedule periodic evaluation if evaluator is set
+    ScheduleEvaluation();
+    
+    // Run simulation
+    Simulator::Stop(Seconds(duration));
+    Simulator::Run();
+
+    if (m_exportApi)
+    {
+        m_exportApi->StopAutoRecording();
+    }
+    
+    m_running = false;
+}
+
+void
+SimulationContext::Step(double stepSize)
+{
+    if (!m_initialized) {
+        Initialize();
+    }
+    
+    m_running = true;
+    double currentTime = Simulator::Now().GetSeconds();
+    Simulator::Stop(Seconds(currentTime + stepSize));
+    Simulator::Run();
+    m_running = false;
+}
+
+void
+SimulationContext::Reset()
+{
+    NS_LOG_FUNCTION(this);
+    Simulator::Destroy();
+    m_initialized = false;
+    m_running = false;
+}
+
+bool
+SimulationContext::IsRunning() const
+{
+    return m_running;
+}
+
+SimulationState
+SimulationContext::GetState() const
+{
+    if (m_bridge) {
+        return m_bridge->GetSimulationState();
+    }
+    return SimulationState();
 }
 
 double
 SimulationContext::GetCurrentTime() const
 {
     return Simulator::Now().GetSeconds();
+}
+
+Domain
+SimulationContext::GetDomainInfo(uint32_t domainId) const
+{
+    if (m_domainManager) {
+        return m_domainManager->GetDomainInfo(domainId);
+    }
+    return Domain();
+}
+
+UserScore
+SimulationContext::GetUserScore(uint32_t userId) const
+{
+    if (m_scoreManager) {
+        return m_scoreManager->GetUserScore(userId);
+    }
+    return UserScore();
+}
+
+std::map<uint32_t, UserScore>
+SimulationContext::GetAllUserScores() const
+{
+    std::map<uint32_t, UserScore> scores;
+    if (m_scoreManager) {
+        auto userIds = m_scoreManager->GetTrackedUsers();
+        for (uint32_t userId : userIds) {
+            scores[userId] = m_scoreManager->GetUserScore(userId);
+        }
+    }
+    return scores;
+}
+
+TrafficStats
+SimulationContext::GetProxyStats(uint32_t proxyId) const
+{
+    if (m_detector) {
+        return m_detector->GetStats(proxyId);
+    }
+    return TrafficStats();
+}
+
+void
+SimulationContext::TriggerShuffle(uint32_t domainId, ShuffleMode mode)
+{
+    if (m_shuffleController) {
+        m_shuffleController->TriggerShuffle(domainId, mode);
+    }
+}
+
+void
+SimulationContext::MigrateUser(uint32_t userId, uint32_t newDomainId)
+{
+    if (m_domainManager) {
+        m_domainManager->MoveUser(userId, newDomainId);
+    }
+}
+
+std::map<std::string, double>
+SimulationContext::GetResults() const
+{
+    std::map<std::string, double> results;
+    
+    if (m_bridge) {
+        auto stats = m_bridge->GetStatistics();
+        for (const auto& pair : stats) {
+            results[pair.first] = pair.second;
+        }
+    }
+    
+    results["simulationTime"] = GetCurrentTime();
+    results["numUsers"] = static_cast<double>(m_numUsers);
+    results["numProxies"] = static_cast<double>(m_numProxies);
+    results["numDomains"] = static_cast<double>(m_numDomains);
+    
+    return results;
+}
+
+void
+SimulationContext::ExportResults(const std::string& prefix)
+{
+    if (m_exportApi) {
+        m_exportApi->ExportExperimentSnapshot(prefix + "_snapshot.json");
+        m_exportApi->ExportDomainState(prefix + "_domains.json");
+        m_exportApi->ExportShuffleEvents(prefix + "_shuffles.csv");
+        m_exportApi->ExportAttackEvents(prefix + "_attacks.csv");
+        m_exportApi->ExportEventHistory(prefix + "_events.json");
+    }
 }
 
 std::vector<uint32_t>
@@ -826,6 +1137,15 @@ void
 SimulationContext::ScheduleEvent(double delaySeconds, std::function<void()> callback)
 {
     Simulator::Schedule(Seconds(delaySeconds), callback);
+}
+
+void
+SimulationContext::ScheduleEvaluation()
+{
+    // Schedule periodic evaluations
+    if (m_bridge) {
+        m_bridge->StartPeriodicEvaluation();
+    }
 }
 
 // ==================== Helper Functions ====================
