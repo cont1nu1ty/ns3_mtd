@@ -54,7 +54,7 @@ EventBus::Publish(const MtdEvent& event)
         m_eventHistory.push_back(event);
     }
 
-    // File-based logging (automatic for all events)
+    // File-based logging (when enabled, applies to all events)
     if (m_fileLoggingEnabled)
     {
         LogEventToFile(event);

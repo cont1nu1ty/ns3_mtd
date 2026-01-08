@@ -37,7 +37,14 @@ When working on `model/*.cc` or `*.h`:
 
 ## 3. Event File Logging
 
-The EventBus supports automatic file-based logging for all published events:
+When file logging is enabled, the EventBus automatically writes file-based logs for all published events.
+
+Important: enabling logs/exports is scenario-specific
+
+- File logging and CSV/JSON exports are **opt-in** and are usually configured in each example/scenario.
+- Many built-in examples call `ExportApi::SetupEventLogging(...)` during initialization, so it can look like “logs are default” when you only run examples.
+- Publishing an event via `EventBus::Publish(...)` does not automatically create files unless file logging is enabled.
+- Likewise, `ExportApi` only writes artifacts when `Export*()` methods are explicitly called.
 
 ### Log Files Generated
 - **Per-event-type files**: `ATTACK_DETECTED.log`, `SHUFFLE_COMPLETED.log`, etc. (created on-demand)

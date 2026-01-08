@@ -48,7 +48,13 @@
 
 ## 输出文件
 
-运行后在 `ns3-dev/` 根目录生成：
+输出行为说明（重要）：
+- 本项目的 **日志/导出不是固定系统默认行为**，而是由每个具体示例/场景决定是否开启。
+- 只有当示例代码中显式调用 `ExportApi.SetupEventLogging(...)` / `EventBus::EnableFileLogging(...)` 时，才会生成 `*.log` 文件。
+- 由于多数内置示例会在初始化阶段调用 `SetupEventLogging(...)`，所以“跑示例时通常能看到 `*.log`”是常态；但这并不代表框架全局默认开启。
+- 只有当示例代码中显式调用 `ExportApi.Export*()` 时，才会生成 `*.csv` / `*.json` 导出文件。
+
+常见导出文件（取决于示例是否调用导出 API）：
 
 | 文件 | 格式 | 内容 |
 |------|------|------|
@@ -60,7 +66,7 @@
 | `*_traffic.csv` | CSV | 流量追踪数据 |
 
 说明：
-- EventBus 文件日志默认输出到 `output/<experiment>/`，包含 `ALL_INFO.log`/`ALL_INFO_DEBUG.log` 以及按事件类型拆分的 `*.log`。
+- 若开启 EventBus 文件日志，推荐输出到 `output/<experiment>/`，包含 `ALL_INFO.log`/`ALL_INFO_DEBUG.log` 以及按事件类型拆分的 `*.log`。
 - `attacks.csv` 已弃用（默认示例不再生成），建议以 `events.json` 或 `ATTACK_*.log` 作为攻击相关分析数据源。
 
 ---
