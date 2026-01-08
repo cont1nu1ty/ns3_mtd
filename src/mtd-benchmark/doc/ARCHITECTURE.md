@@ -10,25 +10,12 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                      Python 用户空间                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │
-│  │ DefenseAlgorithm│  │ ScoreCalculator │  │ ShuffleStrategy │     │
-│  │   (用户实现)     │  │   (用户实现)     │  │   (用户实现)     │     │
-│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘     │
-│           └────────────────────┼────────────────────┘               │
-│                                │                                    │
-│                    ┌───────────┴───────────┐                        │
-│                    │   PythonAlgorithmBridge│  ◄── pybind11 绑定    │
-│                    └───────────┬───────────┘                        │
-└────────────────────────────────┼────────────────────────────────────┘
-                                 │
-┌────────────────────────────────┼────────────────────────────────────┐
 │                         C++ NS-3 核心                               │
-│                                │                                    │
-│  ┌─────────────────────────────┴─────────────────────────────────┐  │
-│  │                        EventBus                                │  │
-│  │         (发布/订阅模式，解耦所有组件通信)                        │  │
-│  └──────┬──────────────┬──────────────┬──────────────┬───────────┘  │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                        EventBus                              │   │
+│  │         (发布/订阅模式，解耦所有组件通信)                      │   │
+│  └──────┬──────────────┬──────────────┬──────────────┬─────────┘   │
 │         │              │              │              │              │
 │  ┌──────┴──────┐ ┌─────┴─────┐ ┌──────┴──────┐ ┌─────┴─────┐       │
 │  │  Detector   │ │  Score    │ │  Shuffle    │ │  Attack   │       │
@@ -44,32 +31,6 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 NS-3 与 Python 交互机制
-
-**数据流方向**：
-
-1. **NS-3 → Python**：仿真状态（`SimulationState`）通过 `PythonAlgorithmBridge` 封装后传递
-2. **Python → NS-3**：防御决策（`DefenseDecision`）经回调函数返回，由 Bridge 解析执行
-
-**绑定实现**：采用 pybind11，核心绑定代码位于 `model/mtd-python-interface.cc`
-
-```cpp
-// 绑定示例：注册 Python 评分回调
-void PythonAlgorithmBridge::SetScoreCallback(py::function callback) {
-    m_scoreCallback = callback;
-    m_scoreManager->SetCustomScoreCallback(
-        [this](uint32_t userId, const DetectionObservation& obs, double score) {
-            py::gil_scoped_acquire acquire;  // 获取 GIL
-            return m_scoreCallback(userId, obs, score).cast<double>();
-        });
-}
-```
-
-**内存管理要点**：
-- C++ 对象生命周期由 NS-3 智能指针 (`Ptr<T>`) 管理
-- Python 回调执行时需获取 GIL（`py::gil_scoped_acquire`）
-- `SimulationState` 为值拷贝传递，避免跨语言引用问题
-
 ---
 
 ## 2. 核心组件详解
@@ -83,8 +44,6 @@ void PythonAlgorithmBridge::SetScoreCallback(py::function callback) {
 ```cpp
 class EventBus : public Object {
 public:
-    static Ptr<EventBus> GetInstance();  // 单例模式
-    
     void Publish(const MtdEvent& event);
     void Subscribe(EventType type, EventCallback callback);
     void SubscribeAll(EventCallback callback);
@@ -109,6 +68,7 @@ private:
 | `USER_MIGRATED` | 用户迁移 | `userId`, `fromDomain`, `toDomain` |
 | `ATTACK_DETECTED` | 攻击检测 | `agentId`, `attackType`, `confidence` |
 | `SCORE_UPDATED` | 评分更新 | `userId`, `score`, `riskLevel` |
+| `USER_BANNED` | 用户封禁 | `userId`, `domainId`, `reason` |
 
 ---
 
@@ -129,9 +89,6 @@ private:
 │ 阈值规则 │     │     │ Z-score     │          │     │ ML 模型  │
 │ <1ms    │     │     │ ~10ms       │          │     │ >100ms   │
 └─────────┘     │     └─────────────┘          │     └──────────┘
-                │                              │
-           适用场景                        适用场景
-         实时洗牌触发                    离线分析/报告
 ```
 
 **类继承关系**：
@@ -210,6 +167,7 @@ struct Domain {
 | `MoveUser(userId, newDomainId)` | 跨域迁移 | O(log n) |
 | `SplitDomain(domainId)` | 按负载拆分 | O(n) |
 | `MergeDomains(idA, idB)` | 合并两域 | O(n) |
+| `BanUser(userId, reason)` | 封禁用户 | O(log n) |
 
 ---
 
@@ -315,22 +273,6 @@ attackGenerator->SubscribeDefenseEvents(
        │
 ```
 
-### 3.2 Python 算法集成流程
-
-```
-┌──────────────┐    SimulationState     ┌──────────────────┐
-│   NS-3 核心   │ ─────────────────────► │  Python 算法     │
-│              │                        │                  │
-│  EventBus    │                        │  evaluate(state) │
-│  Detectors   │                        │       │          │
-│  ScoreManager│ ◄───────────────────── │       ▼          │
-│              │    DefenseDecision     │  返回决策列表     │
-└──────────────┘                        └──────────────────┘
-       │
-       ▼ 执行决策
-  TriggerShuffle / MoveUser / UpdateScore / ...
-```
-
 ---
 
 ## 4. 扩展指南
@@ -381,5 +323,4 @@ exportApi->AddCustomMetric("myMetric", [this]() {
 | `mtd-shuffle-controller.h/cc` | 洗牌控制 |
 | `mtd-attack-generator.h/cc` | 攻击模拟 |
 | `mtd-export-api.h/cc` | 数据导出 |
-| `mtd-python-interface.h/cc` | Python 绑定 |
 | `mtd-benchmark-module.h` | 统一包含头文件 |

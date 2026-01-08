@@ -12,10 +12,14 @@
 #include "ns3/ptr.h"
 
 #include <map>
+#include <set>
 #include <vector>
 
 namespace ns3 {
 namespace mtd {
+
+// Forward declaration
+class ShuffleController;
 
 /**
  * \brief Domain load thresholds for split/merge operations
@@ -139,6 +143,14 @@ public:
      * \return True if successful
      */
     bool RemoveUser(uint32_t userId);
+
+    /**
+     * \brief Ban a user (remove from domain and publish USER_BANNED)
+     * \param userId The user ID
+     * \param reason Optional human-readable reason
+     * \return True if user existed and was removed
+     */
+    bool BanUser(uint32_t userId, const std::string& reason = "");
     
     /**
      * \brief Get domain information
@@ -166,6 +178,32 @@ public:
      * \return Vector of proxy IDs
      */
     std::vector<uint32_t> GetDomainProxies(uint32_t domainId) const;
+    
+    /**
+     * \brief Set shuffle controller reference for proxy assignment
+     * \param shuffleController Pointer to shuffle controller
+     */
+    void SetShuffleController(Ptr<ShuffleController> shuffleController);
+    
+    /**
+     * \brief Assign all users in a domain to proxies (round-robin)
+     * \param domainId The domain ID
+     * \return Number of users assigned
+     */
+    uint32_t AssignUsersToProxies(uint32_t domainId);
+    
+    /**
+     * \brief Assign all users across all domains to proxies
+     * \return Total number of users assigned
+     */
+    uint32_t AssignAllUsersToProxies();
+    
+    /**
+     * \brief Check if a user is banned
+     * \param userId The user ID
+     * \return True if user is banned
+     */
+    bool IsUserBanned(uint32_t userId) const;
     
     /**
      * \brief Set domain thresholds
@@ -248,10 +286,12 @@ private:
     std::map<uint32_t, Domain> m_domains;
     std::map<uint32_t, uint32_t> m_userToDomain;
     std::map<uint32_t, uint32_t> m_proxyToDomain;
+    std::set<uint32_t> m_bannedUsers;             // Track banned users
     DomainThresholds m_thresholds;
     DomainStrategy m_strategy;
     DomainStrategyCallback m_customStrategy;
     Ptr<EventBus> m_eventBus;
+    Ptr<ShuffleController> m_shuffleController;   // For proxy assignment
     uint32_t m_nextDomainId;
     
     uint32_t ConsistentHashAssign(uint32_t userId) const;

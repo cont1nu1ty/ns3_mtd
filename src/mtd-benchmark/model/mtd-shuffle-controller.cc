@@ -85,7 +85,7 @@ ShuffleController::SetEventBus(Ptr<EventBus> eventBus)
 }
 
 ShuffleEvent
-ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode)
+ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode, const std::string& reason)
 {
     NS_LOG_FUNCTION(this << domainId << static_cast<int>(mode));
     
@@ -93,6 +93,7 @@ ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode)
     event.domainId = domainId;
     event.timestamp = Simulator::Now().GetMilliSeconds();
     event.strategy = SwitchStrategy::ADAPTIVE; // Map from ShuffleMode
+    event.reason = reason;
     
     if (m_domainManager == nullptr)
     {
@@ -201,8 +202,16 @@ ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode)
     
     NotifyShuffleEvent(event);
     
-    NS_LOG_INFO("Shuffle completed for domain " << domainId 
-                << ": " << usersShuffled << " users shuffled");
+    if (!event.reason.empty())
+    {
+        NS_LOG_INFO("Shuffle completed for domain " << domainId
+                    << ": " << usersShuffled << " users shuffled (reason: " << event.reason << ")");
+    }
+    else
+    {
+        NS_LOG_INFO("Shuffle completed for domain " << domainId
+                    << ": " << usersShuffled << " users shuffled");
+    }
     
     return event;
 }
@@ -363,6 +372,22 @@ ShuffleController::GetUserProxyHistory(uint32_t userId) const
     return std::vector<ProxyAssignment>();
 }
 
+std::vector<uint32_t>
+ShuffleController::GetUsersOnProxy(uint32_t proxyId) const
+{
+    NS_LOG_FUNCTION(this << proxyId);
+    
+    std::vector<uint32_t> users;
+    for (const auto& pair : m_userToProxy)
+    {
+        if (pair.second == proxyId)
+        {
+            users.push_back(pair.first);
+        }
+    }
+    return users;
+}
+
 bool
 ShuffleController::IsInActiveSession(uint32_t userId) const
 {
@@ -511,7 +536,7 @@ ShuffleController::PerformPeriodicShuffle(uint32_t domainId)
     NS_LOG_FUNCTION(this << domainId);
     
     // Perform shuffle
-    TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN);
+    TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN, "");
     
     // Calculate next frequency (potentially adaptive)
     double nextFrequency = CalculateAdaptiveFrequency(domainId);
@@ -533,6 +558,10 @@ ShuffleController::NotifyShuffleEvent(const ShuffleEvent& event)
         mtdEvent.metadata["usersAffected"] = std::to_string(event.usersAffected);
         mtdEvent.metadata["executionTime"] = std::to_string(event.executionTime);
         mtdEvent.metadata["success"] = event.success ? "true" : "false";
+        if (!event.reason.empty())
+        {
+            mtdEvent.metadata["reason"] = event.reason;
+        }
         m_eventBus->Publish(mtdEvent);
     }
 }

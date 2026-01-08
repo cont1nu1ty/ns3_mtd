@@ -73,6 +73,19 @@ ExportApi::SetAttackGenerator(Ptr<AttackGenerator> attackGenerator)
 {
     NS_LOG_FUNCTION(this);
     m_attackGenerator = attackGenerator;
+    // Also add to the vector for multi-attacker support
+    if (attackGenerator != nullptr) {
+        m_attackGenerators.push_back(attackGenerator);
+    }
+}
+
+void
+ExportApi::AddAttackGenerator(Ptr<AttackGenerator> attackGenerator)
+{
+    NS_LOG_FUNCTION(this);
+    if (attackGenerator != nullptr) {
+        m_attackGenerators.push_back(attackGenerator);
+    }
 }
 
 void
@@ -179,6 +192,26 @@ ExportApi::ExportAttackEvents(const std::string& path, ExportFormat format)
             break;
     }
     
+    return WriteToFile(path, content);
+}
+
+bool
+ExportApi::ExportBanEvents(const std::string& path, ExportFormat format)
+{
+    NS_LOG_FUNCTION(this << path);
+
+    std::string content;
+
+    switch (format)
+    {
+        case ExportFormat::CSV:
+            content = GenerateBansCsv();
+            break;
+        default:
+            content = GenerateBansCsv();
+            break;
+    }
+
     return WriteToFile(path, content);
 }
 
@@ -304,6 +337,34 @@ std::string
 ExportApi::GetOutputDirectory() const
 {
     return m_outputDirectory;
+}
+
+void
+ExportApi::SetupEventLogging()
+{
+    NS_LOG_FUNCTION(this);
+    SetupEventLogging(FileLogLevel::INFO, 0, false);
+}
+
+void
+ExportApi::SetupEventLogging(FileLogLevel logLevel, size_t flushEveryN, bool strongConsistency)
+{
+    NS_LOG_FUNCTION(this << static_cast<int>(logLevel) << flushEveryN << strongConsistency);
+
+    if (m_eventBus == nullptr)
+    {
+        NS_LOG_ERROR("EventBus not set - cannot setup event logging");
+        return;
+    }
+
+    m_eventBus->SetFileLogLevel(logLevel);
+    m_eventBus->SetFlushPolicy(flushEveryN, strongConsistency);
+    m_eventBus->EnableFileLogging(m_outputDirectory);
+
+    NS_LOG_INFO("Event logging configured: dir=" << m_outputDirectory 
+                << " level=" << (logLevel == FileLogLevel::DEBUG ? "DEBUG" : "INFO")
+                << " flushEveryN=" << flushEveryN 
+                << " strongConsistency=" << strongConsistency);
 }
 
 void
@@ -511,15 +572,35 @@ ExportApi::GenerateAttackCsv() const
     std::ostringstream ss;
     ss << std::fixed << std::setprecision(3);
     
-    // Header
-    ss << "timestamp,type,targetProxyId,rate,duration,defenseTriggered\n";
+    // Header with attacker ID
+    ss << "timestamp,attackerId,type,targetProxyId,rate,duration,defenseTriggered\n";
     
-    if (m_attackGenerator != nullptr)
+    // Export from all attack generators
+    if (!m_attackGenerators.empty())
     {
+        for (size_t attackerId = 0; attackerId < m_attackGenerators.size(); ++attackerId)
+        {
+            auto history = m_attackGenerators[attackerId]->GetAttackHistory();
+            for (const auto& event : history)
+            {
+                ss << event.timestamp << ",";
+                ss << (attackerId + 1) << ",";  // 1-indexed attacker ID
+                ss << static_cast<int>(event.type) << ",";
+                ss << event.targetProxyId << ",";
+                ss << event.rate << ",";
+                ss << event.duration << ",";
+                ss << (event.defenseTriggered ? "true" : "false") << "\n";
+            }
+        }
+    }
+    else if (m_attackGenerator != nullptr)
+    {
+        // Fallback to single attacker (backward compatibility)
         auto history = m_attackGenerator->GetAttackHistory();
         for (const auto& event : history)
         {
             ss << event.timestamp << ",";
+            ss << "1,";  // Default attacker ID
             ss << static_cast<int>(event.type) << ",";
             ss << event.targetProxyId << ",";
             ss << event.rate << ",";
@@ -527,7 +608,167 @@ ExportApi::GenerateAttackCsv() const
             ss << (event.defenseTriggered ? "true" : "false") << "\n";
         }
     }
+
+    // If no AttackGenerator is attached, derive a minimal attack CSV from EventBus events.
+    // This supports Python-driven scenarios that publish ATTACK_DETECTED/STARTED/STOPPED
+    // events without using AttackGenerator traffic generation.
+    else if (m_eventBus != nullptr)
+    {
+        const auto events = m_eventBus->GetEventHistory();
+        for (const auto& ev : events)
+        {
+            if (ev.type != EventType::ATTACK_DETECTED)
+            {
+                continue;
+            }
+
+            uint32_t attackerUserId = 0;
+            auto itAttacker = ev.metadata.find("attackerUserId");
+            if (itAttacker != ev.metadata.end())
+            {
+                try
+                {
+                    attackerUserId = static_cast<uint32_t>(std::stoul(itAttacker->second));
+                }
+                catch (...)
+                {
+                }
+            }
+
+            uint32_t proxyId = static_cast<uint32_t>(ev.sourceNodeId);
+            auto itProxy = ev.metadata.find("proxyId");
+            if (itProxy != ev.metadata.end())
+            {
+                try
+                {
+                    proxyId = static_cast<uint32_t>(std::stoul(itProxy->second));
+                }
+                catch (...)
+                {
+                }
+            }
+
+            // Best-effort parse of attack type; default to DOS.
+            AttackType attackType = AttackType::DOS;
+            auto itType = ev.metadata.find("attackType");
+            if (itType != ev.metadata.end())
+            {
+                try
+                {
+                    attackType = static_cast<AttackType>(std::stoul(itType->second));
+                }
+                catch (...)
+                {
+                    // allow string names like "DOS", "UDP_FLOOD", ...
+                    const std::string& s = itType->second;
+                    if (s == "NONE") attackType = AttackType::NONE;
+                    else if (s == "DOS") attackType = AttackType::DOS;
+                    else if (s == "PROBE") attackType = AttackType::PROBE;
+                    else if (s == "PORT_SCAN") attackType = AttackType::PORT_SCAN;
+                    else if (s == "ROUTE_MONITOR") attackType = AttackType::ROUTE_MONITOR;
+                    else if (s == "SYN_FLOOD") attackType = AttackType::SYN_FLOOD;
+                    else if (s == "UDP_FLOOD") attackType = AttackType::UDP_FLOOD;
+                    else if (s == "HTTP_FLOOD") attackType = AttackType::HTTP_FLOOD;
+                }
+            }
+
+            // Python-driven scenarios may not have meaningful rate/duration.
+            double rate = 0.0;
+            double duration = 0.0;
+            bool defenseTriggered = false;
+            auto itRate = ev.metadata.find("rate");
+            if (itRate != ev.metadata.end())
+            {
+                try
+                {
+                    rate = std::stod(itRate->second);
+                }
+                catch (...)
+                {
+                }
+            }
+            auto itDuration = ev.metadata.find("duration");
+            if (itDuration != ev.metadata.end())
+            {
+                try
+                {
+                    duration = std::stod(itDuration->second);
+                }
+                catch (...)
+                {
+                }
+            }
+            auto itDefense = ev.metadata.find("defenseTriggered");
+            if (itDefense != ev.metadata.end())
+            {
+                defenseTriggered = (itDefense->second == "true" || itDefense->second == "1");
+            }
+
+            ss << ev.timestamp << ",";
+            ss << attackerUserId << ",";
+            ss << static_cast<int>(attackType) << ",";
+            ss << proxyId << ",";
+            ss << rate << ",";
+            ss << duration << ",";
+            ss << (defenseTriggered ? "true" : "false") << "\n";
+        }
+    }
     
+    return ss.str();
+}
+
+std::string
+ExportApi::GenerateBansCsv() const
+{
+    std::ostringstream ss;
+    ss << "timestamp,userId,domainId,reason\n";
+
+    if (m_eventBus == nullptr)
+    {
+        return ss.str();
+    }
+
+    const auto events = m_eventBus->GetEventHistory();
+    for (const auto& event : events)
+    {
+        if (event.type != EventType::USER_BANNED)
+        {
+            continue;
+        }
+
+        uint32_t userId = event.sourceNodeId;
+        auto itUser = event.metadata.find("userId");
+        if (itUser != event.metadata.end())
+        {
+            try
+            {
+                userId = static_cast<uint32_t>(std::stoul(itUser->second));
+            }
+            catch (...)
+            {
+            }
+        }
+
+        std::string domainId;
+        auto itDomain = event.metadata.find("domainId");
+        if (itDomain != event.metadata.end())
+        {
+            domainId = itDomain->second;
+        }
+
+        std::string reason;
+        auto itReason = event.metadata.find("reason");
+        if (itReason != event.metadata.end())
+        {
+            reason = itReason->second;
+        }
+
+        ss << event.timestamp << ",";
+        ss << userId << ",";
+        ss << domainId << ",";
+        ss << "\"" << EscapeCsv(reason) << "\"\n";
+    }
+
     return ss.str();
 }
 
@@ -576,6 +817,13 @@ ExportApi::GenerateEventJson() const
 bool
 ExportApi::WriteToFile(const std::string& path, const std::string& content)
 {
+    // Ensure event log files are up-to-date before exporting derived artifacts.
+    // This avoids losing the final (partial) batch when using buffered flush policies.
+    if (m_eventBus != nullptr && m_eventBus->IsFileLoggingEnabled())
+    {
+        m_eventBus->FlushLogs();
+    }
+
     if (path.empty())
     {
         NS_LOG_ERROR("Empty path provided");
@@ -594,6 +842,18 @@ ExportApi::WriteToFile(const std::string& path, const std::string& content)
     {
         std::filesystem::path outputDir(m_outputDirectory);
         fullPath = (outputDir / fsPath).string();
+    }
+
+    // Create parent directory if it doesn't exist
+    std::filesystem::path parentDir = std::filesystem::path(fullPath).parent_path();
+    if (!parentDir.empty() && !std::filesystem::exists(parentDir))
+    {
+        std::error_code ec;
+        if (!std::filesystem::create_directories(parentDir, ec))
+        {
+            NS_LOG_ERROR("Failed to create directory: " << parentDir << " - " << ec.message());
+            return false;
+        }
     }
     
     std::ofstream file(fullPath);

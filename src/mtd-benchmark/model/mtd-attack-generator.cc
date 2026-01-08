@@ -33,13 +33,17 @@ AttackGenerator::AttackGenerator()
       m_active(false),
       m_paused(false),
       m_eventSubscriptionId(0),
-      m_lastCooldownEnd(0),
-      m_cooldownPeriod(10.0),
-      m_packetCount(0),
-      m_byteCount(0),
-      m_attackCount(0),
-      m_nextCallbackId(1),
-      m_roundRobinIdx(0)
+    m_attackLogIntervalMs(1000),
+    m_lastLoggedMs(0),
+    m_lastLoggedTargetId(0),
+    m_hasLastLogged(false),
+    m_lastCooldownEnd(0),
+    m_cooldownPeriod(10.0),
+    m_packetCount(0),
+    m_byteCount(0),
+    m_attackCount(0),
+    m_nextCallbackId(1),
+    m_roundRobinIdx(0)
 {
     NS_LOG_FUNCTION(this);
     
@@ -114,19 +118,28 @@ AttackGenerator::SetEventBus(Ptr<EventBus> eventBus)
     
     m_eventBus = eventBus;
     
-    // Subscribe to defense events
-    if (m_eventBus != nullptr && m_params.adaptToDefense)
+    if (m_eventBus != nullptr)
     {
-        m_eventSubscriptionId = m_eventBus->Subscribe(
-            EventType::SHUFFLE_COMPLETED,
+        // Always subscribe to ATTACK_DETECTED to mark defenseTriggered
+        m_eventBus->Subscribe(
+            EventType::ATTACK_DETECTED,
             MakeCallback(&AttackGenerator::OnDefenseEvent, this)
         );
         
-        // Also subscribe to proxy switch events
-        m_eventBus->Subscribe(
-            EventType::PROXY_SWITCHED,
-            MakeCallback(&AttackGenerator::OnDefenseEvent, this)
-        );
+        // Subscribe to defense events only if adaptive
+        if (m_params.adaptToDefense)
+        {
+            m_eventSubscriptionId = m_eventBus->Subscribe(
+                EventType::SHUFFLE_COMPLETED,
+                MakeCallback(&AttackGenerator::OnDefenseEvent, this)
+            );
+            
+            // Also subscribe to proxy switch events
+            m_eventBus->Subscribe(
+                EventType::PROXY_SWITCHED,
+                MakeCallback(&AttackGenerator::OnDefenseEvent, this)
+            );
+        }
     }
 }
 
@@ -388,7 +401,36 @@ AttackGenerator::OnDefenseEvent(const MtdEvent& event)
         pair.second(event);
     }
     
-    // Adapt if enabled
+    // Always mark defenseTriggered when attack is detected (for all modes).
+    // Semantics: mark the most recent attack record to that proxy, or if none
+    // exists yet, mark the *next* record to that proxy (one-shot).
+    if (event.type == EventType::ATTACK_DETECTED)
+    {
+        const uint32_t detectedProxy = event.sourceNodeId;
+
+        bool marked = false;
+        if (!m_history.empty())
+        {
+            // Find attack events targeting the detected proxy
+            for (auto it = m_history.rbegin(); it != m_history.rend(); ++it)
+            {
+                if (it->targetProxyId == detectedProxy && !it->defenseTriggered)
+                {
+                    it->defenseTriggered = true;
+                    marked = true;
+                    NS_LOG_DEBUG("Marked attack on proxy " << detectedProxy << " as detected");
+                    break;  // Only mark the most recent one
+                }
+            }
+        }
+
+        if (!marked)
+        {
+            m_pendingDetectedProxies.insert(detectedProxy);
+        }
+    }
+    
+    // Adapt behavior only if enabled
     if (m_params.adaptToDefense)
     {
         AdaptToDefense(event);
@@ -400,6 +442,12 @@ AttackGenerator::AdaptToDefense(const MtdEvent& event)
 {
     NS_LOG_FUNCTION(this << static_cast<int>(event.type));
     
+    // Skip ATTACK_DETECTED here - already handled above
+    if (event.type == EventType::ATTACK_DETECTED)
+    {
+        return;
+    }
+    
     switch (m_behavior)
     {
         case AttackBehavior::ADAPTIVE:
@@ -408,13 +456,6 @@ AttackGenerator::AdaptToDefense(const MtdEvent& event)
             if (event.type == EventType::SHUFFLE_COMPLETED)
             {
                 EnterCooldown();
-                
-                // Mark recent attack as triggering defense
-                if (!m_history.empty())
-                {
-                    m_history.back().defenseTriggered = true;
-                }
-                
                 NS_LOG_INFO("Defense detected, entering cooldown");
             }
             else if (event.type == EventType::PROXY_SWITCHED)
@@ -500,16 +541,49 @@ AttackGenerator::SelectTarget()
 void
 AttackGenerator::RecordAttackEvent(uint32_t targetId)
 {
+    const uint64_t nowMs = Simulator::Now().GetMilliSeconds();
+
+    // If a detection mark is pending for this target, we must record an entry
+    // to surface the one-shot defenseTriggered=true and consume the pending.
+    const bool hasPendingDetection =
+        (m_pendingDetectedProxies.find(targetId) != m_pendingDetectedProxies.end());
+
+    // Throttle history logging to avoid per-packet flooding at high pps.
+    // Always record when target changes (helps track adaptation), or when we
+    // need to emit a pending detection marker.
+    if (!hasPendingDetection && m_hasLastLogged)
+    {
+        const bool sameTarget = (targetId == m_lastLoggedTargetId);
+        const bool withinInterval = (nowMs < m_lastLoggedMs + m_attackLogIntervalMs);
+        if (sameTarget && withinInterval)
+        {
+            return;
+        }
+    }
+
     AttackEvent event;
-    event.timestamp = Simulator::Now().GetMilliSeconds();
+    event.timestamp = nowMs;
     event.type = m_params.type;
     event.targetProxyId = targetId;
     event.rate = m_params.rate;
     event.duration = m_params.duration;
-    event.defenseTriggered = false;
+    auto pendingIt = m_pendingDetectedProxies.find(targetId);
+    if (pendingIt != m_pendingDetectedProxies.end())
+    {
+        event.defenseTriggered = true;
+        m_pendingDetectedProxies.erase(pendingIt);
+    }
+    else
+    {
+        event.defenseTriggered = false;
+    }
     
     m_history.push_back(event);
     m_attackCount++;
+
+    m_lastLoggedMs = nowMs;
+    m_lastLoggedTargetId = targetId;
+    m_hasLastLogged = true;
     
     // Limit history size
     if (m_history.size() > 1000)

@@ -231,7 +231,7 @@ ShuffleControllerTestCase::DoRun()
                           "User 101 should be assigned to proxy 2");
     
     // Trigger shuffle
-    ShuffleEvent event = shuffleController->TriggerShuffle(domainId, ShuffleMode::RANDOM);
+    ShuffleEvent event = shuffleController->TriggerShuffle(domainId, ShuffleMode::RANDOM, "");
     NS_TEST_ASSERT_MSG_EQ(event.success, true, "Shuffle should succeed");
     
     Simulator::Destroy();
@@ -449,7 +449,7 @@ MtdEndToEndTestCase::DoRun()
                           static_cast<int>(RiskLevel::HIGH),
                           "Attack observation should elevate user to HIGH risk");
 
-    ShuffleEvent shuffleEvent = shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN);
+    ShuffleEvent shuffleEvent = shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN, "");
     NS_TEST_ASSERT_MSG_EQ(shuffleEvent.success, true, "Shuffle should succeed for populated domain");
     NS_TEST_ASSERT_MSG_EQ(shuffleController->GetProxyAssignment(100), 2u,
                           "User should be re-assigned to a different proxy");

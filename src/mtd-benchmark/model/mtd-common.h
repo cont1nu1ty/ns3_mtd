@@ -67,7 +67,49 @@ enum class EventType {
     ATTACK_STOPPED,         ///< Attack simulation stopped
     PROXY_SWITCHED,         ///< Proxy assignment changed
     THRESHOLD_EXCEEDED,     ///< Detection threshold exceeded
-    SCORE_UPDATED           ///< User score updated
+    SCORE_UPDATED,          ///< User score updated
+    USER_BANNED,            ///< User banned/removed from simulation
+    EVENT_TYPE_COUNT        ///< Sentinel for iteration (must be last)
+};
+
+/**
+ * \brief Convert EventType to string representation
+ * \param type The event type to convert
+ * \return String name of the event type
+ * 
+ * Uses indexed array lookup for O(1) conversion. New event types added
+ * before EVENT_TYPE_COUNT are automatically handled.
+ */
+inline std::string EventTypeToString(EventType type)
+{
+    static const char* names[] = {
+        "SHUFFLE_TRIGGERED",
+        "SHUFFLE_COMPLETED",
+        "DOMAIN_SPLIT",
+        "DOMAIN_MERGE",
+        "USER_MIGRATED",
+        "ATTACK_DETECTED",
+        "ATTACK_STARTED",
+        "ATTACK_STOPPED",
+        "PROXY_SWITCHED",
+        "THRESHOLD_EXCEEDED",
+        "SCORE_UPDATED",
+        "USER_BANNED"
+    };
+    auto idx = static_cast<size_t>(type);
+    if (idx < static_cast<size_t>(EventType::EVENT_TYPE_COUNT))
+    {
+        return names[idx];
+    }
+    return "UNKNOWN_" + std::to_string(idx);
+}
+
+/**
+ * \brief Log levels for file-based event logging
+ */
+enum class FileLogLevel {
+    INFO,   ///< Basic event info (type, timestamp, nodeId)
+    DEBUG   ///< Full event info including all metadata
 };
 
 /**

@@ -94,7 +94,25 @@ public:
      * \param userId The user ID
      * \param observation The detection observation
      */
-    void UpdateScore(uint32_t userId, const DetectionObservation& observation);
+    void UpdateScore(uint32_t userId, const DetectionObservation& observation, const std::string& reason = "");
+    
+    /**
+     * \brief Add a fixed delta to a user's score (simple increment)
+     * \param userId The user ID
+     * \param delta The amount to add (can be negative)
+     * \param reason Optional reason for the score change
+     * \return The new score after addition
+     */
+    double AddScore(uint32_t userId, double delta, const std::string& reason = "");
+    
+    /**
+     * \brief Add a fixed delta to multiple users' scores
+     * \param userIds Vector of user IDs to update
+     * \param delta The amount to add to each user
+     * \param reason Optional reason for the score change
+     * \return Map of userId -> new score
+     */
+    std::map<uint32_t, double> AddScoreToUsers(const std::vector<uint32_t>& userIds, double delta, const std::string& reason = "");
     
     /**
      * \brief Get current risk level for a user
@@ -218,7 +236,7 @@ private:
     
     RiskLevel CalculateRiskLevel(double score) const;
     double CalculateNewScore(const UserScore& current, const DetectionObservation& obs) const;
-    void NotifyScoreUpdate(uint32_t userId, const UserScore& score);
+    void NotifyScoreUpdate(uint32_t userId, const UserScore& score, const std::string& reason);
 };
 
 } // namespace mtd

@@ -63,7 +63,7 @@ ScoreManager::GetRiskThresholds() const
 }
 
 void
-ScoreManager::UpdateScore(uint32_t userId, const DetectionObservation& observation)
+ScoreManager::UpdateScore(uint32_t userId, const DetectionObservation& observation, const std::string& reason)
 {
     NS_LOG_FUNCTION(this << userId);
     
@@ -109,7 +109,55 @@ ScoreManager::UpdateScore(uint32_t userId, const DetectionObservation& observati
     }
     
     // Notify via event bus
-    NotifyScoreUpdate(userId, userScore);
+    NotifyScoreUpdate(userId, userScore, reason);
+}
+
+double
+ScoreManager::AddScore(uint32_t userId, double delta, const std::string& reason)
+{
+    NS_LOG_FUNCTION(this << userId << delta);
+    
+    // Get or create user score
+    if (m_userScores.find(userId) == m_userScores.end())
+    {
+        m_userScores[userId] = UserScore(userId);
+    }
+    
+    UserScore& userScore = m_userScores[userId];
+    
+    // Simple addition with clamping
+    double newScore = std::clamp(userScore.currentScore + delta, 0.0, 1.0);
+    userScore.currentScore = newScore;
+    
+    // Update risk level
+    if (!m_customRiskLevelCallback.IsNull())
+    {
+        userScore.riskLevel = m_customRiskLevelCallback(userId, newScore);
+    }
+    else
+    {
+        userScore.riskLevel = CalculateRiskLevel(newScore);
+    }
+    
+    userScore.lastUpdateTime = Simulator::Now().GetMilliSeconds();
+    
+    // Notify via event bus
+    NotifyScoreUpdate(userId, userScore, reason);
+    
+    return newScore;
+}
+
+std::map<uint32_t, double>
+ScoreManager::AddScoreToUsers(const std::vector<uint32_t>& userIds, double delta, const std::string& reason)
+{
+    NS_LOG_FUNCTION(this << delta << userIds.size());
+    
+    std::map<uint32_t, double> results;
+    for (uint32_t userId : userIds)
+    {
+        results[userId] = AddScore(userId, delta, reason);
+    }
+    return results;
 }
 
 RiskLevel
@@ -193,7 +241,7 @@ ScoreManager::ApplyFeedback(uint32_t userId, double feedbackScore)
             it->second.riskLevel = CalculateRiskLevel(it->second.currentScore);
         }
         
-        NotifyScoreUpdate(userId, it->second);
+        NotifyScoreUpdate(userId, it->second, "");
     }
 }
 
@@ -348,7 +396,7 @@ ScoreManager::CalculateNewScore(const UserScore& current, const DetectionObserva
 }
 
 void
-ScoreManager::NotifyScoreUpdate(uint32_t userId, const UserScore& score)
+ScoreManager::NotifyScoreUpdate(uint32_t userId, const UserScore& score, const std::string& reason)
 {
     if (m_eventBus != nullptr)
     {
@@ -356,6 +404,10 @@ ScoreManager::NotifyScoreUpdate(uint32_t userId, const UserScore& score)
         event.metadata["userId"] = std::to_string(userId);
         event.metadata["score"] = std::to_string(score.currentScore);
         event.metadata["riskLevel"] = std::to_string(static_cast<int>(score.riskLevel));
+        if (!reason.empty())
+        {
+            event.metadata["reason"] = reason;
+        }
         m_eventBus->Publish(event);
     }
 }

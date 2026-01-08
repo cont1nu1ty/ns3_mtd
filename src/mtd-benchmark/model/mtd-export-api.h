@@ -76,6 +76,12 @@ public:
     void SetAttackGenerator(Ptr<AttackGenerator> attackGenerator);
     
     /**
+     * \brief Add attack generator (for multiple attackers)
+     * \param attackGenerator Pointer to attack generator
+     */
+    void AddAttackGenerator(Ptr<AttackGenerator> attackGenerator);
+    
+    /**
      * \brief Set event bus reference
      * \param eventBus Pointer to event bus
      */
@@ -125,6 +131,15 @@ public:
      */
     bool ExportAttackEvents(const std::string& path,
                             ExportFormat format = ExportFormat::CSV);
+
+    /**
+     * \brief Export user ban events (derived from event history)
+     * \param path Output file path
+     * \param format Export format
+     * \return True if successful
+     */
+    bool ExportBanEvents(const std::string& path,
+                         ExportFormat format = ExportFormat::CSV);
     
     /**
      * \brief Export event bus history
@@ -178,6 +193,23 @@ public:
      */
     std::string GetOutputDirectory() const;
 
+    /**
+     * \brief Setup event logging on the EventBus
+     * 
+     * Convenience method that enables file-based event logging using
+     * the configured output directory. Creates per-event-type log files
+     * and aggregate logs (ALL_INFO.log, ALL_INFO_DEBUG.log).
+     */
+    void SetupEventLogging();
+
+    /**
+     * \brief Setup event logging with custom configuration
+     * \param logLevel Log level for per-event-type files
+     * \param flushEveryN Flush after N events (0 = only on close)
+     * \param strongConsistency If true, flush after every write
+     */
+    void SetupEventLogging(FileLogLevel logLevel, size_t flushEveryN = 0, bool strongConsistency = false);
+
 private:
     struct TrafficRecord {
         uint64_t timestamp;
@@ -190,6 +222,7 @@ private:
     Ptr<DomainManager> m_domainManager;
     Ptr<ShuffleController> m_shuffleController;
     Ptr<AttackGenerator> m_attackGenerator;
+    std::vector<Ptr<AttackGenerator>> m_attackGenerators;  // Multiple attackers
     Ptr<EventBus> m_eventBus;
     
     std::vector<TrafficRecord> m_trafficRecords;
@@ -204,6 +237,7 @@ private:
     std::string GenerateDomainJson() const;
     std::string GenerateShuffleCsv() const;
     std::string GenerateAttackCsv() const;
+    std::string GenerateBansCsv() const;
     std::string GenerateEventJson() const;
     
     bool WriteToFile(const std::string& path, const std::string& content);

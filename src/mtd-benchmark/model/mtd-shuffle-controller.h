@@ -110,7 +110,9 @@ public:
      * \param mode The shuffle mode/strategy
      * \return Shuffle event record
      */
-    ShuffleEvent TriggerShuffle(uint32_t domainId, ShuffleMode mode);
+    ShuffleEvent TriggerShuffle(uint32_t domainId,
+                                ShuffleMode mode,
+                                const std::string& reason = "");
     
     /**
      * \brief Set shuffle frequency for a domain
@@ -179,6 +181,13 @@ public:
      * \return Vector of proxy assignments
      */
     std::vector<ProxyAssignment> GetUserProxyHistory(uint32_t userId) const;
+
+    /**
+     * \brief Get all users currently assigned to a specific proxy
+     * \param proxyId The proxy ID
+     * \return Vector of user IDs on this proxy
+     */
+    std::vector<uint32_t> GetUsersOnProxy(uint32_t proxyId) const;
     
     /**
      * \brief Check if a user is in an active session

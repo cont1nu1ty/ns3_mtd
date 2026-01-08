@@ -2,16 +2,17 @@
 /*
  * MTD-Benchmark: Full Defense Test
  * 
- * This is a comprehensive end-to-end test that demonstrates
- * a complete attack-defense cycle with all MTD components:
+ * Comprehensive attack-defense cycle demonstration:
  * 
- * 1. Attack Detection (LocalDetector, CrossAgentDetector, GlobalDetector)
- * 2. Risk Scoring and Classification (ScoreManager)
- * 3. Domain Management (DomainManager - split/merge/migrate)
- * 4. Shuffle Operations (ShuffleController - multiple strategies)
- * 5. Adaptive Attack Response (AttackGenerator)
- * 6. Event-driven Architecture (EventBus)
- * 7. Metrics Export (ExportApi)
+ * Attack Model:
+ *   - AttackGenerator attacks proxies in round-robin
+ *   - When SHUFFLE_COMPLETED is detected, attacker enters cooldown
+ * 
+ * Defense Model:
+ *   - LocalDetector monitors proxy traffic periodically
+ *   - On ATTACK_DETECTED: users on that proxy get score +1
+ *   - Shuffle triggered for affected domain
+ *   - When score >= BAN_THRESHOLD, user is banned
  */
 
 #include "ns3/core-module.h"
@@ -21,47 +22,60 @@
 #include "ns3/mtd-network-helper.h"
 #include "ns3/mtd-export-api.h"
 
+#include <set>
+
 using namespace ns3;
 using namespace ns3::mtd;
 
 NS_LOG_COMPONENT_DEFINE("MtdFullDefenseTest");
 
-// ==================== Global Statistics ====================
+// ==================== Configuration Constants ====================
+
+static const double BAN_THRESHOLD = 0.99;           // Score threshold for banning (max 1.0)
+static const double DETECTION_INTERVAL = 1.0;       // Detection check interval (seconds)
+static const double ATTACK_COOLDOWN = 5.0;          // Attacker cooldown after shuffle (seconds)
+static const double ATTACK_RATE = 15000.0;          // Attack packet rate
+
+// ==================== Global State ====================
 
 struct TestStatistics {
     uint32_t attacksDetected = 0;
     uint32_t shufflesTriggered = 0;
-    uint32_t usersMigrated = 0;
-    uint32_t domainsSplit = 0;
-    uint32_t domainsMerged = 0;
-    uint32_t attackAdaptations = 0;
-    double totalDefenseLatency = 0.0;
-    std::vector<double> riskScoreHistory;
+    uint32_t usersBanned = 0;
+    uint32_t attackCooldowns = 0;
 };
 
 static TestStatistics g_stats;
 
+// Global pointers for scheduled callbacks
+static Ptr<LocalDetector> g_detector;
+static Ptr<EventBus> g_eventBus;
+static Ptr<ShuffleController> g_shuffleController;
+static Ptr<DomainManager> g_domainManager;
+static Ptr<AttackGenerator> g_attackGenerator;
+static Ptr<ScoreManager> g_scoreManager;
+static std::vector<uint32_t> g_proxyIds;
+
+// Attacker is a user - can only attack the proxy they're assigned to
+static const uint32_t ATTACKER_USER_ID = 999;
+
+// ==================== Score Management ====================
+// Simple +0.1 per attack, 10 attacks = banned
+static const double SCORE_INCREMENT = 0.1;
+
 // ==================== Event Handlers ====================
 
-void OnAttackDetected(Ptr<ScoreManager> scoreManager, 
-                      Ptr<ShuffleController> shuffleController,
-                      Ptr<DomainManager> domainManager,
-                      const MtdEvent& event)
+void OnAttackDetected(const MtdEvent& event)
 {
     g_stats.attacksDetected++;
-    
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] ATTACK DETECTED on proxy " 
-                << event.sourceNodeId);
-    
-    // Get affected users - use sourceNodeId as proxy ID
     uint32_t proxyId = event.sourceNodeId;
     
-    // Find domain containing this proxy
-    std::vector<uint32_t> domainIds = domainManager->GetAllDomainIds();
-    uint32_t domainId = 0;
+    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] ATTACK_DETECTED on proxy " << proxyId);
     
-    for (uint32_t dId : domainIds) {
-        Domain info = domainManager->GetDomainInfo(dId);
+    // Find domain for this proxy
+    uint32_t domainId = 0;
+    for (uint32_t dId : g_domainManager->GetAllDomainIds()) {
+        Domain info = g_domainManager->GetDomainInfo(dId);
         for (uint32_t pId : info.proxyIds) {
             if (pId == proxyId) {
                 domainId = dId;
@@ -71,241 +85,140 @@ void OnAttackDetected(Ptr<ScoreManager> scoreManager,
         if (domainId != 0) break;
     }
     
-    if (domainId == 0) return;
+    if (domainId == 0) {
+        NS_LOG_INFO("  Proxy " << proxyId << " not found in any domain");
+        return;
+    }
     
-    Domain domainInfo = domainManager->GetDomainInfo(domainId);
+    // Get users on the ATTACKED PROXY only (not entire domain)
+    std::vector<uint32_t> proxyUsers = g_shuffleController->GetUsersOnProxy(proxyId);
+    NS_LOG_INFO("  Proxy " << proxyId << " has " << proxyUsers.size() << " users");
     
-    // Update scores for all users in affected domain
-    for (uint32_t userId : domainInfo.userIds) {
-        DetectionObservation obs;
-        obs.rateAnomaly = 0.8;
-        obs.patternAnomaly = 0.6;
-        obs.persistenceFactor = 0.5;
-        obs.confidence = 0.85;
-        scoreManager->UpdateScore(userId, obs);
-        
-        RiskLevel level = scoreManager->GetRiskLevel(userId);
-        double score = scoreManager->GetScore(userId);
-        g_stats.riskScoreHistory.push_back(score);
-        
-        NS_LOG_INFO("  User " << userId << " score updated: " << score 
-                    << " (Risk: " << static_cast<int>(level) << ")");
-        
-        // If high risk, trigger shuffle
-        if (level >= RiskLevel::HIGH) {
-            NS_LOG_INFO("  -> HIGH RISK: Triggering shuffle for domain " << domainId);
-            shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN);
+    // Filter out already banned users
+    std::vector<uint32_t> activeUsers;
+    for (uint32_t userId : proxyUsers) {
+        if (!g_domainManager->IsUserBanned(userId)) {
+            activeUsers.push_back(userId);
+        }
+    }
+    
+    if (activeUsers.empty()) {
+        NS_LOG_INFO("  No active users on proxy " << proxyId);
+        // Still trigger shuffle
+        if (domainId != 0) {
+            g_shuffleController->TriggerShuffle(domainId, ShuffleMode::RANDOM, "attack_response");
             g_stats.shufflesTriggered++;
         }
+        return;
+    }
+    
+    // Add score to users on the attacked proxy only
+    std::map<uint32_t, double> newScores = g_scoreManager->AddScoreToUsers(
+        activeUsers, SCORE_INCREMENT, "proxy_under_attack");
+    
+    // Check for users to ban
+    std::vector<uint32_t> usersToBan;
+    for (const auto& [userId, newScore] : newScores) {
+        NS_LOG_INFO("  User " << userId << " score: " << newScore);
+        if (newScore >= BAN_THRESHOLD) {
+            usersToBan.push_back(userId);
+        }
+    }
+    
+    // Ban users who exceeded threshold
+    for (uint32_t userId : usersToBan) {
+        NS_LOG_INFO("  -> BANNING user " << userId << " (score >= " << BAN_THRESHOLD << ")");
+        g_domainManager->BanUser(userId, "Score threshold exceeded");
+        g_stats.usersBanned++;
+    }
+    
+    // Trigger shuffle for the affected domain
+    if (domainId != 0) {
+        NS_LOG_INFO("  -> Triggering shuffle for domain " << domainId);
+        g_shuffleController->TriggerShuffle(domainId, ShuffleMode::RANDOM, "attack_response");
+        g_stats.shufflesTriggered++;
     }
 }
 
 void OnShuffleCompleted(const MtdEvent& event)
 {
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] SHUFFLE COMPLETED for domain " 
+    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] SHUFFLE_COMPLETED domain=" 
                 << event.sourceNodeId);
     
-    // Check if usersAffected is in metadata
     auto it = event.metadata.find("usersAffected");
     if (it != event.metadata.end()) {
-        NS_LOG_INFO("  Users affected: " << it->second);
+        NS_LOG_INFO("  Users shuffled: " << it->second);
     }
-}
-
-void OnUserMigrated(const MtdEvent& event)
-{
-    g_stats.usersMigrated++;
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] USER MIGRATED: User " 
-                << event.sourceNodeId);
     
-    auto it = event.metadata.find("newDomainId");
-    if (it != event.metadata.end()) {
-        NS_LOG_INFO("  -> Moved to domain " << it->second);
+    // Attacker will detect this via EventBus subscription and enter cooldown
+    if (g_attackGenerator && g_attackGenerator->IsInCooldown()) {
+        g_stats.attackCooldowns++;
+        NS_LOG_INFO("  Attacker entered cooldown");
     }
 }
 
-void OnDomainSplit(const MtdEvent& event)
+void OnUserBanned(const MtdEvent& event)
 {
-    g_stats.domainsSplit++;
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] DOMAIN SPLIT: Domain " 
-                << event.sourceNodeId);
+    auto userIt = event.metadata.find("userId");
+    auto reasonIt = event.metadata.find("reason");
     
-    auto it = event.metadata.find("newDomainId");
-    if (it != event.metadata.end()) {
-        NS_LOG_INFO("  -> New domain created: " << it->second);
-    }
-}
-
-void OnDomainMerge(const MtdEvent& event)
-{
-    g_stats.domainsMerged++;
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] DOMAIN MERGE event");
+    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] USER_BANNED: " 
+                << (userIt != event.metadata.end() ? userIt->second : "?")
+                << " reason: " << (reasonIt != event.metadata.end() ? reasonIt->second : "?"));
 }
 
 void OnProxySwitched(const MtdEvent& event)
 {
-    NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] PROXY SWITCHED: Node " 
-                << event.sourceNodeId);
-    
-    auto it = event.metadata.find("newProxyId");
-    if (it != event.metadata.end()) {
-        NS_LOG_INFO("  -> Switched to proxy " << it->second);
-    }
+    // Quiet logging for proxy switches
 }
 
-// ==================== Simulation Phases ====================
+// ==================== Periodic Detection ====================
 
-void SimulateNormalTraffic(Ptr<LocalDetector> detector, 
-                           const std::vector<uint32_t>& proxyIds)
+void PeriodicDetection()
 {
-    NS_LOG_INFO("\n========== PHASE 1: Normal Traffic ==========");
-    
-    for (uint32_t proxyId : proxyIds) {
-        TrafficStats stats;
-        stats.packetRate = 100.0 + (proxyId * 10);
-        stats.byteRate = 50000.0;
-        stats.activeConnections = 20;
-        stats.avgLatency = 5.0;
-        detector->UpdateStats(proxyId, stats);
-        
-        DetectionObservation obs = detector->Analyze(proxyId);
-        NS_LOG_INFO("Proxy " << proxyId << " - Normal traffic: anomaly=" 
-                    << obs.patternAnomaly << ", confidence=" << obs.confidence);
-    }
-}
-
-void SimulateAttackTraffic(Ptr<LocalDetector> detector,
-                           Ptr<EventBus> eventBus,
-                           uint32_t targetProxyId)
-{
-    NS_LOG_INFO("\n========== PHASE 2: Attack Traffic ==========");
-    NS_LOG_INFO("Attacking proxy " << targetProxyId);
-    
-    // Simulate increasing attack intensity
-    for (int intensity = 1; intensity <= 5; intensity++) {
-        TrafficStats stats;
-        stats.packetRate = 10000.0 * intensity;
-        stats.byteRate = 5000000.0 * intensity;
-        stats.activeConnections = 1000 * intensity;
-        stats.avgLatency = 50.0 * intensity;
-        detector->UpdateStats(targetProxyId, stats);
-        
-        DetectionObservation obs = detector->Analyze(targetProxyId);
-        NS_LOG_INFO("  Attack intensity " << intensity << ": packetRate=" 
-                    << stats.packetRate << ", anomaly=" << obs.patternAnomaly);
-        
-        // If anomaly detected, publish event
-        if (obs.patternAnomaly > 0.7) {
-            MtdEvent event(EventType::ATTACK_DETECTED, Simulator::Now().GetNanoSeconds());
-            event.sourceNodeId = targetProxyId;
-            event.metadata["anomalyScore"] = std::to_string(obs.patternAnomaly);
-            event.metadata["packetRate"] = std::to_string(stats.packetRate);
-            eventBus->Publish(event);
-        }
-    }
-}
-
-void SimulateDomainOperations(Ptr<DomainManager> domainManager,
-                              Ptr<ShuffleController> shuffleController)
-{
-    NS_LOG_INFO("\n========== PHASE 3: Domain Operations ==========");
-    
-    std::vector<uint32_t> domainIds = domainManager->GetAllDomainIds();
-    
-    if (domainIds.size() >= 2) {
-        // Test split
-        uint32_t domainToSplit = domainIds[0];
-        Domain info = domainManager->GetDomainInfo(domainToSplit);
-        
-        if (info.userIds.size() >= 4) {
-            NS_LOG_INFO("Splitting domain " << domainToSplit << " (has " 
-                        << info.userIds.size() << " users)");
-            uint32_t newDomainId = domainManager->SplitDomain(domainToSplit);
-            NS_LOG_INFO("  -> New domain created: " << newDomainId);
-        }
-        
-        // Test user migration
-        if (domainIds.size() >= 2) {
-            uint32_t sourceDomain = domainIds[0];
-            uint32_t targetDomain = domainIds[1];
-            Domain sourceInfo = domainManager->GetDomainInfo(sourceDomain);
-            
-            if (!sourceInfo.userIds.empty()) {
-                uint32_t userToMove = sourceInfo.userIds[0];
-                NS_LOG_INFO("Migrating user " << userToMove << " from domain " 
-                            << sourceDomain << " to " << targetDomain);
-                domainManager->MoveUser(userToMove, targetDomain);
-            }
-        }
-    }
-}
-
-void TestShuffleStrategies(Ptr<ShuffleController> shuffleController,
-                           Ptr<DomainManager> domainManager)
-{
-    NS_LOG_INFO("\n========== PHASE 4: Shuffle Strategies ==========");
-    
-    std::vector<uint32_t> domainIds = domainManager->GetAllDomainIds();
-    if (domainIds.empty()) return;
-    
-    uint32_t testDomain = domainIds[0];
-    
-    // Test different shuffle strategies
-    std::vector<std::pair<ShuffleMode, std::string>> strategies = {
-        {ShuffleMode::RANDOM, "RANDOM"},
-        {ShuffleMode::SCORE_DRIVEN, "SCORE_DRIVEN"},
-        {ShuffleMode::ROUND_ROBIN, "ROUND_ROBIN"},
-        {ShuffleMode::ATTACKER_AVOID, "ATTACKER_AVOID"}
-    };
-    
-    for (const auto& strategy : strategies) {
-        NS_LOG_INFO("Testing " << strategy.second << " shuffle strategy");
-        ShuffleEvent event = shuffleController->TriggerShuffle(testDomain, strategy.first);
-        NS_LOG_INFO("  Result: success=" << event.success 
-                    << ", usersAffected=" << event.usersAffected);
-    }
-}
-
-void TestAdaptiveAttacker(Ptr<AttackGenerator> attackGenerator,
-                          Ptr<EventBus> eventBus)
-{
-    NS_LOG_INFO("\n========== PHASE 5: Adaptive Attacker ==========");
-    
-    // Configure adaptive attack
-    AttackParams params;
-    params.type = AttackType::UDP_FLOOD;
-    params.rate = 20000.0;
-    params.adaptToDefense = true;
-    params.cooldownPeriod = 5.0;
-    attackGenerator->Generate(params);
-    attackGenerator->SetBehavior(AttackBehavior::ADAPTIVE);
-    
-    // Add initial targets
-    attackGenerator->AddTarget(1);
-    attackGenerator->AddTarget(2);
-    
-    NS_LOG_INFO("Starting adaptive attack with targets: 1, 2");
-    attackGenerator->Start();
-    
-    // Simulate defense event via EventBus (attacker is subscribed internally)
-    MtdEvent defenseEvent(EventType::SHUFFLE_COMPLETED, Simulator::Now().GetNanoSeconds());
-    defenseEvent.sourceNodeId = 1;
-    defenseEvent.metadata["usersAffected"] = "5";
-    defenseEvent.metadata["newProxy"] = "3";
-    
-    NS_LOG_INFO("Publishing defense event - shuffle completed");
-    eventBus->Publish(defenseEvent);
-    
-    NS_LOG_INFO("Attacker in cooldown: " << (attackGenerator->IsInCooldown() ? "yes" : "no"));
-    
-    // Check current attack targets
-    auto targets = attackGenerator->GetTargets();
-    NS_LOG_INFO("Current attack targets: ");
-    for (uint32_t t : targets) {
-        NS_LOG_INFO("  - Proxy " << t);
+    // Check if attack is active
+    if (!g_attackGenerator || !g_attackGenerator->IsActive()) {
+        Simulator::Schedule(Seconds(DETECTION_INTERVAL), &PeriodicDetection);
+        return;
     }
     
-    attackGenerator->Stop();
+    // Check if attacker is in cooldown (lost target after shuffle)
+    if (g_attackGenerator->IsInCooldown()) {
+        Simulator::Schedule(Seconds(DETECTION_INTERVAL), &PeriodicDetection);
+        return;
+    }
+    
+    // Attacker can only attack the proxy they're assigned to
+    uint32_t attackerProxy = g_shuffleController->GetProxyAssignment(ATTACKER_USER_ID);
+    if (attackerProxy == 0) {
+        NS_LOG_INFO("[t=" << Simulator::Now().GetSeconds() << "s] Attacker has no proxy (banned?)");
+        Simulator::Schedule(Seconds(DETECTION_INTERVAL), &PeriodicDetection);
+        return;
+    }
+    
+    // Simulate attack on attacker's own proxy
+    TrafficStats stats;
+    stats.packetRate = ATTACK_RATE;
+    stats.byteRate = ATTACK_RATE * 512;
+    stats.activeConnections = 5000;
+    stats.avgLatency = 100.0;
+    g_detector->UpdateStats(attackerProxy, stats);
+    
+    // Analyze and detect
+    DetectionObservation obs = g_detector->Analyze(attackerProxy);
+    
+    // If anomaly detected, publish ATTACK_DETECTED event
+    if (obs.patternAnomaly > 0.6) {
+        MtdEvent event(EventType::ATTACK_DETECTED, Simulator::Now().GetMilliSeconds());
+        event.sourceNodeId = attackerProxy;
+        event.metadata["anomalyScore"] = std::to_string(obs.patternAnomaly);
+        event.metadata["packetRate"] = std::to_string(stats.packetRate);
+        event.metadata["attackerUserId"] = std::to_string(ATTACKER_USER_ID);
+        g_eventBus->Publish(event);
+    }
+    
+    // Reschedule
+    Simulator::Schedule(Seconds(DETECTION_INTERVAL), &PeriodicDetection);
 }
 
 // ==================== Main Function ====================
@@ -333,65 +246,66 @@ int main(int argc, char *argv[])
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     NS_LOG_INFO("║ Clients: " << numClients << "  Proxies: " << numProxies 
                 << "  Domains: " << numDomains << "  Time: " << simulationTime << "s");
+    NS_LOG_INFO("║ Ban Threshold: " << BAN_THRESHOLD << "  Cooldown: " << ATTACK_COOLDOWN << "s");
     NS_LOG_INFO("╚══════════════════════════════════════════════════════════════╝\n");
     
     // ==================== Create Components ====================
     
-    Ptr<EventBus> eventBus = CreateObject<EventBus>();
-    eventBus->SetLogging(true);
+    g_eventBus = CreateObject<EventBus>();
+    g_eventBus->SetLogging(true);
     
-    Ptr<DomainManager> domainManager = CreateObject<DomainManager>();
-    domainManager->SetEventBus(eventBus);
+    g_domainManager = CreateObject<DomainManager>();
+    g_domainManager->SetEventBus(g_eventBus);
     
-    Ptr<ScoreManager> scoreManager = CreateObject<ScoreManager>();
-    scoreManager->SetEventBus(eventBus);
+    g_scoreManager = CreateObject<ScoreManager>();
+    g_scoreManager->SetEventBus(g_eventBus);
+    // Uses default scoring + AddScore() for simple increments
     
-    // Configure scoring weights
-    ScoreWeights weights;
-    weights.alpha = 0.4;  // rate weight
-    weights.beta = 0.3;   // anomaly weight
-    weights.gamma = 0.2;  // persistence weight
-    weights.delta = 0.1;  // feedback weight
-    scoreManager->SetWeights(weights);
+    g_shuffleController = CreateObject<ShuffleController>();
+    g_shuffleController->SetDomainManager(g_domainManager);
+    g_shuffleController->SetScoreManager(g_scoreManager);
+    g_shuffleController->SetEventBus(g_eventBus);
     
-    Ptr<ShuffleController> shuffleController = CreateObject<ShuffleController>();
-    shuffleController->SetDomainManager(domainManager);
-    shuffleController->SetScoreManager(scoreManager);
-    shuffleController->SetEventBus(eventBus);
+    // Link DomainManager to ShuffleController for proxy assignment
+    g_domainManager->SetShuffleController(g_shuffleController);
     
     // Configure shuffle
     ShuffleConfig shuffleConfig;
-    shuffleConfig.baseFrequency = 10.0;
-    shuffleConfig.minFrequency = 3.0;
-    shuffleConfig.maxFrequency = 60.0;
-    shuffleConfig.sessionAffinity = true;
-    shuffleController->SetConfig(shuffleConfig);
+    shuffleConfig.baseFrequency = 30.0;
+    shuffleConfig.minFrequency = 5.0;
+    shuffleConfig.maxFrequency = 120.0;
+    shuffleConfig.sessionAffinity = false;
+    g_shuffleController->SetConfig(shuffleConfig);
     
-    // Create detectors
-    Ptr<LocalDetector> localDetector = CreateObject<LocalDetector>();
-    Ptr<CrossAgentDetector> crossAgentDetector = CreateObject<CrossAgentDetector>();
-    Ptr<GlobalDetector> globalDetector = CreateObject<GlobalDetector>();
-    
-    // Configure detection thresholds
+    // Create detector
+    g_detector = CreateObject<LocalDetector>();
     DetectionThresholds thresholds;
     thresholds.packetRateThreshold = 5000.0;
     thresholds.byteRateThreshold = 2000000.0;
     thresholds.connectionThreshold = 500.0;
-    thresholds.anomalyScoreThreshold = 0.6;
-    localDetector->SetThresholds(thresholds);
+    thresholds.anomalyScoreThreshold = 0.5;
+    g_detector->SetThresholds(thresholds);
     
-    // Create attack generator
-    Ptr<AttackGenerator> attackGenerator = CreateObject<AttackGenerator>();
-    attackGenerator->SetEventBus(eventBus);
+    // Create attack generator with cooldown
+    g_attackGenerator = CreateObject<AttackGenerator>();
+    g_attackGenerator->SetEventBus(g_eventBus);  // Subscribe to defense events
+    g_attackGenerator->SetCooldownPeriod(ATTACK_COOLDOWN);
+    g_attackGenerator->SetBehavior(AttackBehavior::ADAPTIVE);
+    
+    AttackParams attackParams;
+    attackParams.type = AttackType::UDP_FLOOD;
+    attackParams.rate = ATTACK_RATE;
+    attackParams.adaptToDefense = true;
+    attackParams.cooldownPeriod = ATTACK_COOLDOWN;
+    g_attackGenerator->Generate(attackParams);
     
     // Create export API
     Ptr<ExportApi> exportApi = CreateObject<ExportApi>();
-    exportApi->SetEventBus(eventBus);
-    exportApi->SetDomainManager(domainManager);
-    exportApi->SetShuffleController(shuffleController);
-    exportApi->SetAttackGenerator(attackGenerator);
+    exportApi->SetEventBus(g_eventBus);
+    exportApi->SetDomainManager(g_domainManager);
+    exportApi->SetShuffleController(g_shuffleController);
+    exportApi->SetAttackGenerator(g_attackGenerator);
     
-    // Configure experiment
     ExperimentConfig experimentConfig;
     experimentConfig.experimentId = "mtd_full_defense_test";
     experimentConfig.randomSeed = 42;
@@ -401,129 +315,91 @@ int main(int argc, char *argv[])
     experimentConfig.numDomains = numDomains;
     exportApi->SetExperimentConfig(experimentConfig);
     
+    // Setup output directory and file-based event logging
+    std::string outputDir = "output/" + experimentConfig.experimentId;
+    exportApi->SetOutputDirectory(outputDir);
+    exportApi->SetupEventLogging(FileLogLevel::DEBUG, 50, false);
+    
     // ==================== Subscribe to Events ====================
     
-    eventBus->Subscribe(EventType::ATTACK_DETECTED,
-        MakeBoundCallback(&OnAttackDetected, scoreManager, shuffleController, domainManager));
-    
-    eventBus->Subscribe(EventType::SHUFFLE_COMPLETED,
-        MakeCallback(&OnShuffleCompleted));
-    
-    eventBus->Subscribe(EventType::USER_MIGRATED,
-        MakeCallback(&OnUserMigrated));
-    
-    eventBus->Subscribe(EventType::DOMAIN_SPLIT,
-        MakeCallback(&OnDomainSplit));
-    
-    eventBus->Subscribe(EventType::DOMAIN_MERGE,
-        MakeCallback(&OnDomainMerge));
-    
-    eventBus->Subscribe(EventType::PROXY_SWITCHED,
-        MakeCallback(&OnProxySwitched));
+    g_eventBus->Subscribe(EventType::ATTACK_DETECTED, MakeCallback(&OnAttackDetected));
+    g_eventBus->Subscribe(EventType::SHUFFLE_COMPLETED, MakeCallback(&OnShuffleCompleted));
+    g_eventBus->Subscribe(EventType::USER_BANNED, MakeCallback(&OnUserBanned));
+    g_eventBus->Subscribe(EventType::PROXY_SWITCHED, MakeCallback(&OnProxySwitched));
     
     // ==================== Setup Domains and Users ====================
     
-    NS_LOG_INFO("\n========== SETUP: Creating Domains ==========");
+    NS_LOG_INFO("========== SETUP: Creating Network ==========\n");
     
     std::vector<uint32_t> domainIds;
-    std::vector<uint32_t> proxyIds;
     
     // Create proxies
     for (uint32_t p = 0; p < numProxies; p++) {
-        proxyIds.push_back(p + 1);  // Proxy IDs start from 1
+        g_proxyIds.push_back(p + 1);  // Proxy IDs: 1, 2, ..., numProxies
     }
     
-    // Create domains
+    // Create domains and assign proxies
     for (uint32_t d = 0; d < numDomains; d++) {
         std::ostringstream name;
         name << "Domain_" << d;
-        uint32_t domainId = domainManager->CreateDomain(name.str());
+        uint32_t domainId = g_domainManager->CreateDomain(name.str());
         domainIds.push_back(domainId);
         
-        // Assign proxies (round-robin)
+        // Round-robin proxy assignment to domains
         for (uint32_t p = d; p < numProxies; p += numDomains) {
-            domainManager->AddProxy(domainId, proxyIds[p]);
+            g_domainManager->AddProxy(domainId, g_proxyIds[p]);
         }
         
         NS_LOG_INFO("Created " << name.str() << " (ID: " << domainId << ")");
     }
     
-    // Assign users
+    // Add users to domains
     for (uint32_t u = 0; u < numClients; u++) {
+        uint32_t userId = u + 100;  // User IDs: 100, 101, ...
         uint32_t domainIdx = u % numDomains;
-        domainManager->AddUser(domainIds[domainIdx], u + 100);  // User IDs start from 100
-        
-        // Initial proxy assignment
-        Domain info = domainManager->GetDomainInfo(domainIds[domainIdx]);
-        if (!info.proxyIds.empty()) {
-            uint32_t proxyId = info.proxyIds[u % info.proxyIds.size()];
-            shuffleController->AssignUserToProxy(u + 100, proxyId);
-        }
+        uint32_t domainId = domainIds[domainIdx];
+        g_domainManager->AddUser(domainId, userId);
     }
     
-    NS_LOG_INFO("Assigned " << numClients << " users to " << numDomains << " domains");
+    // Add attacker as a user in domain 1
+    g_domainManager->AddUser(domainIds[0], ATTACKER_USER_ID);
     
-    // Add attack targets
-    for (uint32_t proxyId : proxyIds) {
-        attackGenerator->AddTarget(proxyId);
-    }
+    // Assign all users to proxies (round-robin within each domain)
+    uint32_t assigned = g_domainManager->AssignAllUsersToProxies();
+    NS_LOG_INFO("Assigned " << assigned << " users to proxies across " << numDomains << " domains");
+    NS_LOG_INFO("Attacker (user " << ATTACKER_USER_ID << ") in domain " << domainIds[0] << "\n");
     
-    // ==================== Run Test Phases ====================
-    
-    // Phase 1: Normal traffic
-    SimulateNormalTraffic(localDetector, proxyIds);
-    
-    // Phase 2: Attack traffic
-    SimulateAttackTraffic(localDetector, eventBus, proxyIds[0]);
-    
-    // Phase 3: Domain operations
-    SimulateDomainOperations(domainManager, shuffleController);
-    
-    // Phase 4: Test shuffle strategies
-    TestShuffleStrategies(shuffleController, domainManager);
-    
-    // Phase 5: Adaptive attacker
-    TestAdaptiveAttacker(attackGenerator, eventBus);
+    // No need to add targets - attacker attacks their own proxy
     
     // ==================== Schedule Simulation Events ====================
     
-    // Start periodic shuffling
-    for (uint32_t domainId : domainIds) {
-        shuffleController->SetFrequency(domainId, 10.0);
-        Simulator::Schedule(Seconds(5.0), 
-            &ShuffleController::StartPeriodicShuffle, shuffleController, domainId);
-    }
+    // Start attack at t=5s
+    Simulator::Schedule(Seconds(5.0), &AttackGenerator::Start, g_attackGenerator);
     
-    // Schedule attack
-    AttackParams attackParams;
-    attackParams.type = AttackType::UDP_FLOOD;
-    attackParams.rate = 15000.0;
-    attackParams.adaptToDefense = true;
-    attackGenerator->Generate(attackParams);
-    attackGenerator->SetBehavior(AttackBehavior::ADAPTIVE);
+    // Stop attack at t=55s (5 seconds before simulation end)
+    Simulator::Schedule(Seconds(simulationTime - 5.0), &AttackGenerator::Stop, g_attackGenerator);
     
-    Simulator::Schedule(Seconds(10.0), &AttackGenerator::Start, attackGenerator);
-    Simulator::Schedule(Seconds(simulationTime - 5.0), &AttackGenerator::Stop, attackGenerator);
-    
-    // Start auto-recording
-    exportApi->StartAutoRecording(5.0);
+    // Start periodic detection at t=5s
+    Simulator::Schedule(Seconds(5.0), &PeriodicDetection);
     
     // ==================== Run Simulation ====================
     
-    NS_LOG_INFO("\n========== RUNNING SIMULATION ==========");
+    NS_LOG_INFO("========== RUNNING SIMULATION ==========\n");
     
     Simulator::Stop(Seconds(simulationTime));
     Simulator::Run();
     
     // ==================== Export Results ====================
     
-    NS_LOG_INFO("\n========== EXPORTING RESULTS ==========");
+    NS_LOG_INFO("\n========== EXPORTING RESULTS ==========\n");
     
-    exportApi->ExportExperimentSnapshot("mtd_full_test_snapshot.json");
-    exportApi->ExportDomainState("mtd_full_test_domains.json");
-    exportApi->ExportShuffleEvents("mtd_full_test_shuffles.csv");
-    exportApi->ExportAttackEvents("mtd_full_test_attacks.csv");
-    exportApi->ExportEventHistory("mtd_full_test_events.json");
+    exportApi->ExportExperimentSnapshot("snapshot.json");
+    exportApi->ExportDomainState("domains.json");
+    exportApi->ExportShuffleEvents("shuffles.csv");
+    exportApi->ExportBanEvents("bans.csv");
+    exportApi->ExportEventHistory("events.json");
+    
+    NS_LOG_INFO("Results exported to: " << outputDir);
     
     // ==================== Print Summary ====================
     
@@ -532,33 +408,32 @@ int main(int argc, char *argv[])
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     NS_LOG_INFO("║ Attacks Detected:     " << g_stats.attacksDetected);
     NS_LOG_INFO("║ Shuffles Triggered:   " << g_stats.shufflesTriggered);
-    NS_LOG_INFO("║ Users Migrated:       " << g_stats.usersMigrated);
-    NS_LOG_INFO("║ Domains Split:        " << g_stats.domainsSplit);
-    NS_LOG_INFO("║ Domains Merged:       " << g_stats.domainsMerged);
-    NS_LOG_INFO("║ Attack Adaptations:   " << g_stats.attackAdaptations);
+    NS_LOG_INFO("║ Users Banned:         " << g_stats.usersBanned);
+    NS_LOG_INFO("║ Attack Cooldowns:     " << g_stats.attackCooldowns);
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
     
-    // Calculate average risk score
-    double avgRiskScore = 0.0;
-    if (!g_stats.riskScoreHistory.empty()) {
-        for (double score : g_stats.riskScoreHistory) {
-            avgRiskScore += score;
-        }
-        avgRiskScore /= g_stats.riskScoreHistory.size();
+    // Final user scores (from ScoreManager)
+    std::vector<uint32_t> trackedUsers = g_scoreManager->GetTrackedUsers();
+    uint32_t highScoreUsers = 0;
+    double maxScore = 0.0;
+    for (uint32_t userId : trackedUsers) {
+        double score = g_scoreManager->GetScore(userId);
+        if (score > 0) highScoreUsers++;
+        if (score > maxScore) maxScore = score;
     }
-    NS_LOG_INFO("║ Average Risk Score:   " << avgRiskScore);
-    
-    // Shuffle controller stats
-    auto shuffleStats = shuffleController->GetShuffleStats();
-    NS_LOG_INFO("║ Total Shuffles:       " << shuffleStats["totalShuffles"]);
-    NS_LOG_INFO("║ Shuffle Success Rate: " << shuffleStats["successRate"]);
+    NS_LOG_INFO("║ Users with score > 0: " << highScoreUsers);
+    NS_LOG_INFO("║ Max user score:       " << maxScore);
     
     // Attack stats
-    auto attackStats = attackGenerator->GetStatistics();
+    auto attackStats = g_attackGenerator->GetStatistics();
     NS_LOG_INFO("║ Attack Packets:       " << attackStats["packetCount"]);
     
+    // Shuffle stats
+    auto shuffleStats = g_shuffleController->GetShuffleStats();
+    NS_LOG_INFO("║ Total Shuffles:       " << shuffleStats["totalShuffles"]);
+    
     NS_LOG_INFO("╠══════════════════════════════════════════════════════════════╣");
-    NS_LOG_INFO("║ Results exported to: mtd_full_test_*.csv/json                ║");
+    NS_LOG_INFO("║ Output directory: " << outputDir);
     NS_LOG_INFO("╚══════════════════════════════════════════════════════════════╝");
     
     // Cleanup

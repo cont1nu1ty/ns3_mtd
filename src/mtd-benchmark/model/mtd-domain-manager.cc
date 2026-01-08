@@ -4,6 +4,7 @@
  */
 
 #include "mtd-domain-manager.h"
+#include "mtd-shuffle-controller.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 
@@ -349,6 +350,40 @@ DomainManager::RemoveUser(uint32_t userId)
     return true;
 }
 
+bool
+DomainManager::BanUser(uint32_t userId, const std::string& reason)
+{
+    NS_LOG_FUNCTION(this << userId << reason);
+
+    const uint32_t domainId = GetDomain(userId);
+    const bool removed = RemoveUser(userId);
+    if (!removed)
+    {
+        return false;
+    }
+    
+    // Track banned user
+    m_bannedUsers.insert(userId);
+
+    if (m_eventBus != nullptr)
+    {
+        MtdEvent event(EventType::USER_BANNED, Simulator::Now().GetMilliSeconds());
+        event.sourceNodeId = userId;
+        event.metadata["userId"] = std::to_string(userId);
+        if (domainId != 0)
+        {
+            event.metadata["domainId"] = std::to_string(domainId);
+        }
+        if (!reason.empty())
+        {
+            event.metadata["reason"] = reason;
+        }
+        m_eventBus->Publish(event);
+    }
+
+    return true;
+}
+
 Domain
 DomainManager::GetDomainInfo(uint32_t domainId) const
 {
@@ -397,6 +432,67 @@ DomainManager::GetDomainProxies(uint32_t domainId) const
         return it->second.proxyIds;
     }
     return std::vector<uint32_t>();
+}
+
+void
+DomainManager::SetShuffleController(Ptr<ShuffleController> shuffleController)
+{
+    NS_LOG_FUNCTION(this);
+    m_shuffleController = shuffleController;
+}
+
+uint32_t
+DomainManager::AssignUsersToProxies(uint32_t domainId)
+{
+    NS_LOG_FUNCTION(this << domainId);
+    
+    if (m_shuffleController == nullptr)
+    {
+        NS_LOG_WARN("ShuffleController not set, cannot assign users to proxies");
+        return 0;
+    }
+    
+    auto it = m_domains.find(domainId);
+    if (it == m_domains.end())
+    {
+        return 0;
+    }
+    
+    const Domain& domain = it->second;
+    if (domain.proxyIds.empty())
+    {
+        return 0;
+    }
+    
+    uint32_t assigned = 0;
+    for (size_t i = 0; i < domain.userIds.size(); i++)
+    {
+        uint32_t userId = domain.userIds[i];
+        uint32_t proxyId = domain.proxyIds[i % domain.proxyIds.size()];
+        m_shuffleController->AssignUserToProxy(userId, proxyId);
+        assigned++;
+    }
+    
+    return assigned;
+}
+
+uint32_t
+DomainManager::AssignAllUsersToProxies()
+{
+    NS_LOG_FUNCTION(this);
+    
+    uint32_t total = 0;
+    for (const auto& pair : m_domains)
+    {
+        total += AssignUsersToProxies(pair.first);
+    }
+    return total;
+}
+
+bool
+DomainManager::IsUserBanned(uint32_t userId) const
+{
+    return m_bannedUsers.count(userId) > 0;
 }
 
 void

@@ -13,6 +13,7 @@
 #include "ns3/event-id.h"
 
 #include <map>
+#include <unordered_set>
 #include <vector>
 
 #include "ns3/random-variable-stream.h"
@@ -220,7 +221,21 @@ private:
     
     std::vector<uint32_t> m_targets;
     std::vector<AttackEvent> m_history;
+    // Proxies with a pending detection mark.
+    // If ATTACK_DETECTED happens before we have history for that proxy,
+    // we mark the next recorded AttackEvent to that proxy as defenseTriggered=true
+    // and then consume the pending flag.
+    std::unordered_set<uint32_t> m_pendingDetectedProxies;
     std::map<uint32_t, DefenseEventCallback> m_callbacks;
+
+    // Attack history logging throttling.
+    // Attack generation may run at very high pps; we sample history to keep
+    // export sizes manageable and avoid losing key markers (e.g., detection)
+    // due to the fixed history cap.
+    uint64_t m_attackLogIntervalMs;
+    uint64_t m_lastLoggedMs;
+    uint32_t m_lastLoggedTargetId;
+    bool m_hasLastLogged;
     
     EventId m_attackEvent;
     uint64_t m_lastCooldownEnd;

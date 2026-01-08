@@ -108,6 +108,13 @@ LocalDetector::UpdateStats(uint32_t agentId, const TrafficStats& stats)
     }
 }
 
+void
+LocalDetector::SetEventBus(Ptr<EventBus> eventBus)
+{
+    NS_LOG_FUNCTION(this << eventBus);
+    m_eventBus = eventBus;
+}
+
 DetectionObservation
 LocalDetector::Analyze(uint32_t agentId)
 {
@@ -169,8 +176,39 @@ LocalDetector::Analyze(uint32_t agentId)
         obs.suspectedType = AttackType::NONE;
     }
     
-    // Update attack status
-    m_attackStatus[agentId] = (obs.patternAnomaly > m_thresholds.anomalyScoreThreshold);
+    // Update attack status; publish ATTACK_DETECTED on a rising edge.
+    const bool wasUnderAttack = IsUnderAttack(agentId);
+    const bool isUnderAttack = (obs.patternAnomaly > m_thresholds.anomalyScoreThreshold);
+    m_attackStatus[agentId] = isUnderAttack;
+
+    if (!wasUnderAttack && isUnderAttack && m_eventBus != nullptr)
+    {
+        MtdEvent event(EventType::ATTACK_DETECTED, Simulator::Now().GetMilliSeconds());
+        event.sourceNodeId = agentId;
+        event.metadata["proxyId"] = std::to_string(agentId);
+        event.metadata["suspectedType"] = std::to_string(static_cast<int>(obs.suspectedType));
+        event.metadata["confidence"] = std::to_string(obs.confidence);
+        event.metadata["patternAnomaly"] = std::to_string(obs.patternAnomaly);
+        event.metadata["anomalyScoreThreshold"] = std::to_string(m_thresholds.anomalyScoreThreshold);
+        event.metadata["packetRate"] = std::to_string(stats.packetRate);
+        event.metadata["packetRateThreshold"] = std::to_string(m_thresholds.packetRateThreshold);
+        event.metadata["byteRate"] = std::to_string(stats.byteRate);
+        event.metadata["byteRateThreshold"] = std::to_string(m_thresholds.byteRateThreshold);
+        event.metadata["activeConnections"] = std::to_string(stats.activeConnections);
+        event.metadata["connectionThreshold"] = std::to_string(m_thresholds.connectionThreshold);
+
+        std::ostringstream reason;
+        reason << "LocalDetector: anomaly=" << obs.patternAnomaly
+               << " > " << m_thresholds.anomalyScoreThreshold
+               << " (pktRate=" << stats.packetRate << "/" << m_thresholds.packetRateThreshold
+               << ", byteRate=" << stats.byteRate << "/" << m_thresholds.byteRateThreshold
+               << ", conns=" << stats.activeConnections << "/" << m_thresholds.connectionThreshold
+               << ")";
+        event.metadata["reason"] = reason.str();
+
+        NS_LOG_INFO("ATTACK_DETECTED on proxy " << agentId << ": " << reason.str());
+        m_eventBus->Publish(event);
+    }
     
     return obs;
 }

@@ -15,7 +15,6 @@
  * - Attack Generator (dynamic attack simulation)
  * - Export API (metrics and logging)
  * - Event Bus (inter-module communication)
- * - Python Interface (external algorithm integration)
  */
 
 #ifndef MTD_BENCHMARK_MODULE_H
@@ -26,6 +25,9 @@
 
 // Event bus for inter-module communication
 #include "mtd-event-bus.h"
+
+// Incremental event stream adapter (Python bridge)
+#include "mtd-event-stream.h"
 
 // Detection layer
 #include "mtd-detector.h"
@@ -45,8 +47,4 @@
 // Export API
 #include "mtd-export-api.h"
 
-// Python Interface for external algorithm integration
-#include "mtd-python-interface.h"
-
 #endif // MTD_BENCHMARK_MODULE_H
-

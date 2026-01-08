@@ -86,6 +86,12 @@ public:
      * \param stats Updated traffic statistics
      */
     void UpdateStats(uint32_t agentId, const TrafficStats& stats);
+
+    /**
+     * \brief Set event bus for publishing detection events
+     * \param eventBus Pointer to event bus
+     */
+    void SetEventBus(Ptr<EventBus> eventBus);
     
     /**
      * \brief Analyze traffic and detect anomalies
@@ -119,6 +125,7 @@ private:
     std::map<uint32_t, std::deque<TrafficStats>> m_statsHistory;
     std::map<uint32_t, bool> m_attackStatus;
     size_t m_historySize;
+    Ptr<EventBus> m_eventBus;
     
     double CalculateRateAnomaly(uint32_t agentId) const;
     double CalculateConnectionAnomaly(uint32_t agentId) const;

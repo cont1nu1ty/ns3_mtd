@@ -9,13 +9,13 @@ set(module_name mtd-benchmark)
 # Set source files
 set(source_files
     model/mtd-event-bus.cc
+    model/mtd-event-stream.cc
     model/mtd-detector.cc
     model/mtd-score-manager.cc
     model/mtd-domain-manager.cc
     model/mtd-shuffle-controller.cc
     model/mtd-attack-generator.cc
     model/mtd-export-api.cc
-    model/mtd-python-interface.cc
     helper/mtd-network-helper.cc
 )
 
@@ -23,13 +23,13 @@ set(source_files
 set(header_files
     model/mtd-common.h
     model/mtd-event-bus.h
+    model/mtd-event-stream.h
     model/mtd-detector.h
     model/mtd-score-manager.h
     model/mtd-domain-manager.h
     model/mtd-shuffle-controller.h
     model/mtd-attack-generator.h
     model/mtd-export-api.h
-    model/mtd-python-interface.h
     helper/mtd-network-helper.h
 )
 
@@ -56,42 +56,25 @@ build_lib(
     TEST_SOURCES ${test_sources}
 )
 
-# ==================== Python Bindings (Pybind11) ====================
-
-# Find Python and pybind11
-find_package(Python3 COMPONENTS Interpreter Development QUIET)
-find_package(pybind11 QUIET)
-
-if(Python3_FOUND AND pybind11_FOUND)
-    message(STATUS "Building MTD-Benchmark Python bindings")
-    
-    # Create Python module
-    pybind11_add_module(mtd_benchmark
-        bindings/mtd-benchmark-bindings.cc
+# Stage pure-Python bridge package into build/bindings/python for source-tree development.
+file(
+    GLOB_RECURSE
+    mtd_bridge_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/python/mtd_bridge/*
+)
+foreach(
+    file
+    ${mtd_bridge_files}
+)
+    string(
+        REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/python"
+                        "${CMAKE_OUTPUT_DIRECTORY}/bindings/python"
+                        destination
+                        ${file}
     )
-    
-    # Link with the main module library
-    target_link_libraries(mtd_benchmark PRIVATE
-        ${lib${module_name}}
-        ${libcore}
-        ${libnetwork}
+    configure_file(
+        ${file}
+        ${destination}
+        COPYONLY
     )
-    
-    # Set output directory
-    set_target_properties(mtd_benchmark PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/python"
-    )
-    
-    # Install Python module
-    install(TARGETS mtd_benchmark
-        LIBRARY DESTINATION lib/python
-        COMPONENT python
-    )
-    
-else()
-    message(STATUS "Python3 or pybind11 not found, skipping Python bindings")
-    message(STATUS "  To enable Python bindings, install pybind11:")
-    message(STATUS "    pip install pybind11")
-    message(STATUS "    # or on Ubuntu/Debian:")
-    message(STATUS "    sudo apt install pybind11-dev python3-pybind11")
-endif()
+endforeach()
