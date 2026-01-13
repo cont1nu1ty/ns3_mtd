@@ -14,6 +14,8 @@
 #include "ns3/ptr.h"
 #include "ns3/timer.h"
 #include "ns3/event-id.h"
+#include "ns3/data-rate.h"
+#include "ns3/node-list.h"
 
 #include <map>
 #include <vector>
@@ -22,6 +24,9 @@
 
 namespace ns3 {
 namespace mtd {
+
+// Forward declarations
+class MtdTrafficHelper;
 
 /**
  * \brief Shuffle mode/strategy
@@ -103,6 +108,29 @@ public:
      * \param eventBus Pointer to event bus
      */
     void SetEventBus(Ptr<EventBus> eventBus);
+    
+    /**
+     * \brief Set traffic helper reference for flow management
+     * \param trafficHelper Pointer to traffic helper
+     */
+    void SetTrafficHelper(Ptr<MtdTrafficHelper> trafficHelper);
+    
+    /**
+     * \brief Initialize baseline traffic for all users (cold start)
+     * 
+     * Creates initial TCP flows for all users to their assigned proxies.
+     * Must be called after domain placement is complete.
+     */
+    void InitializeBaselineTraffic();
+    
+    /**
+     * \brief Apply user migration (atomic operation)
+     * \param userId The user ID to migrate
+     * \param newProxyId Target proxy ID
+     * 
+     * Terminates existing flows and creates new flows to the target proxy.
+     */
+    void ApplyUserMigration(uint32_t userId, uint32_t newProxyId);
     
     /**
      * \brief Trigger shuffle for a domain
@@ -225,6 +253,7 @@ private:
     Ptr<DomainManager> m_domainManager;
     Ptr<ScoreManager> m_scoreManager;
     Ptr<EventBus> m_eventBus;
+    Ptr<MtdTrafficHelper> m_trafficHelper;
     
     std::map<uint32_t, uint32_t> m_userToProxy;
     std::map<uint32_t, std::vector<ProxyAssignment>> m_proxyHistory;
@@ -291,6 +320,13 @@ public:
      * \return Aggregate statistics
      */
     TrafficStats GetAggregateTraffic(uint32_t domainId) const;
+    
+    /**
+     * \brief Get detection observation for a proxy
+     * \param proxyId The proxy ID
+     * \return Detection observation derived from proxy stats
+     */
+    DetectionObservation GetObservationForProxy(uint32_t proxyId) const;
 
 private:
     Ptr<DomainManager> m_domainManager;

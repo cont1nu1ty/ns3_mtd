@@ -13,12 +13,24 @@
 #include "ns3/point-to-point-helper.h"
 #include "ns3/string.h"
 
+#include "ns3/type-id.h"
+
 #include <sstream>
 
 namespace ns3 {
 namespace mtd {
 
 NS_LOG_COMPONENT_DEFINE("MtdNetworkHelper");
+NS_OBJECT_ENSURE_REGISTERED(MtdNetworkHelper);
+
+TypeId
+MtdNetworkHelper::GetTypeId()
+{
+    static TypeId tid = TypeId("ns3::mtd::MtdNetworkHelper")
+                            .SetParent<Object>()
+                            .SetGroupName("MTD");
+    return tid;
+}
 
 MtdNetworkHelper::MtdNetworkHelper()
     : m_topologyCreated(false),
@@ -159,13 +171,33 @@ MtdNetworkHelper::AssignIpAddresses()
     // Proxy addresses (10.2.0.x/24)
     ipv4.SetBase("10.2.0.0", "255.255.255.0");
     m_proxyInterfaces = ipv4.Assign(m_proxyDevices);
-    
-    for (uint32_t i = 0; i < m_proxyNodes.GetN(); ++i)
+
+    // Build a stable per-proxy "service IP" mapping.
+    // We assign the first observed address on any proxy NetDevice as the service IP.
+    m_proxyServiceIp.clear();
+    m_serviceIpToProxyId.clear();
+    for (uint32_t i = 0; i < m_proxyDevices.GetN() && i < m_proxyInterfaces.GetN(); ++i)
     {
+        Ptr<NetDevice> dev = m_proxyDevices.Get(i);
+        Ptr<Node> node = dev ? dev->GetNode() : nullptr;
+        if (node == nullptr)
+        {
+            continue;
+        }
+
+        const uint32_t proxyId = node->GetId();
+        if (m_proxyServiceIp.find(proxyId) != m_proxyServiceIp.end())
+        {
+            continue;
+        }
+
         Ipv4Address addr = m_proxyInterfaces.GetAddress(i);
+        m_proxyServiceIp[proxyId] = addr;
+        m_serviceIpToProxyId[addr] = proxyId;
+
         std::ostringstream addrStr;
         addr.Print(addrStr);
-        m_nodeIpMap[m_proxyNodes.Get(i)->GetId()] = addrStr.str();
+        m_nodeIpMap[proxyId] = addrStr.str();
     }
     
     // Server addresses (10.3.0.x/24)
@@ -193,6 +225,28 @@ MtdNetworkHelper::AssignIpAddresses()
     }
     
     m_ipAssigned = true;
+}
+
+Ipv4Address
+MtdNetworkHelper::GetServiceIp(uint32_t proxyNodeId) const
+{
+    auto it = m_proxyServiceIp.find(proxyNodeId);
+    if (it != m_proxyServiceIp.end())
+    {
+        return it->second;
+    }
+    return Ipv4Address::GetZero();
+}
+
+uint32_t
+MtdNetworkHelper::GetProxyIdByIp(Ipv4Address ip) const
+{
+    auto it = m_serviceIpToProxyId.find(ip);
+    if (it != m_serviceIpToProxyId.end())
+    {
+        return it->second;
+    }
+    return 0;
 }
 
 NodeContainer

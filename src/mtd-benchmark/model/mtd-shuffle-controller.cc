@@ -4,6 +4,7 @@
  */
 
 #include "mtd-shuffle-controller.h"
+#include "ns3/mtd-traffic-helper.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 
@@ -84,6 +85,130 @@ ShuffleController::SetEventBus(Ptr<EventBus> eventBus)
     m_eventBus = eventBus;
 }
 
+void
+ShuffleController::SetTrafficHelper(Ptr<MtdTrafficHelper> trafficHelper)
+{
+    NS_LOG_FUNCTION(this);
+    m_trafficHelper = trafficHelper;
+}
+
+void
+ShuffleController::InitializeBaselineTraffic()
+{
+    NS_LOG_FUNCTION(this);
+    
+    if (m_domainManager == nullptr)
+    {
+        NS_LOG_ERROR("Domain manager not set for baseline traffic");
+        return;
+    }
+    
+    if (m_trafficHelper == nullptr)
+    {
+        NS_LOG_ERROR("Traffic helper not set for baseline traffic");
+        return;
+    }
+
+    // 1. Get all domains and users
+    auto allDomains = m_domainManager->GetAllDomainIds();
+    uint32_t flowCount = 0;
+
+    for (uint32_t domainId : allDomains)
+    {
+        auto users = m_domainManager->GetDomainUsers(domainId);
+        auto proxies = m_domainManager->GetDomainProxies(domainId);
+        
+        if (proxies.empty())
+        {
+            NS_LOG_WARN("Domain " << domainId << " has no proxies, skipping");
+            continue;
+        }
+
+        // 2. Establish initial connections for each user
+        for (size_t i = 0; i < users.size(); ++i)
+        {
+            uint32_t userId = users[i];
+            // Simple load balancing (Round-Robin)
+            uint32_t proxyId = proxies[i % proxies.size()]; 
+            
+            // Update internal mapping state
+            m_userToProxy[userId] = proxyId;
+
+            // Get user Node pointer
+            Ptr<Node> userNode = NodeList::GetNode(userId);
+            if (userNode == nullptr)
+            {
+                NS_LOG_WARN("Node not found for user " << userId);
+                continue;
+            }
+
+            // 3. [Key] Call TrafficHelper to create physical flow
+            // Primitive 3: Periodic TCP flow
+            m_trafficHelper->CreatePeriodicTcpFlow(
+                userId,
+                userNode,
+                proxyId,
+                DataRate("500kbps"), // Baseline rate
+                1024,                // Packet size
+                Seconds(0.1)         // Interaction interval
+            );
+            flowCount++;
+        }
+    }
+
+    NS_LOG_INFO("Baseline traffic established: " << flowCount << " flows created.");
+    
+    // 4. Event instrumentation
+    if (m_eventBus != nullptr)
+    {
+        MtdEvent event(EventType::SHUFFLE_COMPLETED, Simulator::Now().GetMilliSeconds());
+        event.metadata["type"] = "BASELINE_ESTABLISHED";
+        event.metadata["flowCount"] = std::to_string(flowCount);
+        m_eventBus->Publish(event);
+    }
+}
+
+void
+ShuffleController::ApplyUserMigration(uint32_t userId, uint32_t newProxyId)
+{
+    NS_LOG_FUNCTION(this << userId << newProxyId);
+
+    // 1. Get old state
+    uint32_t oldProxyId = GetProxyAssignment(userId);
+    if (oldProxyId == newProxyId)
+    {
+        return; // No change needed
+    }
+
+    // 2. [Key] Execute: Break-Before-Make (ensure old state is cleared)
+    if (m_trafficHelper != nullptr)
+    {
+        m_trafficHelper->TerminateFlowsByUser(userId);
+    }
+
+    // 3. [Key] Execute: Establish new connection
+    Ptr<Node> userNode = NodeList::GetNode(userId);
+    if (userNode != nullptr && m_trafficHelper != nullptr)
+    {
+        // Recreate traffic flow (parameters should match configuration)
+        m_trafficHelper->CreatePeriodicTcpFlow(
+            userId, 
+            userNode, 
+            newProxyId,
+            DataRate("500kbps"), 
+            1024, 
+            Seconds(0.1)
+        );
+    }
+
+    // 4. Update state
+    m_userToProxy[userId] = newProxyId;
+    
+    // 5. Event instrumentation
+    NotifyProxySwitch(userId, oldProxyId, newProxyId);
+    RecordProxyAssignment(userId, oldProxyId, newProxyId, IsInActiveSession(userId));
+}
+
 ShuffleEvent
 ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode, const std::string& reason)
 {
@@ -159,15 +284,18 @@ ShuffleController::TriggerShuffle(uint32_t domainId, ShuffleMode mode, const std
             }
         }
         
-        uint32_t oldProxy = GetProxyAssignment(userId);
-        uint32_t newProxy = SelectProxy(userId, mode, availableProxies);
+        // Decision: Calculate target proxy (algorithm layer)
+        uint32_t targetProxy = SelectProxy(userId, mode, availableProxies);
         
-        if (newProxy > 0 && newProxy != oldProxy)
+        // Execution: Call atomic operation (mechanism layer)
+        if (targetProxy > 0)
         {
-            m_userToProxy[userId] = newProxy;
-            RecordProxyAssignment(userId, oldProxy, newProxy, false);
-            NotifyProxySwitch(userId, oldProxy, newProxy);
-            usersShuffled++;
+            uint32_t oldProxy = GetProxyAssignment(userId);
+            if (targetProxy != oldProxy)
+            {
+                ApplyUserMigration(userId, targetProxy);
+                usersShuffled++;
+            }
         }
     }
     
@@ -710,6 +838,50 @@ TrafficDataApi::GetAggregateTraffic(uint32_t domainId) const
     }
     
     return aggregate;
+}
+
+DetectionObservation
+TrafficDataApi::GetObservationForProxy(uint32_t proxyId) const
+{
+    NS_LOG_FUNCTION(this << proxyId);
+    
+    DetectionObservation obs;
+    obs.timestamp = Simulator::Now().GetMilliSeconds();
+
+    auto it = m_proxyStats.find(proxyId);
+    if (it == m_proxyStats.end())
+    {
+        return obs;
+    }
+
+    const TrafficStats& stats = it->second;
+
+    // Simple anomaly calculation logic (example only, not real algorithm)
+    // 1. Rate anomaly: assume > 1000 pkt/s is anomalous
+    if (stats.packetRate > 1000.0)
+    {
+        obs.rateAnomaly = std::min((stats.packetRate - 1000.0) / 1000.0, 1.0);
+    }
+
+    // 2. Connection anomaly: assume > 100 conns is anomalous
+    if (stats.activeConnections > 100)
+    {
+        obs.connectionAnomaly = std::min(static_cast<double>(stats.activeConnections) / 200.0, 1.0);
+    }
+    
+    // 3. Determine type
+    if (obs.rateAnomaly > 0.8)
+    {
+        obs.suspectedType = AttackType::DOS;
+        obs.confidence = 0.9;
+    }
+    else if (obs.connectionAnomaly > 0.8)
+    {
+        obs.suspectedType = AttackType::SYN_FLOOD;
+        obs.confidence = 0.7;
+    }
+
+    return obs;
 }
 
 } // namespace mtd

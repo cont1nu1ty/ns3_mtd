@@ -6,10 +6,12 @@
 #ifndef MTD_NETWORK_HELPER_H
 #define MTD_NETWORK_HELPER_H
 
+#include "ns3/object.h"
 #include "ns3/node-container.h"
 #include "ns3/net-device-container.h"
 #include "ns3/internet-stack-helper.h"
 #include "ns3/ipv4-interface-container.h"
+#include "ns3/ipv4-address.h"
 #include "ns3/point-to-point-helper.h"
 #include "ns3/application-container.h"
 #include "ns3/ptr.h"
@@ -60,20 +62,23 @@ struct TopologyConfig {
 };
 
 /**
- * \brief MTD Network Helper for creating the simulation topology
- * 
- * This helper creates a standard MTD network topology with:
+ * \ingroup mtd
+ * \brief Helper for creating MTD network topology
+ *
+ * This helper creates the network topology consisting of:
  * - Client nodes
- * - Proxy nodes (for MTD switching)
- * - Backend server nodes
+ * - Proxy nodes
+ * - Server nodes
  * - Attacker nodes
  * - Controller node
  */
-class MtdNetworkHelper
+class MtdNetworkHelper : public Object
 {
 public:
+    static TypeId GetTypeId();
+
     MtdNetworkHelper();
-    ~MtdNetworkHelper();
+    ~MtdNetworkHelper() override;
     
     /**
      * \brief Set topology configuration
@@ -197,6 +202,24 @@ public:
      * \return IP address string
      */
     std::string GetNodeIpAddress(uint32_t nodeId) const;
+
+    /**
+     * \brief Get proxy service IP (VIPA-like) used by applications.
+     *
+     * This returns a stable per-proxy IP address intended to be used as the
+     * destination for benign/attack traffic and for FlowMonitor aggregation.
+     *
+     * \param proxyNodeId Proxy node ID (also used as ProxyId in model layer)
+     * \return Service IP address (Ipv4Address::GetZero() if unknown)
+     */
+    Ipv4Address GetServiceIp(uint32_t proxyNodeId) const;
+
+    /**
+     * \brief Reverse lookup: map a service IP back to proxy ID.
+     * \param ip Service IP address
+     * \return Proxy node ID, or 0 if not found
+     */
+    uint32_t GetProxyIdByIp(Ipv4Address ip) const;
     
     /**
      * \brief Print topology summary
@@ -223,6 +246,10 @@ private:
     
     std::map<uint32_t, Ptr<NetDevice>> m_clientProxyMap;
     std::map<uint32_t, std::string> m_nodeIpMap;
+
+    // Proxy service IP (VIPA-like) bidirectional mapping.
+    std::map<uint32_t, Ipv4Address> m_proxyServiceIp;
+    std::map<Ipv4Address, uint32_t> m_serviceIpToProxyId;
     
     bool m_topologyCreated;
     bool m_stackInstalled;

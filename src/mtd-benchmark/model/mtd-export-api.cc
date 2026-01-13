@@ -573,7 +573,7 @@ ExportApi::GenerateAttackCsv() const
     ss << std::fixed << std::setprecision(3);
     
     // Header with attacker ID
-    ss << "timestamp,attackerId,type,targetProxyId,rate,duration,defenseTriggered\n";
+    ss << "startTime,attackerId,type,targetProxyId,ratePps,packetSize,attackerCount,durationPlanned,durationActual,defenseTriggered\n";
     
     // Export from all attack generators
     if (!m_attackGenerators.empty())
@@ -583,12 +583,15 @@ ExportApi::GenerateAttackCsv() const
             auto history = m_attackGenerators[attackerId]->GetAttackHistory();
             for (const auto& event : history)
             {
-                ss << event.timestamp << ",";
+                ss << event.startTime << ",";
                 ss << (attackerId + 1) << ",";  // 1-indexed attacker ID
                 ss << static_cast<int>(event.type) << ",";
                 ss << event.targetProxyId << ",";
-                ss << event.rate << ",";
-                ss << event.duration << ",";
+                ss << event.ratePps << ",";
+                ss << event.packetSize << ",";
+                ss << event.attackerCount << ",";
+                ss << event.durationPlanned << ",";
+                ss << event.durationActual << ",";
                 ss << (event.defenseTriggered ? "true" : "false") << "\n";
             }
         }
@@ -599,12 +602,15 @@ ExportApi::GenerateAttackCsv() const
         auto history = m_attackGenerator->GetAttackHistory();
         for (const auto& event : history)
         {
-            ss << event.timestamp << ",";
+            ss << event.startTime << ",";
             ss << "1,";  // Default attacker ID
             ss << static_cast<int>(event.type) << ",";
             ss << event.targetProxyId << ",";
-            ss << event.rate << ",";
-            ss << event.duration << ",";
+            ss << event.ratePps << ",";
+            ss << event.packetSize << ",";
+            ss << event.attackerCount << ",";
+            ss << event.durationPlanned << ",";
+            ss << event.durationActual << ",";
             ss << (event.defenseTriggered ? "true" : "false") << "\n";
         }
     }

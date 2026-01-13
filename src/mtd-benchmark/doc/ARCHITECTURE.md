@@ -31,6 +31,21 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+### 1.2 Helper 层（真实流量/统计）
+
+为了支持“真实 ns-3 流量 → 统计采样 → detector/策略”的闭环，本项目提供了一组 helper：
+
+- `MtdNetworkHelper`：创建 ns-3 拓扑，并提供 proxy service IP 映射（用于应用目的地址与 FlowMonitor 聚合）。
+- `MtdTrafficHelper`：安装 benign users 与 external attackers 的 UDP 应用，并订阅事件实现：
+    - `PROXY_SWITCHED`：强制迁移（立即更新 sender 目的地址）
+    - `USER_BANNED`：停流（停止对应 sender 应用）
+- `MtdAnalysisHelper`：双模式采样（不要硬编码只用 FlowMonitor）：
+    - 轻量：PacketSink bytes + Rx trace packets
+    - 重量：FlowMonitor 聚合（按 destination IP → proxyId）
+
+重要约束：helper 只负责“工具性工作”（装应用/采样/事件响应），不包含 `LocalDetector` 等控制逻辑；
+检测/评分/洗牌的调度仍由主脚本（example / Python 算法驱动器）负责。
+
 ---
 
 ## 2. 核心组件详解
@@ -239,6 +254,10 @@ attackGenerator->SubscribeDefenseEvents(
     });
 ```
 
+> 说明：`AttackGenerator` 更偏向“逻辑攻击事件/计数”的生成方式。
+> 若需要真实包级流量验证，建议使用 `MtdTrafficHelper` 生成真实 UDP/TCP 应用流量，
+> 再用 `MtdAnalysisHelper` 采样统计喂给 detector。
+
 ---
 
 ## 3. 数据流详解
@@ -322,5 +341,8 @@ exportApi->AddCustomMetric("myMetric", [this]() {
 | `mtd-domain-manager.h/cc` | 域管理 |
 | `mtd-shuffle-controller.h/cc` | 洗牌控制 |
 | `mtd-attack-generator.h/cc` | 攻击模拟 |
+| `helper/mtd-network-helper.h/cc` | 真实拓扑创建 + proxy service IP 映射 |
+| `helper/mtd-traffic-helper.h/cc` | 真实 UDP 流量部署（benign/attackers）+ 强制迁移/停流 |
+| `helper/mtd-analysis-helper.h/cc` | 双模式采样（PacketSink/FlowMonitor） |
 | `mtd-export-api.h/cc` | 数据导出 |
 | `mtd-benchmark-module.h` | 统一包含头文件 |

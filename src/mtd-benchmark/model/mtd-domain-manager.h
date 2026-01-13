@@ -282,6 +282,15 @@ public:
      */
     double GetShuffleFrequency(uint32_t domainId) const;
 
+    /**
+     * \brief Initialize user placement (cold start - logical assignment only)
+     * \param userIds Vector of user IDs to initialize
+     * 
+     * This performs only logical domain assignment without creating traffic flows.
+     * Traffic creation is handled separately by ShuffleController::InitializeBaselineTraffic.
+     */
+    void InitializeUserPlacement(const std::vector<uint32_t>& userIds);
+
 private:
     std::map<uint32_t, Domain> m_domains;
     std::map<uint32_t, uint32_t> m_userToDomain;

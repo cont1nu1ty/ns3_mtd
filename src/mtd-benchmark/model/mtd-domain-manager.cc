@@ -706,6 +706,54 @@ DomainManager::GetShuffleFrequency(uint32_t domainId) const
     return 0.0;
 }
 
+void
+DomainManager::InitializeUserPlacement(const std::vector<uint32_t>& userIds)
+{
+    NS_LOG_FUNCTION(this << userIds.size());
+
+    if (m_domains.empty())
+    {
+        NS_LOG_WARN("No domains available for initialization");
+        return;
+    }
+
+    // 1. Clear old state (logical mapping only)
+    m_userToDomain.clear();
+    for (auto& pair : m_domains)
+    {
+        pair.second.userIds.clear();
+    }
+
+    // 2. Assign users to domains
+    for (uint32_t userId : userIds)
+    {
+        // A. Assign Domain using consistent hash or default strategy
+        uint32_t domainId = AssignUserToDomain(userId);
+        
+        if (domainId == 0)
+        {
+            NS_LOG_WARN("Failed to assign user " << userId << " to any domain");
+            continue;
+        }
+
+        // Note: Proxy assignment is handled by ShuffleController's bootstrap
+        // DomainManager only maintains Domain-level membership
+        
+        NS_LOG_INFO("User " << userId << " initialized to Domain " << domainId);
+    }
+    
+    // 3. Publish event: logical placement complete
+    if (m_eventBus != nullptr)
+    {
+        MtdEvent event(EventType::SHUFFLE_COMPLETED, Simulator::Now().GetMilliSeconds());
+        event.metadata["reason"] = "COLD_START_PLACEMENT";
+        event.metadata["userCount"] = std::to_string(userIds.size());
+        m_eventBus->Publish(event);
+    }
+    
+    NS_LOG_INFO("InitializeUserPlacement completed: " << userIds.size() << " users placed");
+}
+
 uint32_t
 DomainManager::ConsistentHashAssign(uint32_t userId) const
 {

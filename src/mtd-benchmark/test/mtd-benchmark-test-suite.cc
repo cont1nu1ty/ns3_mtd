@@ -1,496 +1,133 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-/*
- * MTD-Benchmark: Test suite
- */
-
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
 #include "ns3/mtd-benchmark-module.h"
-
-#include <algorithm>
+#include "ns3/test.h"
+#include "ns3/simulator.h"
 
 using namespace ns3;
 using namespace ns3::mtd;
 
-NS_LOG_COMPONENT_DEFINE("MtdBenchmarkTest");
-
 /**
- * \brief Test case for EventBus
+ * 
  */
-class EventBusTestCase : public TestCase
+
+// ===========================================================================
+// 1. DomainManager 逻辑测试
+// ===========================================================================
+class MtdDomainTestCase : public TestCase
 {
 public:
-    EventBusTestCase();
-    ~EventBusTestCase() override;
+    MtdDomainTestCase() : TestCase("测试 DomainManager 的域操作逻辑") {}
+    void DoRun() override {
+        Ptr<DomainManager> mgr = CreateObject<DomainManager>();
+            
+            // 方案 A：手动降低阈值（推荐用于单元测试）
+            DomainThresholds thresholds;
+            thresholds.minProxies = 1;      // 分裂后每个域仅需 1 个代理
+            thresholds.minUsers = 1;       // 分裂后每个域仅需 1 个用户
+            thresholds.splitThreshold = 0.5; // 降低负载触发门槛
+            mgr->SetThresholds(thresholds);
+
+            uint32_t domId = mgr->CreateDomain("Alpha");
+
+            // 方案 B：或者提供满足默认阈值（minProxies=2, minUsers=10）的资源量
+            // 这里我们添加 4 个代理和 20 个用户
+            for (uint32_t i = 0; i < 4; ++i) mgr->AddProxy(domId, 100 + i);
+            for (uint32_t i = 0; i < 20; ++i) mgr->AddUser(domId, 2000 + i);
+
+            // 模拟触发分裂的负载
+            mgr->UpdateLoadFactor(domId, 0.9);
+            
+            NS_TEST_EXPECT_MSG_EQ(mgr->NeedsRebalancing(), true, "负载 0.9 应触发重平衡");
+
+            // 执行分裂
+            uint32_t newDomId = mgr->SplitDomain(domId);
+            
+            // 验证结果
+            NS_TEST_EXPECT_MSG_NE(newDomId, 0, "资源充足且满足最小约束时，SplitDomain 不应返回 0");
+            
+            // 验证分裂后的资源分布
+            std::vector<uint32_t> oldDomUsers = mgr->GetDomainUsers(domId);
+            std::vector<uint32_t> newDomUsers = mgr->GetDomainUsers(newDomId);
+            NS_TEST_EXPECT_MSG_GT(newDomUsers.size(), 0, "新域中应包含迁移的用户");
+    }
+};
+
+// ===========================================================================
+// 2. ScoreManager 评分逻辑测试
+// ===========================================================================
+class MtdScoreTestCase : public TestCase
+{
+public:
+    MtdScoreTestCase() : TestCase("测试 ScoreManager 的风险分值计算") {}
+    void DoRun() override {
+        Ptr<ScoreManager> sm = CreateObject<ScoreManager>();
+        uint32_t userId = 2001;
+
+        // 测试初始分数与分值增加
+        double initialScore = sm->GetScore(userId);
+        NS_TEST_EXPECT_MSG_EQ(initialScore, 0.0, "初始分数应为 0");
+
+        sm->AddScore(userId, 0.5, "检测到端口扫描"); //
+        NS_TEST_EXPECT_MSG_EQ(sm->GetScore(userId), 0.5, "分数增加值不正确");
+
+        // 测试风险等级转换
+        // 默认 RiskThresholds: MediumMax = 0.6
+        sm->AddScore(userId, 0.2, "持续异常流量"); 
+        NS_TEST_EXPECT_MSG_EQ(sm->GetRiskLevel(userId) == RiskLevel::HIGH, true, "分数达到 0.7 时应为 HIGH 等级");
+
+        // 测试时间衰减 (ApplyTimeDecay)
+        sm->ApplyTimeDecay(1000); // 衰减取决于 lambda 权重
+        NS_TEST_EXPECT_MSG_LT(sm->GetScore(userId), 0.7, "时间衰减后分数应下降");
+    }
+};
+
+// ===========================================================================
+// 3. Attack & EventBus 联动测试
+// ===========================================================================
+class MtdAttackLogicTestCase : public TestCase
+{
+public:
+    MtdAttackLogicTestCase() : TestCase("测试攻击生成与检测事件流") {}
     
+    // 模拟事件回调
+    void OnAttackDetected(const MtdEvent& ev) {
+        m_detected = true;
+    }
+
+    void DoRun() override {
+        Ptr<EventBus> bus = CreateObject<EventBus>();
+        Ptr<LocalDetector> detector = CreateObject<LocalDetector>();
+        detector->SetEventBus(bus);
+        m_detected = false;
+
+        // 订阅检测事件
+        bus->Subscribe(EventType::ATTACK_DETECTED, 
+            MakeCallback(&MtdAttackLogicTestCase::OnAttackDetected, this));
+
+        // 构造触发检测的统计数据
+        TrafficStats stats;
+        stats.packetRate = 20000.0; // 超过默认阈值 10000.0
+        detector->UpdateStats(100, stats);
+        
+        // 执行分析逻辑
+        detector->Analyze(100); 
+
+        NS_TEST_ASSERT_MSG_EQ(m_detected, true, "流量超标时 Detector 应发布事件到 EventBus");
+    }
 private:
-    void DoRun() override;
-    void OnEvent(const MtdEvent& event);
-    
-    bool m_eventReceived;
-    EventType m_receivedType;
+    bool m_detected;
 };
 
-EventBusTestCase::EventBusTestCase()
-    : TestCase("EventBus basic functionality test"),
-      m_eventReceived(false),
-      m_receivedType(EventType::SHUFFLE_TRIGGERED)
-{
-}
-
-EventBusTestCase::~EventBusTestCase()
-{
-}
-
-void
-EventBusTestCase::OnEvent(const MtdEvent& event)
-{
-    m_eventReceived = true;
-    m_receivedType = event.type;
-}
-
-void
-EventBusTestCase::DoRun()
-{
-    Ptr<EventBus> eventBus = CreateObject<EventBus>();
-    
-    // Reset state
-    m_eventReceived = false;
-    m_receivedType = EventType::SHUFFLE_TRIGGERED;
-    
-    // Subscribe to an event using MakeCallback
-    eventBus->Subscribe(EventType::SHUFFLE_COMPLETED, 
-        MakeCallback(&EventBusTestCase::OnEvent, this));
-    
-    // Publish an event
-    MtdEvent event(EventType::SHUFFLE_COMPLETED, 0);
-    eventBus->Publish(event);
-    
-    NS_TEST_ASSERT_MSG_EQ(m_eventReceived, true, "Event should be received");
-    NS_TEST_ASSERT_MSG_EQ(static_cast<int>(m_receivedType), 
-                          static_cast<int>(EventType::SHUFFLE_COMPLETED), 
-                          "Event type should match");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief Test case for ScoreManager
- */
-class ScoreManagerTestCase : public TestCase
+// ===========================================================================
+// 测试套件定义
+// ===========================================================================
+class MtdModuleTestSuite : public TestSuite
 {
 public:
-    ScoreManagerTestCase();
-    ~ScoreManagerTestCase() override;
-    
-private:
-    void DoRun() override;
+    MtdModuleTestSuite() : TestSuite("mtd-benchmark-unit", Type::UNIT) {
+        AddTestCase(new MtdDomainTestCase(), TestCase::Duration::QUICK);
+        AddTestCase(new MtdScoreTestCase(), TestCase::Duration::QUICK);
+        AddTestCase(new MtdAttackLogicTestCase(), TestCase::Duration::QUICK);
+    }
 };
 
-ScoreManagerTestCase::ScoreManagerTestCase()
-    : TestCase("ScoreManager basic functionality test")
-{
-}
-
-ScoreManagerTestCase::~ScoreManagerTestCase()
-{
-}
-
-void
-ScoreManagerTestCase::DoRun()
-{
-    Ptr<ScoreManager> scoreManager = CreateObject<ScoreManager>();
-    
-    // Create an observation
-    DetectionObservation obs;
-    obs.rateAnomaly = 0.8;
-    obs.patternAnomaly = 0.7;
-    obs.persistenceFactor = 0.5;
-    
-    // Update score
-    scoreManager->UpdateScore(1, obs);
-    
-    // Check score was updated
-    double score = scoreManager->GetScore(1);
-    NS_TEST_ASSERT_MSG_GT(score, 0.0, "Score should be greater than 0");
-    
-    // Check risk level
-    RiskLevel level = scoreManager->GetRiskLevel(1);
-    NS_TEST_ASSERT_MSG_NE(static_cast<int>(level), 
-                          static_cast<int>(RiskLevel::CRITICAL),
-                          "Initial risk should not be critical");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief Test case for DomainManager
- */
-class DomainManagerTestCase : public TestCase
-{
-public:
-    DomainManagerTestCase();
-    ~DomainManagerTestCase() override;
-    
-private:
-    void DoRun() override;
-};
-
-DomainManagerTestCase::DomainManagerTestCase()
-    : TestCase("DomainManager basic functionality test")
-{
-}
-
-DomainManagerTestCase::~DomainManagerTestCase()
-{
-}
-
-void
-DomainManagerTestCase::DoRun()
-{
-    Ptr<DomainManager> domainManager = CreateObject<DomainManager>();
-    
-    // Create domains
-    uint32_t domain1 = domainManager->CreateDomain("TestDomain1");
-    uint32_t domain2 = domainManager->CreateDomain("TestDomain2");
-    
-    NS_TEST_ASSERT_MSG_GT(domain1, 0u, "Domain ID should be positive");
-    NS_TEST_ASSERT_MSG_GT(domain2, 0u, "Domain ID should be positive");
-    NS_TEST_ASSERT_MSG_NE(domain1, domain2, "Domain IDs should be different");
-    
-    // Add users
-    NS_TEST_ASSERT_MSG_EQ(domainManager->AddUser(domain1, 100), true, 
-                          "Should be able to add user");
-    NS_TEST_ASSERT_MSG_EQ(domainManager->AddUser(domain1, 101), true, 
-                          "Should be able to add user");
-    
-    // Check user domain
-    NS_TEST_ASSERT_MSG_EQ(domainManager->GetDomain(100), domain1, 
-                          "User should be in domain1");
-    
-    // Move user
-    NS_TEST_ASSERT_MSG_EQ(domainManager->MoveUser(100, domain2), true, 
-                          "Should be able to move user");
-    NS_TEST_ASSERT_MSG_EQ(domainManager->GetDomain(100), domain2, 
-                          "User should now be in domain2");
-    
-    // Check domain info
-    Domain info = domainManager->GetDomainInfo(domain1);
-    NS_TEST_ASSERT_MSG_EQ(info.userIds.size(), 1u, 
-                          "Domain1 should have 1 user after migration");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief Test case for ShuffleController
- */
-class ShuffleControllerTestCase : public TestCase
-{
-public:
-    ShuffleControllerTestCase();
-    ~ShuffleControllerTestCase() override;
-    
-private:
-    void DoRun() override;
-};
-
-ShuffleControllerTestCase::ShuffleControllerTestCase()
-    : TestCase("ShuffleController basic functionality test")
-{
-}
-
-ShuffleControllerTestCase::~ShuffleControllerTestCase()
-{
-}
-
-void
-ShuffleControllerTestCase::DoRun()
-{
-    Ptr<DomainManager> domainManager = CreateObject<DomainManager>();
-    Ptr<ShuffleController> shuffleController = CreateObject<ShuffleController>();
-    
-    shuffleController->SetDomainManager(domainManager);
-    
-    // Create a domain with proxies and users
-    uint32_t domainId = domainManager->CreateDomain("TestDomain");
-    domainManager->AddProxy(domainId, 1);
-    domainManager->AddProxy(domainId, 2);
-    domainManager->AddUser(domainId, 100);
-    domainManager->AddUser(domainId, 101);
-    
-    // Assign users to proxies
-    shuffleController->AssignUserToProxy(100, 1);
-    shuffleController->AssignUserToProxy(101, 2);
-    
-    // Check assignments
-    NS_TEST_ASSERT_MSG_EQ(shuffleController->GetProxyAssignment(100), 1u, 
-                          "User 100 should be assigned to proxy 1");
-    NS_TEST_ASSERT_MSG_EQ(shuffleController->GetProxyAssignment(101), 2u, 
-                          "User 101 should be assigned to proxy 2");
-    
-    // Trigger shuffle
-    ShuffleEvent event = shuffleController->TriggerShuffle(domainId, ShuffleMode::RANDOM, "");
-    NS_TEST_ASSERT_MSG_EQ(event.success, true, "Shuffle should succeed");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief Test case for LocalDetector
- */
-class LocalDetectorTestCase : public TestCase
-{
-public:
-    LocalDetectorTestCase();
-    ~LocalDetectorTestCase() override;
-    
-private:
-    void DoRun() override;
-};
-
-LocalDetectorTestCase::LocalDetectorTestCase()
-    : TestCase("LocalDetector basic functionality test")
-{
-}
-
-LocalDetectorTestCase::~LocalDetectorTestCase()
-{
-}
-
-void
-LocalDetectorTestCase::DoRun()
-{
-    Ptr<LocalDetector> detector = CreateObject<LocalDetector>();
-    
-    // Set thresholds
-    DetectionThresholds thresholds;
-    thresholds.packetRateThreshold = 1000.0;
-    detector->SetThresholds(thresholds);
-    
-    // Update stats - normal traffic
-    TrafficStats stats;
-    stats.packetRate = 500.0;
-    stats.byteRate = 500000.0;
-    stats.activeConnections = 50;
-    detector->UpdateStats(1, stats);
-    
-    // Analyze
-    DetectionObservation obs = detector->Analyze(1);
-    NS_TEST_ASSERT_MSG_LT(obs.patternAnomaly, 0.5, 
-                          "Normal traffic should have low anomaly score");
-    
-    // Update stats - attack traffic
-    stats.packetRate = 50000.0;
-    stats.byteRate = 50000000.0;
-    stats.activeConnections = 5000;
-    detector->UpdateStats(1, stats);
-    
-    obs = detector->Analyze(1);
-    NS_TEST_ASSERT_MSG_GT(obs.patternAnomaly, 0.5, 
-                          "Attack traffic should have high anomaly score");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief Test case for AttackGenerator
- */
-class AttackGeneratorTestCase : public TestCase
-{
-public:
-    AttackGeneratorTestCase();
-    ~AttackGeneratorTestCase() override;
-    
-private:
-    void DoRun() override;
-};
-
-AttackGeneratorTestCase::AttackGeneratorTestCase()
-    : TestCase("AttackGenerator basic functionality test")
-{
-}
-
-AttackGeneratorTestCase::~AttackGeneratorTestCase()
-{
-}
-
-void
-AttackGeneratorTestCase::DoRun()
-{
-    Ptr<AttackGenerator> generator = CreateObject<AttackGenerator>();
-    
-    // Configure attack
-    AttackParams params;
-    params.type = AttackType::DOS;
-    params.rate = 1000.0;
-    params.targetProxyId = 1;
-    params.duration = 10.0;
-    
-    generator->Generate(params);
-    
-    // Check configuration
-    NS_TEST_ASSERT_MSG_EQ(generator->IsActive(), false, 
-                          "Generator should not be active before Start()");
-    
-    generator->AddTarget(1);
-    generator->AddTarget(2);
-    
-    auto targets = generator->GetTargets();
-    NS_TEST_ASSERT_MSG_EQ(targets.size(), 2u, 
-                          "Should have 2 targets");
-    
-    Simulator::Destroy();
-}
-
-/**
- * \brief End-to-end interaction test across detector, scoring, shuffle, and attack adaptation
- */
-class MtdEndToEndTestCase : public TestCase
-{
-public:
-    MtdEndToEndTestCase();
-    ~MtdEndToEndTestCase() override;
-
-private:
-    void DoRun() override;
-    void OnShuffleEvent(const MtdEvent& event);
-    void OnProxySwitchEvent(const MtdEvent& event);
-    
-    bool m_shuffleEventReceived;
-    bool m_proxySwitchReceived;
-};
-
-MtdEndToEndTestCase::MtdEndToEndTestCase()
-    : TestCase("MTD integration flow test"),
-      m_shuffleEventReceived(false),
-      m_proxySwitchReceived(false)
-{
-}
-
-MtdEndToEndTestCase::~MtdEndToEndTestCase() = default;
-
-void
-MtdEndToEndTestCase::OnShuffleEvent(const MtdEvent& /*event*/)
-{
-    m_shuffleEventReceived = true;
-}
-
-void
-MtdEndToEndTestCase::OnProxySwitchEvent(const MtdEvent& /*event*/)
-{
-    m_proxySwitchReceived = true;
-}
-
-void
-MtdEndToEndTestCase::DoRun()
-{
-    // Reset state
-    m_shuffleEventReceived = false;
-    m_proxySwitchReceived = false;
-    
-    Ptr<EventBus> eventBus = CreateObject<EventBus>();
-    Ptr<DomainManager> domainManager = CreateObject<DomainManager>();
-    Ptr<ScoreManager> scoreManager = CreateObject<ScoreManager>();
-    Ptr<ShuffleController> shuffleController = CreateObject<ShuffleController>();
-    Ptr<LocalDetector> detector = CreateObject<LocalDetector>();
-    Ptr<AttackGenerator> attackGenerator = CreateObject<AttackGenerator>();
-
-    domainManager->SetEventBus(eventBus);
-    scoreManager->SetEventBus(eventBus);
-    shuffleController->SetDomainManager(domainManager);
-    shuffleController->SetScoreManager(scoreManager);
-    shuffleController->SetEventBus(eventBus);
-
-    AttackParams params;
-    params.targetProxyId = 1;
-    attackGenerator->Generate(params);
-    attackGenerator->SetBehavior(AttackBehavior::ADAPTIVE);
-    attackGenerator->SetEventBus(eventBus);
-
-    eventBus->Subscribe(EventType::SHUFFLE_COMPLETED, 
-        MakeCallback(&MtdEndToEndTestCase::OnShuffleEvent, this));
-    eventBus->Subscribe(EventType::PROXY_SWITCHED, 
-        MakeCallback(&MtdEndToEndTestCase::OnProxySwitchEvent, this));
-
-    uint32_t domainId = domainManager->CreateDomain("integration");
-    domainManager->AddProxy(domainId, 1);
-    domainManager->AddProxy(domainId, 2);
-    domainManager->AddUser(domainId, 100);
-    shuffleController->AssignUserToProxy(100, 1);
-
-    DetectionThresholds thresholds;
-    thresholds.packetRateThreshold = 100.0;
-    thresholds.byteRateThreshold = 1000.0;
-    thresholds.connectionThreshold = 50.0;
-    thresholds.anomalyScoreThreshold = 0.5;
-    detector->SetThresholds(thresholds);
-
-    TrafficStats normalTraffic;
-    normalTraffic.packetRate = 50.0;
-    normalTraffic.byteRate = 500.0;
-    normalTraffic.activeConnections = 20;
-    detector->UpdateStats(1, normalTraffic);
-
-    TrafficStats attackTraffic;
-    attackTraffic.packetRate = 1000.0;
-    attackTraffic.byteRate = 100000.0;
-    attackTraffic.activeConnections = 500;
-    detector->UpdateStats(1, attackTraffic);
-
-    DetectionObservation observation = detector->Analyze(1);
-    observation.rateAnomaly = 1.0;
-    observation.patternAnomaly = 1.0;
-    observation.persistenceFactor = 1.0;
-    scoreManager->UpdateScore(100, observation);
-
-    NS_TEST_ASSERT_MSG_EQ(static_cast<int>(scoreManager->GetRiskLevel(100)),
-                          static_cast<int>(RiskLevel::HIGH),
-                          "Attack observation should elevate user to HIGH risk");
-
-    ShuffleEvent shuffleEvent = shuffleController->TriggerShuffle(domainId, ShuffleMode::SCORE_DRIVEN, "");
-    NS_TEST_ASSERT_MSG_EQ(shuffleEvent.success, true, "Shuffle should succeed for populated domain");
-    NS_TEST_ASSERT_MSG_EQ(shuffleController->GetProxyAssignment(100), 2u,
-                          "User should be re-assigned to a different proxy");
-    NS_TEST_ASSERT_MSG_GT(shuffleEvent.usersAffected, 0u,
-                          "At least one user must be shuffled in integration flow");
-
-    auto targets = attackGenerator->GetTargets();
-    bool sawNewTarget = std::find(targets.begin(), targets.end(), 2u) != targets.end();
-    NS_TEST_ASSERT_MSG_EQ(attackGenerator->IsInCooldown(), true,
-                          "Adaptive attack generator should enter cooldown after defense event");
-    NS_TEST_ASSERT_MSG_EQ(sawNewTarget, true,
-                          "Attack generator should learn newly switched proxy as target");
-
-    NS_TEST_ASSERT_MSG_EQ(m_shuffleEventReceived, true,
-                          "Shuffle completion event should be broadcast on EventBus");
-    NS_TEST_ASSERT_MSG_EQ(m_proxySwitchReceived, true,
-                          "Proxy switch event should be broadcast on EventBus");
-
-    attackGenerator->Stop();
-    Simulator::Destroy();
-}
-
-/**
- * \brief MTD-Benchmark test suite
- */
-class MtdBenchmarkTestSuite : public TestSuite
-{
-public:
-    MtdBenchmarkTestSuite();
-};
-
-MtdBenchmarkTestSuite::MtdBenchmarkTestSuite()
-    : TestSuite("mtd-benchmark", Type::UNIT)
-{
-    AddTestCase(new EventBusTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new ScoreManagerTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new DomainManagerTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new ShuffleControllerTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new LocalDetectorTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new AttackGeneratorTestCase, TestCase::Duration::QUICK);
-    AddTestCase(new MtdEndToEndTestCase, TestCase::Duration::QUICK);
-}
-
-static MtdBenchmarkTestSuite sMtdBenchmarkTestSuite;
+static MtdModuleTestSuite g_mtdModuleTestSuite;

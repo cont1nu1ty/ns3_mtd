@@ -4,7 +4,7 @@
 #
 
 def build(bld):
-    module = bld.create_ns3_module('mtd-benchmark', ['core', 'network', 'internet', 'point-to-point', 'applications'])
+    module = bld.create_ns3_module('mtd-benchmark', ['core', 'network', 'internet', 'point-to-point', 'csma', 'applications', 'flow-monitor'])
     
     module.source = [
         'model/mtd-event-bus.cc',
@@ -14,7 +14,11 @@ def build(bld):
         'model/mtd-shuffle-controller.cc',
         'model/mtd-attack-generator.cc',
         'model/mtd-export-api.cc',
+        'model/mtd-security-tag.cc',
         'helper/mtd-network-helper.cc',
+        'helper/mtd-traffic-helper.cc',
+        'helper/mtd-analysis-helper.cc',
+        'helper/mtd-telemetry-helper.cc',
     ]
 
     module_test = bld.create_ns3_module_test_library('mtd-benchmark')
@@ -33,7 +37,11 @@ def build(bld):
         'model/mtd-shuffle-controller.h',
         'model/mtd-attack-generator.h',
         'model/mtd-export-api.h',
+        'model/mtd-security-tag.h',
         'helper/mtd-network-helper.h',
+        'helper/mtd-traffic-helper.h',
+        'helper/mtd-analysis-helper.h',
+        'helper/mtd-telemetry-helper.h',
     ]
 
     if bld.env.ENABLE_EXAMPLES:

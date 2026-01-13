@@ -23,6 +23,9 @@
 // Core types and enums
 #include "mtd-common.h"
 
+// Packet tag for deterministic RCA attribution
+#include "mtd-security-tag.h"
+
 // Event bus for inter-module communication
 #include "mtd-event-bus.h"
 
@@ -46,5 +49,8 @@
 
 // Export API
 #include "mtd-export-api.h"
+
+// Telemetry helper (1s RCA aggregation)
+#include "ns3/mtd-telemetry-helper.h"
 
 #endif // MTD_BENCHMARK_MODULE_H

@@ -113,6 +113,26 @@ enum class FileLogLevel {
 };
 
 /**
+ * \brief Root-cause drop attribution categories for RCA.
+ *
+ * Values are part of the telemetry contract and must remain stable.
+ */
+enum class DropReason {
+    // === Physical / Network Layer (DDoS-driven) ===
+    DROP_PHY_CONGESTION = 0, ///< Queue full / congestion drop
+    DROP_PHY_TTL,            ///< TTL expired (loop / hop limit)
+    DROP_PHY_NO_ROUTE,       ///< No route / routing not converged
+
+    // === MTD Policy Layer (Defense-driven) ===
+    DROP_MTD_ACCESS_DENIED,  ///< Banned user / ACL deny
+    DROP_MTD_STALE_DEST,     ///< Old proxy/service IP (client not migrated)
+    DROP_MTD_EPOCH_MISMATCH, ///< Valid IP but stale epoch/token
+
+    // === System ===
+    DROP_SYS_OTHER           ///< Unknown / unmapped
+};
+
+/**
  * \brief Node types in the MTD network
  */
 enum class NodeType {

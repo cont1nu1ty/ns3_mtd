@@ -103,15 +103,17 @@ class BridgeRunner:
             if stop_time_ms is not None and next_ms > stop_time_ms:
                 next_ms = stop_time_ms
 
+            delta_ms = max(0, int(next_ms - now_ms))
+
             # If there are no pending events, schedule a no-op at the tick boundary
             # so time can advance deterministically.
             if int(ns.Simulator.GetEventCount()) == 0:
-                delta_ms = max(0, int(next_ms - now_ms))
                 ev = ns.cppyy.gbl.mtd_bridge.NoopEvent()
                 ns.Simulator.Schedule(ns.MilliSeconds(delta_ms), ev)
 
             # Advance simulator up to next_ms.
-            ns.Simulator.Stop(ns.MilliSeconds(next_ms))
+            # Simulator.Stop(Time) is a delay from *now*; pass delta, not absolute time.
+            ns.Simulator.Stop(ns.MilliSeconds(delta_ms))
             ns.Simulator.Run()
 
             now_ms = int(ns.Simulator.Now().GetMilliSeconds())

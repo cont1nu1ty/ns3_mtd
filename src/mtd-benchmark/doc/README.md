@@ -13,8 +13,9 @@
 
 | 模式 | 命令 | 仿真引擎 | 用途 |
 |------|------|---------|------|
-| 纯 C++ | `./ns3 run mtd-full-defense-test` | NS-3 C++ | 验证 C++ 组件 |
-| Python 驱动（Cppyy） | `./ns3 run src/mtd-benchmark/examples/mtd-python-round-defense.py --` | NS-3 C++（由 Python 低频驱动） | 用 Python 算法控制/评测防御策略 |
+| 纯 C++（真实流量） | `./ns3 run mtd-full-defense-test` | NS-3 C++ | 真实 UDP 流量 + 采样统计 + 检测/洗牌/封禁闭环 |
+| Python 驱动（Cppyy，真实流量） | `./ns3 run src/mtd-benchmark/examples/mtd-python-round-defense.py --` | NS-3 C++（由 Python 低频驱动） | Python 低频 tick 驱动策略；流量/统计在 C++ helper 内完成 |
+| 纯 C++（最小集成示例） | `./ns3 run mtd-real-traffic-defense-test` | NS-3 C++ | 最小“主脚本指挥官模式”示例：helper 装流量/采样，主脚本跑 detector |
 
 ---
 
@@ -34,6 +35,14 @@
 | EventStream | `mtd-event-stream.h` | Python 增量事件读取（GetEventsSince/seq） |
 | mtd_bridge | `python/mtd_bridge/*` | Python 驱动框架（tick stepping + 硬约束） |
 
+### Real-traffic helper（真实流量/统计）
+
+| 组件 | 文件 | 功能 |
+|------|------|------|
+| MtdNetworkHelper | `helper/mtd-network-helper.h` | 创建真实 ns-3 拓扑并提供 proxy service IP 映射 |
+| MtdTrafficHelper | `helper/mtd-traffic-helper.h` | 安装 UDP 应用（benign/users/attackers），订阅事件实现强制迁移/封禁停流 |
+| MtdAnalysisHelper | `helper/mtd-analysis-helper.h` | 双模式采样：轻量 PacketSink / 重量 FlowMonitor（按目的 IP 聚合到 proxy） |
+
 
 ---
 
@@ -41,8 +50,9 @@
 
 | 文件 | 说明 |
 |------|------|
-| `examples/mtd-full-defense-test.cc` | 完整 C++ 攻防演示（5 阶段） |
-| `examples/mtd-python-round-defense.py` | Python round-based 防御算法示例（Cppyy + EventStream） |
+| `examples/mtd-full-defense-test.cc` | 完整 C++ 攻防演示（真实 UDP 流量 + 采样检测 + 洗牌/封禁） |
+| `examples/mtd-real-traffic-defense-test.cc` | 最小 C++ 集成示例（helper 装流量/采样，主脚本触发检测/洗牌） |
+| `examples/mtd-python-round-defense.py` | Python round-based 策略示例（真实流量由 helper 生成；Python tick 驱动评分/洗牌） |
 
 ---
 
@@ -88,6 +98,10 @@
 - 在脚本中创建 `EventBus`、`EventStream`、`DomainManager`、`ShuffleController`（以及你需要的其他组件）。
 - 使用 `BridgeRunner(..., tick_interval_ms=...)` 运行。
 
+如果你需要真实流量/统计（推荐）：
+- 用 `MtdNetworkHelper` 创建拓扑；用 `MtdTrafficHelper` 安装 benign/attacker UDP 应用。
+- 用 `MtdAnalysisHelper` 在每个 tick 调 `CollectStats()`，再把 `TrafficStats` 喂给 detector/算法。
+
 4) 满足硬约束（强制）
 - tick 间隔必须 >= `mtd_bridge.constraints.MIN_TICK_INTERVAL_MS`。
 - 单次 tick 消费事件数量受 `MAX_EVENTS_PER_TICK` 限制。
@@ -106,6 +120,18 @@
 ./ns3 configure --enable-python-bindings
 ./ns3 run src/mtd-benchmark/examples/<your-script>.py --
 ```
+
+---
+
+## 验证真实流量（推荐流程）
+
+- 轻量模式（PacketSink）：
+	- 通过 `MtdAnalysisHelper` 读取每个 proxy sink 的 `bytes/packets`，适合高规模、低开销。
+- 重量模式（FlowMonitor）：
+	- 通过 `MtdAnalysisHelper` 聚合 `FlowMonitor` 的 `FlowStats`（按目的 IP → proxyId），适合精细验证。
+	- 示例会将 XML 写到 `output/.../flowmon.xml`（若启用）。
+- PCAP：
+	- 如需抓包，建议在示例里调用 `MtdNetworkHelper::EnablePcap(prefix)`（会产生 *.pcap）。
 
 ---
 

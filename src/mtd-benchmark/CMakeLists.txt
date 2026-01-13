@@ -16,7 +16,11 @@ set(source_files
     model/mtd-shuffle-controller.cc
     model/mtd-attack-generator.cc
     model/mtd-export-api.cc
+    model/mtd-security-tag.cc
     helper/mtd-network-helper.cc
+    helper/mtd-traffic-helper.cc
+    helper/mtd-analysis-helper.cc
+    helper/mtd-telemetry-helper.cc
 )
 
 # Set header files (for installation)
@@ -30,7 +34,11 @@ set(header_files
     model/mtd-shuffle-controller.h
     model/mtd-attack-generator.h
     model/mtd-export-api.h
+    model/mtd-security-tag.h
     helper/mtd-network-helper.h
+    helper/mtd-traffic-helper.h
+    helper/mtd-analysis-helper.h
+    helper/mtd-telemetry-helper.h
 )
 
 # Set test source files
@@ -44,7 +52,9 @@ set(libraries_to_link
     ${libnetwork}
     ${libinternet}
     ${libpoint-to-point}
+    ${libcsma}
     ${libapplications}
+    ${libflow-monitor}
 )
 
 # Build the module
