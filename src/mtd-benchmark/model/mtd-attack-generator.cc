@@ -242,11 +242,27 @@ AttackGenerator::NotifyAttackEvent(EventType type, const std::string& reason)
     MtdEvent event(type, Simulator::Now().GetMilliSeconds());
     
     // 填充元数据供数据导出使用
+    // Basic params
     event.metadata["attackType"] = std::to_string(static_cast<int>(m_params.type));
     event.metadata["targetProxy"] = std::to_string(m_params.targetProxyId);
-    event.metadata["rate"] = std::to_string(m_params.rate);
+    event.metadata["ratePps"] = std::to_string(m_params.rate);
+    event.metadata["packetSize"] = std::to_string(m_params.packetSize);
     event.metadata["attackerCount"] = std::to_string(m_activeFlows.size());
-    
+
+    // If we have a history record for this attack, publish its fields as well
+    if (!m_attackHistory.empty()) {
+        const AttackRecord& r = m_attackHistory.back();
+        event.metadata["attackId"] = std::to_string(r.attackId);
+        event.metadata["startTime"] = std::to_string(r.startTime);
+        event.metadata["endTime"] = std::to_string(r.endTime);
+        event.metadata["ratePps_record"] = std::to_string(r.ratePps);
+        event.metadata["packetSize_record"] = std::to_string(r.packetSize);
+        event.metadata["attackerCount_record"] = std::to_string(r.attackerCount);
+        event.metadata["durationPlanned"] = std::to_string(r.durationPlanned);
+        event.metadata["durationActual"] = std::to_string(r.durationActual);
+        event.metadata["defenseTriggered"] = r.defenseTriggered ? "true" : "false";
+    }
+
     if (!reason.empty()) {
         event.metadata["reason"] = reason;
     }
