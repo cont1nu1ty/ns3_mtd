@@ -1,2 +1,6 @@
 # MTD-Benchmark Examples
-# (No examples currently - placeholder for future additions)
+build_lib_example(
+    NAME mtd-benchmark-example
+    SOURCE_FILES mtd-benchmark-example.cc
+    LIBRARIES_TO_LINK ${libmtd-benchmark}
+)

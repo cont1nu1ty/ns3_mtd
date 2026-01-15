@@ -401,9 +401,22 @@ ScoreManager::NotifyScoreUpdate(uint32_t userId, const UserScore& score, const s
     if (m_eventBus != nullptr)
     {
         MtdEvent event(EventType::SCORE_UPDATED, Simulator::Now().GetMilliSeconds());
+        event.sourceNodeId = userId;  // Set source to the user being scored
         event.metadata["userId"] = std::to_string(userId);
         event.metadata["score"] = std::to_string(score.currentScore);
-        event.metadata["riskLevel"] = std::to_string(static_cast<int>(score.riskLevel));
+        
+        // Convert risk level to readable string
+        std::string riskLevelStr;
+        switch (score.riskLevel)
+        {
+            case RiskLevel::LOW:      riskLevelStr = "LOW"; break;
+            case RiskLevel::MEDIUM:   riskLevelStr = "MEDIUM"; break;
+            case RiskLevel::HIGH:     riskLevelStr = "HIGH"; break;
+            case RiskLevel::CRITICAL: riskLevelStr = "CRITICAL"; break;
+            default:                  riskLevelStr = "UNKNOWN"; break;
+        }
+        event.metadata["riskLevel"] = riskLevelStr;
+        
         if (!reason.empty())
         {
             event.metadata["reason"] = reason;

@@ -21,36 +21,39 @@
 #define MTD_BENCHMARK_MODULE_H
 
 // Core types and enums
-#include "mtd-common.h"
+#include "ns3/mtd-common.h"
 
 // Packet tag for deterministic RCA attribution
-#include "mtd-security-tag.h"
+#include "ns3/mtd-security-tag.h"
 
 // Event bus for inter-module communication
-#include "mtd-event-bus.h"
+#include "ns3/mtd-event-bus.h"
 
 // Incremental event stream adapter (Python bridge)
-#include "mtd-event-stream.h"
+#include "ns3/mtd-event-stream.h"
 
 // Detection layer
-#include "mtd-detector.h"
+#include "ns3/mtd-detector.h"
 
 // Score manager
-#include "mtd-score-manager.h"
+#include "ns3/mtd-score-manager.h"
 
 // Domain manager
-#include "mtd-domain-manager.h"
+#include "ns3/mtd-domain-manager.h"
 
 // Shuffle controller
-#include "mtd-shuffle-controller.h"
+#include "ns3/mtd-shuffle-controller.h"
 
 // Attack generator
-#include "mtd-attack-generator.h"
+#include "ns3/mtd-attack-generator.h"
 
 // Export API
-#include "mtd-export-api.h"
+#include "ns3/mtd-export-api.h"
 
-// Telemetry helper (1s RCA aggregation)
+// Helper classes
+#include "ns3/mtd-network-helper.h"
+#include "ns3/mtd-traffic-helper.h"
+#include "ns3/mtd-analysis-helper.h"
 #include "ns3/mtd-telemetry-helper.h"
 
 #endif // MTD_BENCHMARK_MODULE_H

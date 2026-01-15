@@ -357,14 +357,36 @@ ExportApi::SetupEventLogging(FileLogLevel logLevel, size_t flushEveryN, bool str
         return;
     }
 
-    m_eventBus->SetFileLogLevel(logLevel);
-    m_eventBus->SetFlushPolicy(flushEveryN, strongConsistency);
-    m_eventBus->EnableFileLogging(m_outputDirectory);
+    // Configure the new logging system
+    LoggingConfig config = m_eventBus->GetLoggingConfig();
+    config.directoryConfig.baseDir = m_outputDirectory;
+    config.enabled = true;
+    
+    // Map legacy parameters to new config
+    if (strongConsistency)
+    {
+        config.bufferConfig = LogBufferConfig::HighDurability();
+    }
+    else if (flushEveryN > 0)
+    {
+        config.bufferConfig.bufferCapacity = flushEveryN * 100;
+    }
+    
+    // Set formatter based on log level
+    if (logLevel == FileLogLevel::DEBUG)
+    {
+        config.defaultFormat = "text";
+    }
+    else
+    {
+        config.defaultFormat = "compact";
+    }
+    
+    m_eventBus->SetLoggingConfig(config);
+    m_eventBus->InitializeLogging();
 
-    NS_LOG_INFO("Event logging configured: dir=" << m_outputDirectory 
-                << " level=" << (logLevel == FileLogLevel::DEBUG ? "DEBUG" : "INFO")
-                << " flushEveryN=" << flushEveryN 
-                << " strongConsistency=" << strongConsistency);
+    NS_LOG_INFO("Event logging configured: dir=" << m_eventBus->GetRunDirectory()
+                << " level=" << (logLevel == FileLogLevel::DEBUG ? "DEBUG" : "INFO"));
 }
 
 void

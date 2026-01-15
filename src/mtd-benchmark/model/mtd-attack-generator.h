@@ -14,19 +14,39 @@
 #include <cstdint>
 #include <map>
 #include <vector>
+#include <sstream>
 
 namespace ns3 {
 namespace mtd {
 
 /**
+ * \brief Convert AttackType enum to human-readable string
+ */
+inline std::string AttackTypeToString(AttackType type)
+{
+    switch (type)
+    {
+        case AttackType::NONE:         return "NONE";
+        case AttackType::DOS:          return "DOS";
+        case AttackType::PROBE:        return "PROBE";
+        case AttackType::PORT_SCAN:    return "PORT_SCAN";
+        case AttackType::ROUTE_MONITOR: return "ROUTE_MONITOR";
+        case AttackType::SYN_FLOOD:    return "SYN_FLOOD";
+        case AttackType::UDP_FLOOD:    return "UDP_FLOOD";
+        case AttackType::HTTP_FLOOD:   return "HTTP_FLOOD";
+        default:                       return "UNKNOWN";
+    }
+}
+
+/**
  * \ingroup mtd
- * \brief 攻击流量生成器 (Attack Logic Module)
+ * \brief Attack Traffic Generator (Attack Logic Module)
  *
- * 职责：
- * 1. 管理僵尸网络节点 (Attacker Nodes)
- * 2. 调度攻击的开启与停止
- * 3. 将高层攻击意图 (AttackType) 转化为底层流量 (TrafficHelper Primitive)
- * 4. 发布安全事件 (ATTACK_STARTED/STOPPED)
+ * Responsibilities:
+ * 1. Manage botnet nodes (Attacker Nodes)
+ * 2. Schedule attack start/stop
+ * 3. Translate high-level attack intent (AttackType) to low-level traffic (TrafficHelper Primitive)
+ * 4. Publish Ground Truth events (ATTACK_STARTED/STOPPED) with full AttackRecord data
  */
 class AttackGenerator : public Object
 {
@@ -36,92 +56,159 @@ public:
     AttackGenerator();
     ~AttackGenerator() override;
 
+    /**
+     * \brief Ground Truth record for attack lifecycle
+     * 
+     * Contains all configuration and runtime data for a single attack instance.
+     * Published via EventBus for logging and analysis.
+     */
     struct AttackRecord {
-    // === 基础信息 ===
-    uint64_t attackId;        // [新增] 唯一标识符，用于关联 START/STOP 事件
-    uint64_t startTime;       // 改名：timestamp -> startTime 更明确
-    uint64_t endTime;         // [新增] 实际结束时间 (Stop 时填充)
+        // === Basic Info ===
+        uint64_t attackId{0};       ///< Unique identifier for correlating START/STOP events
+        uint64_t startTime{0};      ///< Start timestamp (ms)
+        uint64_t endTime{0};        ///< End timestamp (ms), filled on Stop()
     
-    // === 攻击配置 ===
-    AttackType type;
-    uint32_t targetProxyId;
-    double ratePps;           // 改名：rate -> ratePps (Packet Per Second)，避免歧义
-    uint32_t packetSize;      // [新增] 极其重要！只有 PPS 无法计算带宽 (Mbps)
-    uint32_t attackerCount;   // [新增] 多少个僵尸节点参与了攻击？
+        // === Attack Configuration ===
+        AttackType type{AttackType::NONE};
+        uint32_t targetProxyId{0};
+        double ratePps{0.0};        ///< Packets per second
+        uint32_t packetSize{512};   ///< Bytes per packet (critical for bandwidth calculation)
+        uint32_t attackerCount{0};  ///< Number of attacker nodes participating
+        std::vector<uint32_t> targetProxyIds;  ///< Multi-target support
 
-    // === 统计信息 (可选，区分“计划”与“实际”) ===
-    double durationPlanned;   // params.duration
-    double durationActual;    // 实际运行时长 (可能被手动 Stop 截断)
+        // === Statistics ===
+        double durationPlanned{0.0};  ///< Configured duration
+        double durationActual{0.0};   ///< Actual runtime (may be truncated by manual Stop)
+        uint64_t packetsSent{0};      ///< Estimated packets sent
+        uint64_t bytesSent{0};        ///< Estimated bytes sent
+        
+        // === Interaction State ===
+        bool defenseTriggered{false}; ///< Whether defense was triggered (feedback from ScoreManager)
+        std::string stopReason;       ///< Why the attack stopped ("duration", "manual", "defense")
+
+        /**
+         * \brief Serialize to JSON string for EventBus logging
+         * \return JSON-formatted string with all ground truth data
+         */
+        std::string ToJson() const
+        {
+            std::ostringstream ss;
+            ss << std::fixed;
+            ss << "{";
+            ss << "\"attackId\":" << attackId << ",";
+            ss << "\"type\":\"" << AttackTypeToString(type) << "\",";
+            ss << "\"typeId\":" << static_cast<int>(type) << ",";
+            ss << "\"targetProxyId\":" << targetProxyId << ",";
+            ss << "\"ratePps\":" << ratePps << ",";
+            ss << "\"packetSize\":" << packetSize << ",";
+            ss << "\"attackerCount\":" << attackerCount << ",";
+            ss << "\"startTime\":" << startTime << ",";
+            ss << "\"endTime\":" << endTime << ",";
+            ss << "\"durationPlanned\":" << durationPlanned << ",";
+            ss << "\"durationActual\":" << durationActual << ",";
+            ss << "\"packetsSent\":" << packetsSent << ",";
+            ss << "\"bytesSent\":" << bytesSent << ",";
+            ss << "\"defenseTriggered\":" << (defenseTriggered ? "true" : "false");
+            if (!stopReason.empty())
+            {
+                ss << ",\"stopReason\":\"" << stopReason << "\"";
+            }
+            ss << "}";
+            return ss.str();
+        }
+        
+        /**
+         * \brief Calculate bandwidth in Mbps
+         */
+        double GetBandwidthMbps() const
+        {
+            return (ratePps * packetSize * 8.0) / 1000000.0;
+        }
+    };
     
-    // === 交互状态 ===
-    bool defenseTriggered;    // 是否触发了防御（需要 ScoreManager 反馈，目前代码里是写死的 false）
-};
     using AttackHistory = std::vector<AttackRecord>;
 
-    /**
-     * \brief 注入依赖
-     */
+    // === Dependency Injection ===
     void SetTrafficHelper(Ptr<MtdTrafficHelper> trafficHelper);
     void SetNetworkHelper(Ptr<MtdNetworkHelper> networkHelper);
     void SetEventBus(Ptr<EventBus> eventBus);
 
     /**
-     * \brief 配置攻击参数
-     * \param params 包含攻击类型、速率、目标等信息
+     * \brief Configure attack parameters
+     * \param params Attack configuration
      */
     void Configure(const AttackParams& params);
 
     /**
-     * \brief 立即开始攻击
-     * \return true 如果成功启动
+     * \brief Start attack immediately
+     * \return true if successfully started
+     * 
+     * Publishes ATTACK_STARTED event with full Ground Truth data.
      */
     bool Start();
 
     /**
-     * \brief 停止当前攻击
+     * \brief Stop current attack
+     * \param reason Optional reason for stopping ("manual", "defense", etc.)
+     * 
+     * Publishes ATTACK_STOPPED event with full Ground Truth data.
      */
-    void Stop();
+    void Stop(const std::string& reason = "manual");
 
     /**
-     * \brief 获取当前攻击状态
+     * \brief Check if attack is active
      */
     bool IsActive() const;
 
     /**
-     * \brief 获取攻击统计信息
+     * \brief Get attack statistics
      */
     std::map<std::string, double> GetStatistics() const;
 
     /**
-     * \brief 获取攻击历史记录
+     * \brief Get attack history
      */
     const AttackHistory& GetAttackHistory() const;
+    
+    /**
+     * \brief Get current attack record (if active)
+     */
+    const AttackRecord& GetCurrentRecord() const;
+    
+    /**
+     * \brief Mark defense as triggered (called by external defense system)
+     */
+    void MarkDefenseTriggered();
 
 private:
-    // 依赖组件
+    // Dependencies
     Ptr<MtdTrafficHelper> m_trafficHelper;
     Ptr<MtdNetworkHelper> m_networkHelper;
     Ptr<EventBus> m_eventBus;
 
-    // 配置与状态
+    // Configuration & State
     AttackParams m_params;
-    bool m_isActive;
+    bool m_isActive{false};
     Time m_attackStartTime;
-    uint64_t m_totalPacketsSent;
-    uint64_t m_totalBytesSent;
+    uint64_t m_totalPacketsSent{0};
+    uint64_t m_totalBytesSent{0};
     
-    // 追踪当前攻击产生的所有底层流句柄，以便停止时销毁
+    // Current attack tracking
+    AttackRecord m_currentRecord;
+    uint64_t m_nextAttackId{1};
+    
+    // Active flow handles for cleanup
     std::vector<MtdTrafficHelper::FlowHandle> m_activeFlows;
     
-    // 自动停止的定时器 (如果设置了 duration)
+    // Auto-stop timer
     EventId m_stopEvent;
 
+    // Attack history
     AttackHistory m_attackHistory;
 
-    // 内部辅助：将 AttackType 映射为 TrafficHelper 的传输层配置
+    // Internal helpers
     MtdTrafficHelper::StatelessTransport GetTransportProfile() const;
-    
-    void NotifyAttackEvent(EventType type, const std::string& reason = "");
+    void PublishGroundTruthEvent(EventType type);
 };
 
 } // namespace mtd

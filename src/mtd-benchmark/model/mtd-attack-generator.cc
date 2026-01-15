@@ -1,4 +1,11 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * MTD-Benchmark: Attack Generator Implementation
+ * 
+ * Publishes Ground Truth events with complete AttackRecord data
+ * for accurate logging and post-analysis.
+ */
+
 #include "mtd-attack-generator.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -20,9 +27,6 @@ AttackGenerator::GetTypeId()
 }
 
 AttackGenerator::AttackGenerator()
-    : m_isActive(false),
-      m_totalPacketsSent(0),
-      m_totalBytesSent(0)
 {
     NS_LOG_FUNCTION(this);
 }
@@ -30,8 +34,9 @@ AttackGenerator::AttackGenerator()
 AttackGenerator::~AttackGenerator()
 {
     NS_LOG_FUNCTION(this);
-    if (m_isActive) {
-        Stop();
+    if (m_isActive)
+    {
+        Stop("destructor");
     }
 }
 
@@ -57,9 +62,11 @@ void
 AttackGenerator::Configure(const AttackParams& params)
 {
     NS_LOG_FUNCTION(this);
-    // 如果正在攻击，先停止再应用新配置
-    if (m_isActive) {
-        Stop();
+    
+    // If currently attacking, stop before applying new config
+    if (m_isActive)
+    {
+        Stop("reconfigure");
     }
     m_params = params;
 }
@@ -69,120 +76,155 @@ AttackGenerator::Start()
 {
     NS_LOG_FUNCTION(this);
 
-    // 1. 完整性检查
-    if (m_isActive) {
+    // 1. Validation
+    if (m_isActive)
+    {
         NS_LOG_WARN("Attack already active, ignoring Start()");
         return false;
     }
-    if (!m_trafficHelper || !m_networkHelper) {
-        NS_LOG_ERROR("Missing dependencies (TrafficHelper or NetworkHelper)");
-        return false;
+    
+    if (!m_trafficHelper || !m_networkHelper)
+    {
+        NS_LOG_WARN("Missing dependencies (TrafficHelper or NetworkHelper) - running in simulation-only mode");
+        // Allow starting without traffic helper for demonstration/testing
     }
 
-    // 2. 获取攻击资源 (Attacker Nodes)
-    NodeContainer attackers = m_networkHelper->GetAttackerNodes(); //
-    if (attackers.GetN() == 0) {
-        NS_LOG_WARN("No attacker nodes available in topology");
-        return false;
+    // 2. Get attacker resources
+    uint32_t attackerCount = 0;
+    NodeContainer attackers;
+    if (m_networkHelper)
+    {
+        attackers = m_networkHelper->GetAttackerNodes();
+        attackerCount = attackers.GetN();
     }
 
-    // 3. 准备攻击参数
-    DataRate rate(std::to_string(m_params.rate) + "pps"); // 假设 params.rate 是包率
-    MtdTrafficHelper::StatelessTransport transport = GetTransportProfile();
-    uint32_t targetProxy = m_params.targetProxyId;
-
+    // 3. Capture Ground Truth - START
     Time startTime = Simulator::Now();
     m_attackStartTime = startTime;
 
-    AttackRecord record;
-    record.attackId = m_attackHistory.size() + 1;
-    record.startTime = startTime.GetMilliSeconds();
-    record.endTime = 0;
-    record.type = m_params.type;
-    record.targetProxyId = targetProxy;
-    record.ratePps = m_params.rate;
-    record.packetSize = m_params.packetSize;
-    record.attackerCount = attackers.GetN();
-    record.durationPlanned = m_params.duration;
-    record.durationActual = 0.0;
-    record.defenseTriggered = false;
-    m_attackHistory.push_back(record);
+    m_currentRecord = AttackRecord();  // Reset
+    m_currentRecord.attackId = m_nextAttackId++;
+    m_currentRecord.startTime = startTime.GetMilliSeconds();
+    m_currentRecord.endTime = 0;
+    m_currentRecord.type = m_params.type;
+    m_currentRecord.targetProxyId = m_params.targetProxyId;
+    m_currentRecord.targetProxyIds = m_params.targetProxyIds;
+    m_currentRecord.ratePps = m_params.rate;
+    m_currentRecord.packetSize = m_params.packetSize;
+    m_currentRecord.attackerCount = attackerCount > 0 ? attackerCount : 1;
+    m_currentRecord.durationPlanned = m_params.duration;
+    m_currentRecord.durationActual = 0.0;
+    m_currentRecord.packetsSent = 0;
+    m_currentRecord.bytesSent = 0;
+    m_currentRecord.defenseTriggered = false;
+    m_currentRecord.stopReason = "";
 
-    NS_LOG_INFO("Starting attack: Type=" << (int)m_params.type 
-                << " Target=Proxy" << targetProxy 
-                << " Rate=" << m_params.rate);
+    NS_LOG_INFO("Starting attack: ID=" << m_currentRecord.attackId
+                << " Type=" << AttackTypeToString(m_params.type)
+                << " Target=Proxy" << m_params.targetProxyId
+                << " Rate=" << m_params.rate << "pps"
+                << " Bandwidth=" << m_currentRecord.GetBandwidthMbps() << "Mbps");
 
-    // 4. [关键] 调用 TrafficHelper 执行攻击
-    // Primitive 1: 无状态高压流量
-    for (uint32_t i = 0; i < attackers.GetN(); ++i) {
+    // 4. Create traffic flows (if traffic helper available)
+    if (m_trafficHelper && m_networkHelper && attackerCount > 0)
+    {
+        DataRate rate(std::to_string(m_params.rate) + "pps");
+        MtdTrafficHelper::StatelessTransport transport = GetTransportProfile();
+        
+        for (uint32_t i = 0; i < attackerCount; ++i)
+        {
         Ptr<Node> attackerNode = attackers.Get(i);
         
         auto flowHandle = m_trafficHelper->CreateStatelessHighRateFlow(
             attackerNode,
-            targetProxy,
+                m_params.targetProxyId,
             rate,
             transport
         );
 
-        if (flowHandle > 0) {
+            if (flowHandle > 0)
+            {
             m_activeFlows.push_back(flowHandle);
+            }
         }
     }
 
     m_isActive = true;
 
-    // 5. 调度自动停止 (如果配置了 duration)
-    if (m_params.duration > 0) {
+    // 5. Schedule auto-stop (if duration configured)
+    if (m_params.duration > 0)
+    {
         m_stopEvent = Simulator::Schedule(Seconds(m_params.duration), 
-                                          &AttackGenerator::Stop, this);
+                                          &AttackGenerator::Stop, this, "duration");
     }
 
-    // 6. 发布事件
-    NotifyAttackEvent(EventType::ATTACK_STARTED);
+    // 6. Publish ATTACK_STARTED with Ground Truth
+    PublishGroundTruthEvent(EventType::ATTACK_STARTED);
 
     return true;
 }
 
 void
-AttackGenerator::Stop()
+AttackGenerator::Stop(const std::string& reason)
 {
-    NS_LOG_FUNCTION(this);
+    NS_LOG_FUNCTION(this << reason);
 
-    if (!m_isActive) return;
+    if (!m_isActive)
+    {
+        return;
+    }
 
-    if (!m_trafficHelper) return;
-
+    // 1. Calculate actual duration and statistics
     Time stopTime = Simulator::Now();
     double durationSeconds = (stopTime - m_attackStartTime).GetSeconds();
-    if (durationSeconds < 0.0) {
+    if (durationSeconds < 0.0)
+    {
         durationSeconds = 0.0;
     }
+    
     uint64_t packets = static_cast<uint64_t>(m_params.rate * durationSeconds);
     uint64_t bytes = packets * static_cast<uint64_t>(m_params.packetSize);
+    
+    // 2. Update Ground Truth - END
+    m_currentRecord.endTime = stopTime.GetMilliSeconds();
+    m_currentRecord.durationActual = durationSeconds;
+    m_currentRecord.packetsSent = packets;
+    m_currentRecord.bytesSent = bytes;
+    m_currentRecord.stopReason = reason;
+    
+    // Update totals
     m_totalPacketsSent += packets;
     m_totalBytesSent += bytes;
-    if (!m_attackHistory.empty()) {
-        m_attackHistory.back().endTime = stopTime.GetMilliSeconds();
-        m_attackHistory.back().durationActual = durationSeconds;
-    }
+    
+    // 3. Store in history
+    m_attackHistory.push_back(m_currentRecord);
 
-    // 1. 销毁所有攻击流
-    // 调用 TerminateFlow
-    for (auto handle : m_activeFlows) {
+    NS_LOG_INFO("Attack stopped: ID=" << m_currentRecord.attackId
+                << " Duration=" << durationSeconds << "s"
+                << " Packets=" << packets
+                << " Bytes=" << bytes
+                << " Reason=" << reason);
+
+    // 4. Terminate traffic flows
+    if (m_trafficHelper)
+    {
+        for (auto handle : m_activeFlows)
+        {
         m_trafficHelper->TerminateFlow(handle);
+        }
     }
     m_activeFlows.clear();
 
-    // 2. 取消自动停止定时器
-    if (m_stopEvent.IsPending()) {
+    // 5. Cancel auto-stop timer if pending
+    if (m_stopEvent.IsPending())
+    {
         Simulator::Cancel(m_stopEvent);
     }
 
     m_isActive = false;
-    NS_LOG_INFO("Attack stopped");
 
-    // 3. 发布事件
-    NotifyAttackEvent(EventType::ATTACK_STOPPED);
+    // 6. Publish ATTACK_STOPPED with Ground Truth
+    PublishGroundTruthEvent(EventType::ATTACK_STOPPED);
 }
 
 bool
@@ -191,15 +233,31 @@ AttackGenerator::IsActive() const
     return m_isActive;
 }
 
+void
+AttackGenerator::MarkDefenseTriggered()
+{
+    NS_LOG_FUNCTION(this);
+    if (m_isActive)
+    {
+        m_currentRecord.defenseTriggered = true;
+    }
+}
+
+const AttackGenerator::AttackRecord&
+AttackGenerator::GetCurrentRecord() const
+{
+    return m_currentRecord;
+}
+
 MtdTrafficHelper::StatelessTransport
 AttackGenerator::GetTransportProfile() const
 {
-    // 将 mtd-common.h 中的 AttackType 映射到 TrafficHelper 的传输层配置
-    switch (m_params.type) {
+    switch (m_params.type)
+    {
         case AttackType::SYN_FLOOD:
             return MtdTrafficHelper::STATELESS_TCP_SYN;
         case AttackType::UDP_FLOOD:
-        case AttackType::DOS: // 默认为 UDP
+        case AttackType::DOS:
         default:
             return MtdTrafficHelper::STATELESS_UDP;
     }
@@ -211,10 +269,12 @@ AttackGenerator::GetStatistics() const
     double packets = static_cast<double>(m_totalPacketsSent);
     double bytes = static_cast<double>(m_totalBytesSent);
 
-    if (m_isActive) {
+    if (m_isActive)
+    {
         Time now = Simulator::Now();
         double liveDuration = (now - m_attackStartTime).GetSeconds();
-        if (liveDuration < 0.0) {
+        if (liveDuration < 0.0)
+        {
             liveDuration = 0.0;
         }
         double livePackets = m_params.rate * liveDuration;
@@ -224,7 +284,8 @@ AttackGenerator::GetStatistics() const
 
     return std::map<std::string, double>{
         {"packetCount", packets},
-        {"byteCount", bytes}
+        {"byteCount", bytes},
+        {"attackCount", static_cast<double>(m_attackHistory.size())}
     };
 }
 
@@ -235,39 +296,21 @@ AttackGenerator::GetAttackHistory() const
 }
 
 void
-AttackGenerator::NotifyAttackEvent(EventType type, const std::string& reason)
+AttackGenerator::PublishGroundTruthEvent(EventType type)
 {
-    if (!m_eventBus) return;
+    if (!m_eventBus)
+    {
+        return;
+    }
 
     MtdEvent event(type, Simulator::Now().GetMilliSeconds());
+    event.sourceNodeId = m_currentRecord.targetProxyId;
     
-    // 填充元数据供数据导出使用
-    // Basic params
-    event.metadata["attackType"] = std::to_string(static_cast<int>(m_params.type));
-    event.metadata["targetProxy"] = std::to_string(m_params.targetProxyId);
-    event.metadata["ratePps"] = std::to_string(m_params.rate);
-    event.metadata["packetSize"] = std::to_string(m_params.packetSize);
-    event.metadata["attackerCount"] = std::to_string(m_activeFlows.size());
+    // Only include the full Ground Truth JSON - no redundant individual fields
+    // The JSON contains all structured data for Python analysis
+    event.metadata["groundTruth"] = m_currentRecord.ToJson();
 
-    // If we have a history record for this attack, publish its fields as well
-    if (!m_attackHistory.empty()) {
-        const AttackRecord& r = m_attackHistory.back();
-        event.metadata["attackId"] = std::to_string(r.attackId);
-        event.metadata["startTime"] = std::to_string(r.startTime);
-        event.metadata["endTime"] = std::to_string(r.endTime);
-        event.metadata["ratePps_record"] = std::to_string(r.ratePps);
-        event.metadata["packetSize_record"] = std::to_string(r.packetSize);
-        event.metadata["attackerCount_record"] = std::to_string(r.attackerCount);
-        event.metadata["durationPlanned"] = std::to_string(r.durationPlanned);
-        event.metadata["durationActual"] = std::to_string(r.durationActual);
-        event.metadata["defenseTriggered"] = r.defenseTriggered ? "true" : "false";
-    }
-
-    if (!reason.empty()) {
-        event.metadata["reason"] = reason;
-    }
-
-    m_eventBus->Publish(event); //
+    m_eventBus->Publish(event);
 }
 
 } // namespace mtd
